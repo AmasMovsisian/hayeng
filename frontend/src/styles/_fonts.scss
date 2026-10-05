@@ -1,0 +1,38 @@
+@font-face {
+  font-family: 'Manrope';
+  src: url('/fonts/Manrope/Manrope-VariableFont_wght.ttf')
+    format('truetype');
+
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+
+// ------------------------------------------------------------
+// Noto Sans Armenian
+// Primary Armenian typeface
+// ------------------------------------------------------------
+
+@font-face {
+  font-family: 'Noto Sans Armenian';
+  src: url('/fonts/Noto_Sans_Armenian/NotoSansArmenian-VariableFont_wdth,wght.ttf')
+    format('truetype');
+
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+
+// ------------------------------------------------------------
+// HayEng Font Variables
+// ------------------------------------------------------------
+
+$font-primary: 'Manrope', sans-serif;
+$font-armenian: 'Noto Sans Armenian', sans-serif;
+
+:root {
+  --font-primary: #{$font-primary};
+  --font-armenian: #{$font-armenian};
+}

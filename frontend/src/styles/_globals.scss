@@ -1,0 +1,157 @@
+// ============================================================
+// HAYENG — Global Styles
+// ============================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--color-bg);
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+
+  background: var(--color-bg);
+  color: var(--color-text);
+
+  font-family: var(--font-primary);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+// ============================================================
+// FORM ELEMENTS
+// ============================================================
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  padding: 0;
+
+  background: transparent;
+  color: inherit;
+
+  cursor: pointer;
+}
+
+// ============================================================
+// GLOBAL BUTTON
+// ============================================================
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 52px;
+  padding: 0 24px;
+
+  border: 0;
+  border-radius: var(--radius-md);
+
+  background: var(--color-primary);
+  color: #fff;
+
+  font-family: var(--font-primary);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+
+  text-align: center;
+  white-space: nowrap;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    opacity 150ms ease;
+}
+
+.button:hover {
+  background: color-mix(in srgb, var(--color-primary) 90%, #000);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--color-primary-light);
+  outline-offset: 3px;
+}
+
+.button:disabled,
+.button[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+// ============================================================
+// GLOBAL MEDIA
+// ============================================================
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+// ============================================================
+// LISTS
+// ============================================================
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// ============================================================
+// SELECTION
+// ============================================================
+
+::selection {
+  background: var(--color-primary-light);
+  color: var(--color-text);
+}
+
+// ============================================================
+// REDUCED MOTION
+// ============================================================
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
+
+  .button {
+    transition: none;
+  }
+}

@@ -1,0 +1,239 @@
+.splash {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--color-bg);
+  color: var(--color-text);
+
+  overflow: hidden;
+}
+
+.splash__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  transform: translateY(-2%);
+}
+
+.splash__logo {
+  width: 76px;
+  height: 76px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 24px;
+
+  opacity: 0;
+  transform: scale(0.82);
+
+  animation:
+    logo-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards,
+    logo-exit 0.5s ease 4.15s forwards;
+}
+
+.splash__logo-image {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+.splash__logo-image--dark {
+  display: none;
+}
+
+:host-context([data-theme='dark']) .splash__logo-image--light {
+  display: none;
+}
+
+:host-context([data-theme='dark']) .splash__logo-image--dark {
+  display: block;
+}
+
+.splash__brand {
+  overflow: hidden;
+}
+
+.splash__brand-text {
+  display: block;
+
+  font-family: var(--font-primary);
+  font-size: clamp(2rem, 7vw, 3rem);
+  font-weight: 800;
+
+  color: var(--color-text);
+
+  letter-spacing: 0.08em;
+  line-height: 1;
+
+  opacity: 0;
+  transform: translateY(20px);
+
+  animation:
+    brand-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards,
+    brand-exit 0.6s ease 4.15s forwards;
+}
+
+.splash__language {
+  position: relative;
+
+  width: 100%;
+  min-height: 28px;
+
+  margin-top: 16px;
+}
+
+.splash__language-text {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  white-space: nowrap;
+
+  font-family: var(--font-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  color: var(--color-text-secondary);
+
+  letter-spacing: 0.01em;
+
+  opacity: 0;
+}
+
+.splash__language-text--armenian {
+  font-family: var(--font-armenian);
+
+  animation: language-armenian 1.5s ease 1.35s forwards;
+}
+
+.splash__language-text--english {
+  font-family: var(--font-primary);
+
+  animation: language-english 1.5s ease 2.75s forwards;
+}
+
+@keyframes logo-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes logo-exit {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes brand-enter {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes brand-exit {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes language-armenian {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  25% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes language-english {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  25% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash__logo,
+  .splash__brand-text,
+  .splash__language-text {
+    animation: none;
+
+    opacity: 1;
+    transform: none;
+  }
+
+  .splash__language-text--armenian {
+    display: none;
+  }
+}
