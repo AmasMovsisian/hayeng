@@ -1,0 +1,76 @@
+<div class="goal__step-wrapper">
+  <header class="goal__header">
+    <p class="goal__step">ՔԱՅԼ 5</p>
+    <h1 class="goal__title">Ստեղծիր քո հաշիվը։</h1>
+    <p class="goal__subtitle">Պահպանիր քո պրոֆիլը և շարունակիր սովորել այնտեղ, որտեղ կանգ առար։</p>
+  </header>
+
+  <div class="goal__form">
+    <label class="goal__field">
+      <span class="goal__label">Էլ․ փոստ</span>
+      <input
+        type="email"
+        class="goal__input"
+        name="email"
+        autocomplete="email"
+        placeholder="you@example.com"
+        [value]="email"
+        (input)="emailChange.emit($any($event.target).value)"
+      />
+    </label>
+
+    <label class="goal__field">
+      <span class="goal__label">Գաղտնաբառ</span>
+      <input
+        type="password"
+        class="goal__input"
+        name="password"
+        autocomplete="new-password"
+        placeholder="••••••••"
+        [value]="password"
+        (input)="passwordChange.emit($any($event.target).value)"
+      />
+    </label>
+
+    <label class="goal__field">
+      <span class="goal__label">Կրկնել գաղտնաբառը</span>
+      <input
+        type="password"
+        class="goal__input"
+        name="passwordConfirm"
+        autocomplete="new-password"
+        placeholder="••••••••"
+        [value]="passwordConfirm"
+        (input)="passwordConfirmChange.emit($any($event.target).value)"
+      />
+    </label>
+  </div>
+
+  <div class="goal__registration-divider">
+    <span></span>
+    <span>կամ</span>
+    <span></span>
+  </div>
+
+  <button type="button" class="goal__google-button" (click)="googleRegister.emit()">
+    <span class="goal__google-icon" aria-hidden="true">G</span>
+    <span>Գրանցվել Google-ով</span>
+  </button>
+
+  <div class="goal__actions">
+    <button type="button" class="goal__back" (click)="back.emit()">
+      <span aria-hidden="true">←</span>
+      <span>Հետ</span>
+    </button>
+
+    <button
+      type="button"
+      class="goal__next button"
+      [disabled]="!registrationValid"
+      (click)="register.emit()"
+    >
+      <span>Ավարտել</span>
+      <span aria-hidden="true">✓</span>
+    </button>
+  </div>
+</div>

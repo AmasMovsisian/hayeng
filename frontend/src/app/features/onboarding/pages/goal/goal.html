@@ -1,212 +1,61 @@
 <main class="goal">
   <section class="goal__content">
-    @if (currentStep === 1) {
-      <header class="goal__header">
-        <p class="goal__step">ՔԱՅԼ 1</p>
-
-        <h1 class="goal__title">Ի՞նչ նպատակով ես ուզում սովորել անգլերեն։</h1>
-
-        <p class="goal__subtitle">Ընտրիր քո հիմնական նպատակը։</p>
-      </header>
-
-      <div class="goal__options">
-        <button
-          type="button"
-          class="goal__option"
-          [class.goal__option--selected]="selectedGoal === 'career'"
-          (click)="selectGoal('career')"
-        >
-          <span class="goal__option-content">
-            <span class="goal__option-title"> Աշխատանքի և կարիերայի համար </span>
-
-            <span class="goal__option-description">
-              Կարիերայում ավելի վստահ օգտագործել անգլերենը
-            </span>
-          </span>
-
-          <span class="goal__option-arrow" aria-hidden="true"> → </span>
-        </button>
-
-        <button
-          type="button"
-          class="goal__option"
-          [class.goal__option--selected]="selectedGoal === 'travel'"
-          (click)="selectGoal('travel')"
-        >
-          <span class="goal__option-content">
-            <span class="goal__option-title"> Ճամփորդությունների համար </span>
-
-            <span class="goal__option-description">
-              Ավելի ազատ շփվել և հեշտ կողմնորոշվել ճանապարհորդելիս
-            </span>
-          </span>
-
-          <span class="goal__option-arrow" aria-hidden="true"> → </span>
-        </button>
-
-        <button
-          type="button"
-          class="goal__option"
-          [class.goal__option--selected]="selectedGoal === 'communication'"
-          (click)="selectGoal('communication')"
-        >
-          <span class="goal__option-content">
-            <span class="goal__option-title"> Ազատ խոսելու և շփվելու համար </span>
-
-            <span class="goal__option-description">
-              Խոսել ավելի վստահ և հեշտ հասկանալ անգլերենը
-            </span>
-          </span>
-
-          <span class="goal__option-arrow" aria-hidden="true"> → </span>
-        </button>
-
-        <button
-          type="button"
-          class="goal__option"
-          [class.goal__option--selected]="selectedGoal === 'self-development'"
-          (click)="selectGoal('self-development')"
-        >
-          <span class="goal__option-content">
-            <span class="goal__option-title"> Ինքնազարգացման համար </span>
-
-            <span class="goal__option-description">
-              Բարելավել անգլերենս և զարգացնել գիտելիքներս
-            </span>
-          </span>
-
-          <span class="goal__option-arrow" aria-hidden="true"> → </span>
-        </button>
-      </div>
-
-      <div class="goal__actions">
-        <button
-          type="button"
-          class="goal__next button"
-          [disabled]="!selectedGoal"
-          (click)="nextStep()"
-        >
-          <span>Առաջ</span>
-
-          <span aria-hidden="true"> → </span>
-        </button>
-      </div>
+    @if (currentStep === 1 || currentStep === 2) {
+      <app-goal-questions
+        [currentStep]="currentStep"
+        [selectedGoal]="selectedGoal"
+        [selectedLevel]="selectedLevel"
+        [placementTestStatus]="placementTestStatus"
+        (goalSelected)="selectGoal($event)"
+        (levelSelected)="selectLevel($event)"
+        (unknownLevelSelected)="selectUnknownLevel()"
+        (placementStart)="startPlacementTest()"
+        (placementSkip)="skipPlacementTest()"
+        (placementLater)="laterPlacementTest()"
+        (next)="nextStep()"
+        (back)="previousStep()"
+      />
     }
 
-    @if (currentStep === 2) {
-      <header class="goal__header">
-        <p class="goal__step">ՔԱՅԼ 2</p>
+    @if (currentStep === 3) {
+      <app-goal-profile
+        [username]="username"
+        [dateOfBirth]="dateOfBirth"
+        [usernameTouched]="usernameTouched"
+        [dateOfBirthTouched]="dateOfBirthTouched"
+        [usernameValid]="isUsernameValid()"
+        [ageValid]="isAgeValid()"
+        [usernameError]="getUsernameError()"
+        [dateOfBirthError]="getDateOfBirthError()"
+        (usernameInput)="onUsernameInput($event)"
+        (usernameBlur)="onUsernameBlur()"
+        (dateOfBirthChange)="onDateOfBirthChange($event)"
+        (dateOfBirthBlur)="onDateOfBirthBlur()"
+        (next)="nextStep()"
+        (back)="previousStep()"
+      />
+    }
 
-        <h1 class="goal__title">Ի՞նչ մակարդակի է քո անգլերենը։</h1>
+    @if (currentStep === 4) {
+      <app-goal-welcome
+        [username]="username"
+        (next)="nextStep()"
+      />
+    }
 
-        <p class="goal__subtitle">Ընտրիր այն մակարդակը, որն ամենից շատ համապատասխանում է քեզ։</p>
-      </header>
-
-      <div class="goal__options goal__options--levels">
-        <button
-          type="button"
-          class="goal__option"
-          [class.goal__option--selected]="selectedLevel === 'a1'"
-          (click)="selectLevel('a1')"
-        >
-          <span class="goal__option-content">
-            <span class="goal__option-title"> Սկսնակ </span>
-
-            <span class="goal__option-description">
-              Գիտեմ մի քանի բառ և պարզ արտահայտություններ
-            </span>
-          </span>
-
-          <span class="goal__option-level"> A1 </span>
-        </button>
-
-        <button
-          type="button"
-          class="goal__option"
-          [class.goal__option--selected]="selectedLevel === 'a2'"
-          (click)="selectLevel('a2')"
-        >
-          <span class="goal__option-content">
-            <span class="goal__option-title"> Տարրական </span>
-
-            <span class="goal__option-description">
-              Հասկանում եմ պարզ խոսակցություններ և նախադասություններ
-            </span>
-          </span>
-
-          <span class="goal__option-level"> A2 </span>
-        </button>
-
-        <button
-          type="button"
-          class="goal__option"
-          [class.goal__option--selected]="selectedLevel === 'b1'"
-          (click)="selectLevel('b1')"
-        >
-          <span class="goal__option-content">
-            <span class="goal__option-title"> Միջին </span>
-
-            <span class="goal__option-description">
-              Կարողանում եմ շփվել առօրյա թեմաների շուրջ
-            </span>
-          </span>
-
-          <span class="goal__option-level"> B1 </span>
-        </button>
-
-        <button
-          type="button"
-          class="goal__option"
-          [class.goal__option--selected]="selectedLevel === 'b2'"
-          (click)="selectLevel('b2')"
-        >
-          <span class="goal__option-content">
-            <span class="goal__option-title"> Միջինից բարձր </span>
-
-            <span class="goal__option-description">
-              Կարողանում եմ բավականին ազատ խոսել և հասկանալ
-            </span>
-          </span>
-
-          <span class="goal__option-level"> B2 </span>
-        </button>
-
-        <button
-          type="button"
-          class="goal__option"
-          [class.goal__option--selected]="selectedLevel === 'c1'"
-          (click)="selectLevel('c1')"
-        >
-          <span class="goal__option-content">
-            <span class="goal__option-title"> Բարձր </span>
-
-            <span class="goal__option-description">
-              Խոսում և հասկանում եմ անգլերենը վստահ և ազատ
-            </span>
-          </span>
-
-          <span class="goal__option-level"> C1 </span>
-        </button>
-      </div>
-
-      <div class="goal__actions">
-        <button type="button" class="goal__back" (click)="previousStep()">
-          <span aria-hidden="true"> ← </span>
-
-          <span> Հետ </span>
-        </button>
-
-        <button
-          type="button"
-          class="goal__next button"
-          [disabled]="!selectedLevel"
-          (click)="finish()"
-        >
-          <span> Շարունակել </span>
-
-          <span aria-hidden="true"> → </span>
-        </button>
-      </div>
+    @if (currentStep === 5) {
+      <app-goal-register
+        [email]="email"
+        [password]="password"
+        [passwordConfirm]="passwordConfirm"
+        [registrationValid]="isRegistrationValid()"
+        (emailChange)="email = $event"
+        (passwordChange)="password = $event"
+        (passwordConfirmChange)="passwordConfirm = $event"
+        (googleRegister)="registerWithGoogle()"
+        (register)="register()"
+        (back)="previousStep()"
+      />
     }
   </section>
 </main>

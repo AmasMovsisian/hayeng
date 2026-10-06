@@ -1,0 +1,213 @@
+.goal__step-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  animation: goal-step-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
+  &--welcome {
+    justify-content: center;
+    gap: var(--space-6);
+  }
+}
+
+.goal__title {
+  max-width: 500px;
+  margin: 0 auto;
+  color: var(--color-text);
+  font-family: var(--font-armenian);
+  font-size: clamp(2rem, 7vw, 3rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.goal__subtitle {
+  max-width: 500px;
+  margin: var(--space-4) auto 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-armenian);
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.goal__welcome {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.goal__welcome-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--color-success) 40%, transparent);
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--color-success) 10%, var(--color-surface));
+  color: var(--color-success);
+  font-family: var(--font-primary);
+  font-size: 1.5rem;
+  font-weight: 800;
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--color-success) 12%, transparent);
+  animation: goal-welcome-icon 0.55s ease-out forwards;
+}
+
+.goal__welcome-greeting {
+  color: var(--color-primary);
+  font-family: var(--font-armenian);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.goal__actions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-7);
+  opacity: 0;
+  animation: goal-actions-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
+}
+
+.goal__next {
+  min-width: 140px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-armenian);
+
+  &:not(:disabled):hover {
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+
+    &:hover {
+      background: var(--color-primary);
+      transform: none;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .goal__title {
+    font-size: clamp(1.9rem, 8vw, 2.5rem);
+  }
+
+  .goal__subtitle {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .goal__subtitle {
+    margin-top: 14px;
+  }
+
+  .goal__actions {
+    margin-top: var(--space-6);
+  }
+
+  .goal__next {
+    min-width: 128px;
+  }
+
+  .goal__welcome-icon {
+    width: 58px;
+    height: 58px;
+  }
+
+  .goal__welcome-greeting {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .goal__title {
+    font-size: 1.8rem;
+  }
+
+  .goal__actions {
+    gap: var(--space-2);
+  }
+
+  .goal__next {
+    flex: 1;
+  }
+
+  .goal__welcome-greeting {
+    font-size: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goal__step-wrapper,
+  .goal__welcome-icon,
+  .goal__actions {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .goal__next {
+    transition: none;
+  }
+}
+
+@keyframes goal-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes goal-actions-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes goal-welcome-icon {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -1,0 +1,232 @@
+<div class="goal__step-wrapper">
+  @if (currentStep === 1) {
+    <header class="goal__header">
+      <p class="goal__step">ՔԱՅԼ 1</p>
+      <h1 class="goal__title">Ի՞նչ նպատակով ես ուզում սովորել անգլերեն։</h1>
+      <p class="goal__subtitle">Ընտրիր քո հիմնական նպատակը։</p>
+    </header>
+
+    <div class="goal__options">
+      <button
+        type="button"
+        class="goal__option"
+        [class.goal__option--selected]="selectedGoal === 'career'"
+        (click)="goalSelected.emit('career')"
+      >
+        <span class="goal__option-content">
+          <span class="goal__option-title">Աշխատանքի և կարիերայի համար</span>
+          <span class="goal__option-description">
+            Կարիերայում ավելի վստահ օգտագործել անգլերենը
+          </span>
+        </span>
+        <span class="goal__option-arrow" aria-hidden="true">→</span>
+      </button>
+
+      <button
+        type="button"
+        class="goal__option"
+        [class.goal__option--selected]="selectedGoal === 'travel'"
+        (click)="goalSelected.emit('travel')"
+      >
+        <span class="goal__option-content">
+          <span class="goal__option-title">Ճամփորդությունների համար</span>
+          <span class="goal__option-description">
+            Ավելի ազատ շփվել և հեշտ կողմնորոշվել ճանապարհորդելիս
+          </span>
+        </span>
+        <span class="goal__option-arrow" aria-hidden="true">→</span>
+      </button>
+
+      <button
+        type="button"
+        class="goal__option"
+        [class.goal__option--selected]="selectedGoal === 'communication'"
+        (click)="goalSelected.emit('communication')"
+      >
+        <span class="goal__option-content">
+          <span class="goal__option-title">Ազատ խոսելու և շփվելու համար</span>
+          <span class="goal__option-description">
+            Խոսել ավելի վստահ և հեշտ հասկանալ անգլերենը
+          </span>
+        </span>
+        <span class="goal__option-arrow" aria-hidden="true">→</span>
+      </button>
+
+      <button
+        type="button"
+        class="goal__option"
+        [class.goal__option--selected]="selectedGoal === 'self-development'"
+        (click)="goalSelected.emit('self-development')"
+      >
+        <span class="goal__option-content">
+          <span class="goal__option-title">Ինքնազարգացման համար</span>
+          <span class="goal__option-description">
+            Բարելավել անգլերենս և զարգացնել գիտելիքներս
+          </span>
+        </span>
+        <span class="goal__option-arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+
+    <div class="goal__actions">
+      <button
+        type="button"
+        class="goal__next button"
+        [disabled]="!selectedGoal"
+        (click)="next.emit()"
+      >
+        <span>Առաջ</span>
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  }
+
+  @if (currentStep === 2) {
+    <header class="goal__header">
+      <p class="goal__step">ՔԱՅԼ 2</p>
+      <h1 class="goal__title">Ի՞նչ մակարդակի է քո անգլերենը։</h1>
+      <p class="goal__subtitle">Ընտրիր այն մակարդակը, որն ամենից շատ համապատասխանում է քեզ։</p>
+    </header>
+
+    <div class="goal__options goal__options--levels">
+      <button
+        type="button"
+        class="goal__option"
+        [class.goal__option--selected]="selectedLevel === 'a1'"
+        (click)="levelSelected.emit('a1')"
+      >
+        <span class="goal__option-content">
+          <span class="goal__option-title">Սկսնակ</span>
+          <span class="goal__option-description">
+            Գիտեմ մի քանի բառ և պարզ արտահայտություններ
+          </span>
+        </span>
+        <span class="goal__option-level">A1</span>
+      </button>
+
+      <button
+        type="button"
+        class="goal__option"
+        [class.goal__option--selected]="selectedLevel === 'a2'"
+        (click)="levelSelected.emit('a2')"
+      >
+        <span class="goal__option-content">
+          <span class="goal__option-title">Տարրական</span>
+          <span class="goal__option-description">
+            Հասկանում եմ պարզ խոսակցություններ և նախադասություններ
+          </span>
+        </span>
+        <span class="goal__option-level">A2</span>
+      </button>
+
+      <button
+        type="button"
+        class="goal__option"
+        [class.goal__option--selected]="selectedLevel === 'b1'"
+        (click)="levelSelected.emit('b1')"
+      >
+        <span class="goal__option-content">
+          <span class="goal__option-title">Միջին</span>
+          <span class="goal__option-description"> Կարողանում եմ շփվել առօրյա թեմաների շուրջ </span>
+        </span>
+        <span class="goal__option-level">B1</span>
+      </button>
+
+      <button
+        type="button"
+        class="goal__option"
+        [class.goal__option--selected]="selectedLevel === 'b2'"
+        (click)="levelSelected.emit('b2')"
+      >
+        <span class="goal__option-content">
+          <span class="goal__option-title">Միջինից բարձր</span>
+          <span class="goal__option-description">
+            Կարողանում եմ բավականին ազատ խոսել և հասկանալ
+          </span>
+        </span>
+        <span class="goal__option-level">B2</span>
+      </button>
+
+      <button
+        type="button"
+        class="goal__option"
+        [class.goal__option--selected]="selectedLevel === 'c1'"
+        (click)="levelSelected.emit('c1')"
+      >
+        <span class="goal__option-content">
+          <span class="goal__option-title">Բարձր</span>
+          <span class="goal__option-description">
+            Խոսում և հասկանում եմ անգլերենը վստահ և ազատ
+          </span>
+        </span>
+        <span class="goal__option-level">C1</span>
+      </button>
+
+      <button
+        type="button"
+        class="goal__option goal__option--unknown"
+        [class.goal__option--selected]="selectedLevel === 'unknown'"
+        (click)="unknownLevelSelected.emit()"
+      >
+        <span class="goal__option-content">
+          <span class="goal__option-title">Չգիտեմ իմ մակարդակը</span>
+          <span class="goal__option-description">
+            Վստահ չեմ, թե որ մակարդակն է համապատասխանում ինձ
+          </span>
+        </span>
+        <span class="goal__option-level goal__option-level--unknown">?</span>
+      </button>
+    </div>
+
+    @if (selectedLevel === 'unknown') {
+      <div class="goal__placement">
+        <div class="goal__placement-content">
+          <span class="goal__placement-icon" aria-hidden="true">?</span>
+          <div class="goal__placement-text">
+            <h2 class="goal__placement-title">Ցանկանո՞ւմ ես անցնել կարճ թեստ։</h2>
+            <p class="goal__placement-description">
+              Թեստը կօգնի մոտավորապես որոշել քո անգլերենի մակարդակը։
+            </p>
+          </div>
+        </div>
+
+        <div class="goal__placement-actions">
+          <button
+            type="button"
+            class="goal__placement-button goal__placement-button--primary"
+            (click)="placementStart.emit()"
+          >
+            Այո, սկսել թեստը
+          </button>
+
+          <button type="button" class="goal__placement-button" (click)="placementSkip.emit()">
+            Ոչ, թողնել այսպես
+          </button>
+
+          <button type="button" class="goal__placement-button" (click)="placementLater.emit()">
+            Ավելի ուշ
+          </button>
+        </div>
+      </div>
+    }
+
+    <div class="goal__actions">
+      <button type="button" class="goal__back" (click)="back.emit()">
+        <span aria-hidden="true">←</span>
+        <span>Հետ</span>
+      </button>
+
+      <button
+        type="button"
+        class="goal__next button"
+        [disabled]="
+          !selectedLevel || (selectedLevel === 'unknown' && placementTestStatus === 'not-started')
+        "
+        (click)="next.emit()"
+      >
+        <span>Շարունակել</span>
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  }
+</div>

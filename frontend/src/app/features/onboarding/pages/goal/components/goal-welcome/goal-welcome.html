@@ -1,0 +1,18 @@
+<div class="goal__step-wrapper goal__step-wrapper--welcome">
+  <div class="goal__welcome">
+    <span class="goal__welcome-icon" aria-hidden="true">✓</span>
+    <p class="goal__welcome-greeting">Ողջույն, {{ username }}!</p>
+    <h1 class="goal__title">Պատրաստ ենք սկսել։</h1>
+    <p class="goal__subtitle">
+      Քո ուսուցման պրոֆիլը պատրաստ է։ Գրանցվիր, որպեսզի պահպանենք առաջընթացդ և կարողանանք քեզ
+      առաջարկել համապատասխան դասեր։
+    </p>
+  </div>
+
+  <div class="goal__actions">
+    <button type="button" class="goal__next button" (click)="next.emit()">
+      <span>Գրանցվել</span>
+      <span aria-hidden="true">→</span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,100 @@
+<div class="goal__step-wrapper">
+  <header class="goal__header">
+    <p class="goal__step">ՔԱՅԼ 3</p>
+    <h1 class="goal__title">Ինչպե՞ս կարող ենք դիմել քեզ։</h1>
+    <p class="goal__subtitle">Գրիր քո անունը և ծննդյան ամսաթիվը։</p>
+  </header>
+
+  <div class="goal__form">
+    <label class="goal__field" [class.goal__field--error]="usernameTouched && !usernameValid">
+      <span class="goal__label">Անուն</span>
+
+      <input
+        type="text"
+        class="goal__input"
+        name="name"
+        autocomplete="name"
+        placeholder="Քո անունը"
+        [value]="username"
+        (input)="usernameInput.emit($any($event.target).value)"
+        (blur)="usernameBlur.emit()"
+      />
+
+      <p
+        class="goal__field-error"
+        [class.goal__field-error--visible]="usernameTouched && !usernameValid"
+        aria-live="polite"
+      >
+        {{ usernameError || '&nbsp;' }}
+      </p>
+    </label>
+
+    <label class="goal__field" [class.goal__field--error]="dateOfBirthTouched && !ageValid">
+      <span class="goal__label">Ծննդյան ամսաթիվ</span>
+
+      <div class="goal__date-wrapper">
+        <input
+          type="text"
+          class="goal__input goal__date-input"
+          name="dateOfBirth"
+          autocomplete="bday"
+          inputmode="numeric"
+          maxlength="10"
+          placeholder="Օր / Ամիս / Տարի"
+          [value]="dateInputValue"
+          (input)="onDateInput($any($event.target).value)"
+          (blur)="dateOfBirthBlur.emit()"
+        />
+
+        <div class="goal__calendar-button" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path
+              d="M7 2v3M17 2v3M3.5 9.5h17M5.5 4.5h13a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2v-12a2 2 0 0 1 2-2Z"
+            />
+          </svg>
+        </div>
+
+        <input
+          #nativeDateInput
+          type="date"
+          class="goal__native-date"
+          name="nativeDateOfBirth"
+          tabindex="-1"
+          aria-label="Ընտրել ծննդյան ամսաթիվը"
+          [value]="dateOfBirth"
+          (change)="onNativeDateChange($any($event.target).value)"
+        />
+      </div>
+
+      <p
+        class="goal__field-error"
+        [class.goal__field-error--visible]="dateOfBirthTouched && !ageValid"
+        aria-live="polite"
+      >
+        {{ dateOfBirthError || '&nbsp;' }}
+      </p>
+    </label>
+
+    <p class="goal__field-hint">
+      Ծննդյան ամսաթիվը պետք է լինի ճիշտ, որպեսզի մենք կարողանանք համապատասխան սահմանափակումներ
+      կիրառել տարիքային ֆունկցիաների համար։
+    </p>
+  </div>
+
+  <div class="goal__actions">
+    <button type="button" class="goal__back" (click)="back.emit()">
+      <span aria-hidden="true">←</span>
+      <span>Հետ</span>
+    </button>
+
+    <button
+      type="button"
+      class="goal__next button"
+      [disabled]="!usernameValid || !ageValid"
+      (click)="next.emit()"
+    >
+      <span>Շարունակել</span>
+      <span aria-hidden="true">→</span>
+    </button>
+  </div>
+</div>
