@@ -1,0 +1,165 @@
+@if (phase === 'questions') {
+  <header class="goal-testheader goal-testcontent--fade" [attr.data-question]="currentQuestionIndex">
+    <div class="goal-testprogress">
+      <div class="goal-testprogress-meta">
+        <span class="goal-testprogress-label">LEVEL TEST</span>
+        <span class="goal-testprogress-count">{{ currentQuestionNumber }} / {{ maxQuestions }}</span>
+      </div>
+      <div class="goal-testprogress-track" aria-hidden="true">
+        <span class="goal-testprogress-fill" [style.width.%]="progress"></span>
+      </div>
+    </div>
+    <div class="goal-testheading">
+      <span class="goal-testeyebrow">Գտնենք քո մակարդակը</span>
+      <h1 class="goal-testtitle">
+        Որքա՞ն լավ գիտես <span>անգլերենը։</span>
+      </h1>
+      <p class="goal-testsubtitle">
+        Պատասխանիր հարցերին առանց երկար մտածելու։ Թեստը կօգնի մոտավորապես որոշել քո մակարդակը։
+      </p>
+    </div>
+  </header>
+  <main class="goal-testcontent goal-testcontent--fade" [attr.data-question]="currentQuestionIndex">
+    <section class="goal-testquestion" aria-labelledby="question-title">
+      <div class="goal-testquestion-meta">
+        <span class="goal-testquestion-number">Հարց {{ currentQuestionNumber }}</span>
+        <span class="goal-testdifficulty">{{ questionLevelLabel }}</span>
+      </div>
+      <div class="goal-testquestion-title-wrap">
+        <h2 id="question-title" class="goal-testquestion-title">{{ currentQuestion.text }}</h2>
+      </div>
+      <div class="goal-testanswers" role="radiogroup" aria-label="Պատասխանների տարբերակներ">
+        @for (answer of answers; track answer.id; let i = $index) {
+          <button
+            type="button"
+            class="goal-testanswer"
+            [class.goal-testanswer--selected]="selectedAnswerId === answer.id"
+            [attr.aria-checked]="selectedAnswerId === answer.id"
+            role="radio"
+            (click)="selectAnswer(answer.id)"
+          >
+            <span class="goal-testanswer-index">{{ getAnswerLetter(i) }}</span>
+            <span class="goal-testanswer-text">{{ answer.text }}</span>
+            @if (selectedAnswerId === answer.id) {
+              <span class="goal-testanswer-check" aria-hidden="true">✓</span>
+            }
+          </button>
+        }
+      </div>
+    </section>
+  </main>
+  <footer class="goal-testfooter">
+    <p class="goal-testhint">Ընտրիր այն պատասխանը, որը քեզ ամենաճիշտն է թվում։</p>
+    <button
+      type="button"
+      class="goal-testnext"
+      [disabled]="selectedAnswerId === null"
+      (click)="nextQuestion()"
+    >
+      <span>{{ isLastQuestion ? 'Ավարտել' : 'Շարունակել' }}</span>
+      <span class="goal-testnext-icon" aria-hidden="true">→</span>
+    </button>
+    <button type="button" class="goal-testcancel" (click)="cancelTest()">
+      ← Չեղարկել
+    </button>
+  </footer>
+}
+@if (phase === 'result' && result) {
+  <section class="goal-testresult goal-testcontent--fade">
+    <div class="goal-testresult-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
+        <path
+          d="m8 12.5 2.8 2.8L16.5 9.5"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+    <span class="goal-testresult-eyebrow">ԹԵՍՏԸ ԱՎԱՐՏՎԱԾ Է</span>
+    <h1 class="goal-testresult-title">Քո արդյունքը</h1>
+    <p class="goal-testresult-score">
+      <strong>{{ result.correctAnswers }}</strong>
+      <span>/ {{ result.totalQuestions }} ճիշտ պատասխան</span>
+    </p>
+    <div class="goal-testresult-level">
+      <span class="goal-testresult-level-label">Մոտավոր մակարդակ</span>
+      <span class="goal-testresult-level-value">{{ result.level.toUpperCase() }}</span>
+    </div>
+    <p class="goal-testresult-note">
+      Սա մոտավոր գնահատական է։ Իրական մակարդակը կճշտվի դասերի ընթացքում։
+    </p>
+  </section>
+  <footer class="goal-testresult-actions goal-testcontent--fade">
+    <button type="button" class="goal-testnext" (click)="confirmResult()">
+      <span>Շարունակել</span>
+      <span class="goal-testnext-icon" aria-hidden="true">→</span>
+    </button>
+    <button type="button" class="goal-testreview-button" (click)="showReview()">
+      Տեսնել արդյունքները
+    </button>
+  </footer>
+}
+@if (phase === 'review') {
+  <header class="goal-testheader goal-testcontent--fade">
+    <span class="goal-testeyebrow">Պատասխանների վերլուծություն</span>
+    <h1 class="goal-testtitle">
+      Տեսնենք՝ ինչն ինչպես <span>պատասխանեցիր։</span>
+    </h1>
+    <p class="goal-testsubtitle">
+      Կանաչ՝ ճիշտ պատասխան, կարմիր՝ սխալ ընտրություն։
+    </p>
+  </header>
+  <main class="goal-testcontent goal-testcontent--fade">
+    <div class="goal-testreview-list">
+      @for (item of userAnswers; track item.question.id; let i = $index) {
+        <article
+          class="goal-testreview-item"
+          [class.goal-testreview-item--correct]="item.isCorrect"
+          [class.goal-testreview-item--wrong]="!item.isCorrect"
+        >
+          <div class="goal-testreview-meta">
+            <span class="goal-testreview-number">Հարց {{ i + 1 }}</span>
+            <span class="goal-testreview-level">{{ item.question.level.toUpperCase() }}</span>
+            <span
+              class="goal-testreview-badge"
+              [class.goal-testreview-badge--correct]="item.isCorrect"
+              [class.goal-testreview-badge--wrong]="!item.isCorrect"
+            >
+              {{ item.isCorrect ? '✓ Ճիշտ' : '✕ Սխալ' }}
+            </span>
+          </div>
+          <h3 class="goal-testreview-question">{{ item.question.text }}</h3>
+          <div class="goal-testreview-answers">
+            @for (answer of item.question.answers; track answer.id; let j = $index) {
+              <div
+                class="goal-testreview-answer"
+                [class.goal-testreview-answer--correct]="answer.id === item.question.correctAnswerId"
+                [class.goal-testreview-answer--wrong]="answer.id === item.selectedAnswerId && !item.isCorrect"
+              >
+                <span class="goal-testreview-answer-index">{{ getAnswerLetter(j) }}</span>
+                <span class="goal-testreview-answer-text">{{ answer.text }}</span>
+                @if (answer.id === item.question.correctAnswerId) {
+                  <span class="goal-testreview-answer-tag">Ճիշտ</span>
+                } @else if (answer.id === item.selectedAnswerId && !item.isCorrect) {
+                  <span class="goal-testreview-answer-tag">Քո ընտրությունը</span>
+                }
+              </div>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  </main>
+  <footer class="goal-testresult-actions goal-testcontent--fade">
+    <button type="button" class="goal-testback" (click)="backToResult()">
+      ← Հետ արդյունքին
+    </button>
+    <button type="button" class="goal-testnext" (click)="confirmResult()">
+      <span>Շարունակել</span>
+      <span class="goal-testnext-icon" aria-hidden="true">→</span>
+    </button>
+  </footer>
+}

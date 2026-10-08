@@ -1,68 +1,117 @@
 <div class="goal__step-wrapper">
   <header class="goal__header">
-    <p class="goal__step">ՔԱՅԼ 5</p>
-    <h1 class="goal__title">Ստեղծիր քո հաշիվը։</h1>
-    <p class="goal__subtitle">Պահպանիր քո պրոֆիլը և շարունակիր սովորել այնտեղ, որտեղ կանգ առար։</p>
+    <div
+      class="goal__progress"
+      role="progressbar"
+      aria-valuemin="1"
+      aria-valuemax="4"
+      aria-valuenow="4"
+      aria-label="Քայլ 4 4-ից"
+    >
+      <div class="goal__progress-meta">
+        <span class="goal__progress-label"> ՔԱՅԼ 4 </span>
+        <span class="goal__progress-count"> 4 / 4 </span>
+      </div>
+      <div class="goal__progress-track" aria-hidden="true">
+        <span class="goal__progress-fill goal__progress-fill--complete"></span>
+      </div>
+    </div>
+    <div class="goal__heading">
+      <span class="goal__eyebrow"> Վերջին քայլ </span>
+      <h1 class="goal__title">
+        Ստեղծիր քո
+        <span>հաշիվը։</span>
+      </h1>
+      <p class="goal__subtitle">
+        Պահպանիր քո պրոֆիլը և շարունակիր սովորել այնտեղ, որտեղ կանգ առար։
+      </p>
+    </div>
   </header>
-
   <div class="goal__form">
     <label class="goal__field">
-      <span class="goal__label">Էլ․ փոստ</span>
-      <input
-        type="email"
-        class="goal__input"
-        name="email"
-        autocomplete="email"
-        placeholder="you@example.com"
-        [value]="email"
-        (input)="emailChange.emit($any($event.target).value)"
-      />
+      <span class="goal__label-row">
+        <span class="goal__label"> Էլ․ փոստ </span>
+        <span class="goal__optional"> Անհրաժեշտ </span>
+      </span>
+      <span class="goal__input-shell">
+        <span class="goal__input-leading" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <rect x="3.5" y="5.5" width="17" height="13" rx="2.5"></rect>
+            <path d="m4.5 7 7.5 5.5L19.5 7"></path>
+          </svg>
+        </span>
+        <input
+          type="email"
+          class="goal__input"
+          name="email"
+          autocomplete="email"
+          placeholder="you@example.com"
+          [value]="email"
+          (input)="emailChange.emit($any($event.target).value)"
+        />
+      </span>
     </label>
-
     <label class="goal__field">
-      <span class="goal__label">Գաղտնաբառ</span>
-      <input
-        type="password"
-        class="goal__input"
-        name="password"
-        autocomplete="new-password"
-        placeholder="••••••••"
-        [value]="password"
-        (input)="passwordChange.emit($any($event.target).value)"
-      />
+      <span class="goal__label-row">
+        <span class="goal__label"> Գաղտնաբառ </span>
+        <span class="goal__optional"> Անհրաժեշտ </span>
+      </span>
+      <span class="goal__input-shell">
+        <span class="goal__input-leading" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+            <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+          </svg>
+        </span>
+        <input
+          type="password"
+          class="goal__input"
+          name="password"
+          autocomplete="new-password"
+          placeholder="••••••••"
+          [value]="password"
+          (input)="passwordChange.emit($any($event.target).value)"
+        />
+      </span>
     </label>
-
     <label class="goal__field">
-      <span class="goal__label">Կրկնել գաղտնաբառը</span>
-      <input
-        type="password"
-        class="goal__input"
-        name="passwordConfirm"
-        autocomplete="new-password"
-        placeholder="••••••••"
-        [value]="passwordConfirm"
-        (input)="passwordConfirmChange.emit($any($event.target).value)"
-      />
+      <span class="goal__label-row">
+        <span class="goal__label"> Կրկնել գաղտնաբառը </span>
+        <span class="goal__optional"> Անհրաժեշտ </span>
+      </span>
+      <span class="goal__input-shell">
+        <span class="goal__input-leading" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+            <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+          </svg>
+        </span>
+        <input
+          type="password"
+          class="goal__input"
+          name="passwordConfirm"
+          autocomplete="new-password"
+          placeholder="••••••••"
+          [value]="passwordConfirm"
+          (input)="passwordConfirmChange.emit($any($event.target).value)"
+        />
+      </span>
     </label>
   </div>
-
   <div class="goal__registration-divider">
     <span></span>
     <span>կամ</span>
     <span></span>
   </div>
-
   <button type="button" class="goal__google-button" (click)="googleRegister.emit()">
     <span class="goal__google-icon" aria-hidden="true">G</span>
     <span>Գրանցվել Google-ով</span>
   </button>
-
   <div class="goal__actions">
     <button type="button" class="goal__back" (click)="back.emit()">
       <span aria-hidden="true">←</span>
       <span>Հետ</span>
     </button>
-
     <button
       type="button"
       class="goal__next button"

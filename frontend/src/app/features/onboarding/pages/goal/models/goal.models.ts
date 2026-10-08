@@ -1,22 +1,27 @@
-export type GoalOption = 'career' | 'travel' | 'communication' | 'self-development';
-
-export type EnglishLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'unknown';
-
-export type PlacementTestStatus = 'not-needed' | 'not-started' | 'completed' | 'skipped';
-
+export type GoalOption =
+  | 'career'
+  | 'travel'
+  | 'communication'
+  | 'self-development';
+export type EnglishLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1';
+export type LevelSource =
+  | 'self'
+  | 'test'
+  | 'unknown';
+export type Gender = 'male' | 'female';
 export interface LearningProfile {
   goal: GoalOption;
-  selfAssessedLevel: EnglishLevel;
-  placementTestStatus: PlacementTestStatus;
+  level: EnglishLevel | null;
+  levelSource: LevelSource;
 }
-
 export interface UserProfile {
   username: string;
   dateOfBirth: string;
   age: number;
+  gender: Gender;
 }
-
 export interface RegistrationProfile {
   email: string;
   password: string;
 }
+export type PlacementLevel = EnglishLevel;

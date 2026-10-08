@@ -1,11 +1,17 @@
 <main class="goal">
   <section class="goal__content">
-    @if (currentStep === 1 || currentStep === 2) {
+    @if (showPlacementTest) {
+      <app-goal-test
+        (completed)="onPlacementCompleted($event)"
+        (cancelled)="onPlacementCancelled()"
+      />
+    }
+    @if (!showWelcome && !showPlacementTest && (currentStep === 1 || currentStep === 2)) {
       <app-goal-questions
         [currentStep]="currentStep"
         [selectedGoal]="selectedGoal"
         [selectedLevel]="selectedLevel"
-        [placementTestStatus]="placementTestStatus"
+        [levelSource]="levelSource"
         (goalSelected)="selectGoal($event)"
         (levelSelected)="selectLevel($event)"
         (unknownLevelSelected)="selectUnknownLevel()"
@@ -16,34 +22,41 @@
         (back)="previousStep()"
       />
     }
-
-    @if (currentStep === 3) {
+    @if (!showWelcome && !showPlacementTest && currentStep === 3) {
       <app-goal-profile
         [username]="username"
         [dateOfBirth]="dateOfBirth"
+        [gender]="gender"
         [usernameTouched]="usernameTouched"
         [dateOfBirthTouched]="dateOfBirthTouched"
+        [genderTouched]="genderTouched"
         [usernameValid]="isUsernameValid()"
         [ageValid]="isAgeValid()"
+        [genderValid]="isGenderValid()"
         [usernameError]="getUsernameError()"
         [dateOfBirthError]="getDateOfBirthError()"
         (usernameInput)="onUsernameInput($event)"
         (usernameBlur)="onUsernameBlur()"
         (dateOfBirthChange)="onDateOfBirthChange($event)"
         (dateOfBirthBlur)="onDateOfBirthBlur()"
+        (genderChange)="onGenderChange($event)"
+        (genderBlur)="onGenderBlur()"
         (next)="nextStep()"
         (back)="previousStep()"
       />
     }
-
-    @if (currentStep === 4) {
+    @if (showWelcome && !showPlacementTest) {
       <app-goal-welcome
         [username]="username"
+        [dateOfBirth]="dateOfBirth"
+        [gender]="gender"
+        [selectedGoal]="selectedGoal"
+        [selectedLevel]="selectedLevel"
+        [age]="getAge()"
         (next)="nextStep()"
       />
     }
-
-    @if (currentStep === 5) {
+    @if (!showWelcome && !showPlacementTest && currentStep === 4) {
       <app-goal-register
         [email]="email"
         [password]="password"

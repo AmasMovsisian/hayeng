@@ -1,28 +1,101 @@
 <main class="welcome">
+  <div class="welcome__bg" aria-hidden="true">
+    <span class="welcome__orb welcome__orb--1"></span>
+    <span class="welcome__orb welcome__orb--2"></span>
+    <span class="welcome__orb welcome__orb--3"></span>
+  </div>
   <section class="welcome__content">
-    <div class="welcome__logo">
-      <img class="welcome__logo-image welcome__logo-image--light" src="/Logo.png" alt="HAYENG" />
-
-      <img
-        class="welcome__logo-image welcome__logo-image--dark"
-        src="/Logo-dark.png"
-        alt="HAYENG"
-      />
+    <header class="welcome__brand">
+      <div class="welcome__logo">
+        <img class="welcome__logo-image welcome__logo-image--light" src="/Logo.png" alt="HAYENG" />
+        <img class="welcome__logo-image welcome__logo-image--dark" src="/Logo-dark.png" alt="HAYENG" />
+      </div>
+      <span class="welcome__brand-name">HAYENG</span>
+    </header>
+    <div class="welcome__hero">
+      <span class="welcome__eyebrow">
+        <i class="welcome__eyebrow-dot"></i>
+        ԱՆԳԼԵՐԵՆ՝ ՄԻԱՅՆ ՀԱՅԵՐԻ ՀԱՄԱՐ
+      </span>
+      <h1 class="welcome__title">
+        Բարի <span>գալուստ</span>
+      </h1>
+      <p class="welcome__subtitle">
+        Welcome to <strong>HAYENG</strong>
+      </p>
+      <p class="welcome__lead">
+       · Ավելի լավ ֆինանսներ · <br> · Ավելի ազատ ճանապարհորդություններ · <br> · Ավելի շատ հարաբերություններ ·
+      </p>
+      <p class="welcome__lead welcome__lead--strong">
+        Անգլերենը քո զարգացման հաջորդ մեծ քայլն է։
+      </p>
+      <div class="welcome__promise" aria-label="Սովորիր, Հասկացիր, Խոսի՛ր">
+        <span class="welcome__promise-word welcome__promise-word--1">Սովորիր</span>
+        <span class="welcome__promise-sep" aria-hidden="true"></span>
+        <span class="welcome__promise-word welcome__promise-word--2">Հասկացիր</span>
+        <span class="welcome__promise-sep" aria-hidden="true"></span>
+        <span class="welcome__promise-word welcome__promise-word--3">Խոսի՛ր</span>
+        <span class="welcome__promise-bar" aria-hidden="true"></span>
+      </div>
     </div>
-
-    <div class="welcome__text">
-      <p class="welcome__eyebrow">ENGLISH · ARMENIAN</p>
-
-      <h1>Բարի գալուստ</h1>
-
-      <p class="welcome__subtitle">Welcome to HAYENG</p>
-
-      <p class="welcome__description">
-        Սովորիր անգլերեն քայլ առ քայլ՝ <br />
-        հայերեն պարզ ու հասկանալի բացատրություններով և սովորիր միասին ուրիշների հետ։
+    <div class="welcome__benefits">
+      <article class="welcome__benefit">
+        <div class="welcome__benefit-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12h4l3-9 4 18 3-9h4"/>
+          </svg>
+        </div>
+        <div class="welcome__benefit-content">
+          <strong>Քայլ առ քայլ</strong>
+          <span>Կառուցված դասեր՝ պարզից դեպի բարդ։</span>
+        </div>
+      </article>
+      <article class="welcome__benefit">
+        <div class="welcome__benefit-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 7h16M4 12h10M4 17h16"/>
+          </svg>
+        </div>
+        <div class="welcome__benefit-content">
+          <strong>Բացատրված հայերեն</strong>
+          <span>Հասկացիր անգլերենը հայերենով՝ առանց բարդության։</span>
+        </div>
+      </article>
+      <article class="welcome__benefit">
+        <div class="welcome__benefit-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/>
+          </svg>
+        </div>
+        <div class="welcome__benefit-content">
+          <strong>Սովորիր իրական շփման միջոցով</strong>
+          <span>Չաթ, նոր մարդիկ և 1-1 զրույցներ։</span>
+        </div>
+        <span class="welcome__coming-soon">ՇՈՒՏՈՎ</span>
+      </article>
+    </div>
+    <div class="welcome__action">
+      <button type="button" class="welcome__button" (click)="start()">
+        <span class="welcome__button-glow" aria-hidden="true"></span>
+        <span class="welcome__button-label">ՍԿՍԵԼ ՍՈՎՈՐԵԼ</span>
+        <span class="welcome__button-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M13 5l7 7-7 7"/>
+          </svg>
+        </span>
+      </button>
+      <p class="welcome__note">
+        <span>ԱՆՎՃԱՐ ՍԿԻԶԲ</span>
+        <i></i>
+        <span>ՔՈ ՏԵՄՊՈՎ</span>
+        <i></i>
+        <span>ԱՌԱՆՑ ԲԱՐԴՈՒԹՅԱՆ</span>
       </p>
     </div>
-
-    <button type="button" class="welcome__button" (click)="start()">Սկսել!</button>
+    <footer class="welcome__footer">
+      <span class="welcome__footer-brand">HAYENG</span>
+      <i class="welcome__footer-dot"></i>
+      <span>Անգլերենը՝ քեզ հասկանալի ձևով</span>
+    </footer>
   </section>
 </main>

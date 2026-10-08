@@ -1,67 +1,145 @@
 .goal__step-wrapper {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   text-align: center;
-  animation: goal-step-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-
+  isolation: isolate;
+  animation: goal-step-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
   &--welcome {
     justify-content: center;
     gap: var(--space-6);
+    padding: var(--space-6) 0;
   }
 }
-
-.goal__title {
-  max-width: 500px;
-  margin: 0 auto;
-  color: var(--color-text);
-  font-family: var(--font-armenian);
-  font-size: clamp(2rem, 7vw, 3rem);
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
+.goal__bg {
+  position: absolute;
+  inset: -40px;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: var(--radius-2xl);
+  opacity: 0;
+  animation: goal-bg-in 1.2s ease-out 0.15s forwards;
 }
-
-.goal__subtitle {
-  max-width: 500px;
-  margin: var(--space-4) auto 0;
-  color: var(--color-text-secondary);
-  font-family: var(--font-armenian);
-  font-size: 0.95rem;
-  font-weight: 400;
-  line-height: 1.6;
+.goal__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  will-change: transform;
+  &--1 {
+    width: 380px;
+    height: 380px;
+    top: -140px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-primary) 55%, transparent),
+      transparent 70%
+    );
+    animation: goal-orb-float 18s ease-in-out infinite;
+  }
+  &--2 {
+    width: 300px;
+    height: 300px;
+    bottom: -120px;
+    left: -80px;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-primary-light) 55%, transparent),
+      transparent 70%
+    );
+    animation: goal-orb-float 22s ease-in-out infinite reverse;
+  }
+  &--3 {
+    width: 260px;
+    height: 260px;
+    bottom: -80px;
+    right: -80px;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-primary) 40%, transparent),
+      transparent 70%
+    );
+    animation: goal-orb-float 26s ease-in-out infinite;
+  }
 }
-
 .goal__welcome {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  will-change: opacity, transform;
+  &--loading {
+    min-height: 300px;
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  &--loading.goal__welcome--leaving {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.985);
+    pointer-events: none;
+  }
+  &--profile {
+    gap: var(--space-6);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  &--profile.goal__welcome--entering {
+    animation: goal-profile-enter 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+.goal__welcome-content {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--space-4);
-  text-align: center;
 }
-
 .goal__welcome-icon {
   width: 64px;
   height: 64px;
+  flex: 0 0 64px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid color-mix(in srgb, var(--color-success) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
   border-radius: var(--radius-full);
-  background: color-mix(in srgb, var(--color-success) 10%, var(--color-surface));
-  color: var(--color-success);
-  font-family: var(--font-primary);
-  font-size: 1.5rem;
-  font-weight: 800;
-  box-shadow: 0 12px 30px color-mix(in srgb, var(--color-success) 12%, transparent);
-  animation: goal-welcome-icon 0.55s ease-out forwards;
+  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+  color: var(--color-primary);
+  box-shadow:
+    0 8px 30px color-mix(in srgb, var(--color-primary) 10%, transparent),
+    var(--shadow-md);
+  animation: goal-welcome-icon-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-
+.goal__loader {
+  width: 24px;
+  height: 24px;
+  border: 2px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+  border-top-color: var(--color-primary);
+  border-radius: var(--radius-full);
+  animation: goal-loader 0.8s linear infinite;
+}
+.goal__greeting-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 42px;
+  animation: goal-greeting-row-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
 .goal__welcome-greeting {
+  margin: 0;
   color: var(--color-primary);
   font-family: var(--font-armenian);
   font-size: 1.6rem;
@@ -69,145 +147,1019 @@
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
-
-.goal__actions {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-3);
-  margin-top: var(--space-7);
-  opacity: 0;
-  animation: goal-actions-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
+.goal__welcome-hand {
+  display: inline-block;
+  flex: 0 0 auto;
+  font-size: 1.8rem;
+  line-height: 1;
+  transform-origin: 70% 80%;
+  user-select: none;
+  pointer-events: none;
+  animation:
+    goal-hand-pop 0.55s cubic-bezier(0.22, 1.2, 0.36, 1) 0.38s both,
+    goal-hand-wave 1.8s ease-in-out 1.05s infinite;
 }
-
-.goal__next {
-  min-width: 140px;
+.goal__loading {
+  min-height: 28px;
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
-  gap: var(--space-2);
+  color: var(--color-text-secondary);
   font-family: var(--font-armenian);
-
-  &:not(:disabled):hover {
-    box-shadow: 0 8px 24px color-mix(in srgb, var(--color-primary) 20%, transparent);
-  }
-
-  &:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-
-    &:hover {
-      background: var(--color-primary);
-      transform: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: goal-loading-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+.goal__loading-text {
+  animation: goal-loading-text 1.8s ease-in-out infinite;
+}
+.goal__loading-dots {
+  display: inline-flex;
+  width: 18px;
+  overflow: hidden;
+  span {
+    opacity: 0;
+    animation: goal-loading-dot 1.4s infinite;
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    &:nth-child(3) {
+      animation-delay: 0.4s;
     }
   }
 }
-
-@media (max-width: 640px) {
-  .goal__title {
-    font-size: clamp(1.9rem, 8vw, 2.5rem);
-  }
-
-  .goal__subtitle {
-    font-size: 0.9rem;
+.goal__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 560px;
+  animation: goal-hero-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+.goal__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 7px 14px;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+  color: var(--color-primary);
+  font-family: var(--font-primary);
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  line-height: 1;
+}
+.goal__eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  animation: goal-pulse 2s ease-in-out infinite;
+}
+.goal__title {
+  margin: 0 auto;
+  max-width: 520px;
+  color: var(--color-text);
+  font-family: var(--font-armenian);
+  font-size: clamp(1.85rem, 6vw, 2.6rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.028em;
+  span {
+    display: inline-block;
+    background: linear-gradient(
+      120deg,
+      var(--color-primary) 0%,
+      color-mix(in srgb, var(--color-primary) 60%, var(--color-primary-light)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: goal-gradient-shift 6s ease infinite;
   }
 }
-
-@media (max-width: 480px) {
+.goal__subtitle {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-armenian);
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+}
+.goal__profile-card {
+  position: relative;
+  width: min(100%, 540px);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-text) 2%, transparent);
+  border-radius: var(--radius-xl);
+  background: color-mix(in srgb, var(--color-surface) 2%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 6px 24px color-mix(in srgb, var(--color-text) 2%, transparent);
+  text-align: left;
+  animation: goal-profile-card-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+.goal__profile-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    color-mix(in srgb, var(--color-white) 4%, transparent) 50%,
+    transparent 100%
+  );
+  transform: translateX(-160%);
+  animation: goal-shine-sweep 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.9s 1;
+  z-index: 1;
+}
+.goal__profile-item {
+  position: relative;
+  z-index: 2;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  animation: goal-profile-row-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  &:nth-child(2) {
+    animation-delay: 0.3s;
+  }
+  &:nth-child(4) {
+    animation-delay: 0.36s;
+  }
+  &:nth-child(6) {
+    animation-delay: 0.42s;
+  }
+  &:nth-child(8) {
+    animation-delay: 0.48s;
+  }
+  &:nth-child(10) {
+    animation-delay: 0.54s;
+  }
+}
+.goal__profile-icon {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-primary) 5%, transparent);
+  color: var(--color-primary);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s ease;
+  svg {
+    width: 17px;
+    height: 17px;
+  }
+  .goal__profile-item:hover & {
+    transform: rotate(-10deg) scale(1.06);
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  }
+}
+.goal__profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.goal__profile-label {
+  color: var(--color-text-muted);
+  font-family: var(--font-armenian);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.goal__profile-value {
+  min-width: 0;
+  color: var(--color-text);
+  font-family: var(--font-armenian);
+  font-size: 0.98rem;
+  font-weight: 800;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.goal__profile-divider {
+  height: 1px;
+  margin: 0 var(--space-5);
+  background: color-mix(in srgb, var(--color-text) 2%, transparent);
+  opacity: 0;
+  animation: goal-divider-in 0.4s ease-out forwards;
+  &:nth-of-type(1) {
+    animation-delay: 0.33s;
+  }
+  &:nth-of-type(2) {
+    animation-delay: 0.39s;
+  }
+  &:nth-of-type(3) {
+    animation-delay: 0.45s;
+  }
+  &:nth-of-type(4) {
+    animation-delay: 0.51s;
+  }
+}
+.goal__motivation {
+  position: relative;
+  width: min(100%, 560px);
+  padding: clamp(1.6rem, 4.5vw, 2.1rem) 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: hidden;
+  text-align: left;
+  animation: goal-motivation-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+}
+.goal__motivation::before {
+  display: none;
+}
+.goal__motivation-glow {
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  filter: blur(80px);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-primary) 45%, transparent),
+    transparent 70%
+  );
+  opacity: 0.12;
+  pointer-events: none;
+  animation: goal-motivation-glow-float 14s ease-in-out infinite;
+}
+.goal__motivation-shine {
+  display: none;
+}
+.goal__motivation-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+.goal__motivation-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+  font-family: var(--font-primary);
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1.3;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: goal-motivation-item-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.72s forwards;
+}
+.goal__motivation-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 22%, transparent);
+  animation: goal-pulse 2.4s ease-in-out infinite;
+}
+.goal__motivation-title {
+  max-width: 460px;
+  margin: 0 0 1.35rem;
+  color: var(--color-text);
+  font-family: var(--font-armenian);
+  font-size: clamp(1.4rem, 4.5vw, 1.85rem);
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.028em;
+  span {
+    display: inline-block;
+    background: linear-gradient(
+      120deg,
+      var(--color-primary) 0%,
+      color-mix(in srgb, var(--color-primary) 55%, var(--color-primary-light)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: goal-gradient-shift 6s ease infinite;
+  }
+  opacity: 0;
+  animation: goal-motivation-title-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.78s forwards;
+}
+.goal__motivation-features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: 1.35rem;
+}
+.goal__motivation-feature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  &:hover {
+    transform: translateX(4px);
+    .goal__motivation-feature-icon {
+      transform: rotate(-8deg) scale(1.08);
+      background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    }
+  }
+  opacity: 0;
+  animation: goal-motivation-item-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.goal__motivation-feature:nth-child(1) {
+  animation-delay: 0.88s;
+}
+.goal__motivation-feature:nth-child(2) {
+  animation-delay: 0.94s;
+}
+.goal__motivation-feature:nth-child(3) {
+  animation-delay: 1s;
+}
+.goal__motivation-feature-icon {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-primary) 5%, transparent);
+  color: var(--color-primary);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s ease;
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+.goal__motivation-feature-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  strong {
+    color: var(--color-text);
+    font-family: var(--font-armenian);
+    font-size: 0.86rem;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+  span {
+    color: var(--color-text-secondary);
+    font-family: var(--font-armenian);
+    font-size: 0.74rem;
+    font-weight: 500;
+    line-height: 1.45;
+  }
+}
+.goal__motivation-punch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 0.95rem;
+  padding: 0;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-primary);
+  font-family: var(--font-armenian);
+  font-size: 0.94rem;
+  font-weight: 800;
+  line-height: 1.5;
+  svg {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    opacity: 0.95;
+  }
+  opacity: 0;
+  animation: goal-motivation-highlight-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.12s forwards;
+}
+.goal__motivation-footer {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-family: var(--font-armenian);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.7;
+  opacity: 0;
+  animation: goal-motivation-item-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) 1.25s forwards;
+}
+.goal__footer {
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+  padding-top: var(--space-5);
+  border-top: 1px solid color-mix(in srgb, var(--color-text) 2%, transparent);
+  color: var(--color-text-secondary);
+  font-family: var(--font-primary);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  animation: goal-motivation-item-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.35s forwards;
+}
+.goal__footer-brand {
+  color: var(--color-primary);
+  font-weight: 900;
+  letter-spacing: 0.2em;
+}
+.goal__footer-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  opacity: 0.8;
+}
+.goal__actions {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--space-6);
+  opacity: 0;
+  animation: goal-actions-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.45s forwards;
+}
+.goal__next {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-width: 260px;
+  min-height: 60px;
+  padding: 0 var(--space-8);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    color-mix(in srgb, var(--color-primary) 80%, var(--color-primary-light)) 100%
+  );
+  background-size: 200% 200%;
+  color: var(--color-white);
+  font-family: var(--font-armenian);
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow:
+    0 10px 30px color-mix(in srgb, var(--color-primary) 32%, transparent),
+    0 2px 0 color-mix(in srgb, var(--color-white) 20%, transparent) inset;
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease,
+    background-position 0.6s ease;
+  &:hover {
+    background-position: 100% 50%;
+    transform: translateY(-3px);
+    box-shadow:
+      0 18px 40px color-mix(in srgb, var(--color-primary) 42%, transparent),
+      0 2px 0 color-mix(in srgb, var(--color-white) 30%, transparent) inset;
+    .goal__next-arrow {
+      transform: translateX(5px);
+    }
+    .goal__next-glow {
+      transform: translateX(120%);
+    }
+  }
+  &:active {
+    transform: translateY(-1px) scale(0.99);
+    box-shadow:
+      0 6px 18px color-mix(in srgb, var(--color-primary) 35%, transparent),
+      0 1px 0 color-mix(in srgb, var(--color-white) 15%, transparent) inset;
+  }
+  &:focus-visible {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 4px;
+  }
+}
+.goal__next-label {
+  position: relative;
+  z-index: 2;
+}
+.goal__next-arrow {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+.goal__next-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--color-white) 30%, transparent) 50%,
+    transparent 100%
+  );
+  transform: translateX(-140%);
+  transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+  z-index: 1;
+}
+@media (max-width: 640px) {
+  .goal__title {
+    font-size: clamp(1.7rem, 7.5vw, 2.2rem);
+  }
   .goal__subtitle {
-    margin-top: 14px;
+    font-size: 0.86rem;
   }
-
-  .goal__actions {
-    margin-top: var(--space-6);
+  .goal__profile-item {
+    padding: var(--space-3) var(--space-4);
+    min-height: 56px;
+    gap: var(--space-3);
   }
-
-  .goal__next {
-    min-width: 128px;
+  .goal__profile-icon {
+    width: 34px;
+    height: 34px;
+    svg {
+      width: 15px;
+      height: 15px;
+    }
   }
-
-  .goal__welcome-icon {
-    width: 58px;
-    height: 58px;
+  .goal__profile-divider {
+    margin: 0 var(--space-4);
   }
-
+  .goal__profile-label {
+    font-size: 0.68rem;
+  }
+  .goal__profile-value {
+    font-size: 0.92rem;
+  }
+  .goal__motivation {
+    padding: 1.35rem 0;
+  }
+  .goal__motivation-title {
+    font-size: 1.3rem;
+  }
+  .goal__motivation-feature-content {
+    strong {
+      font-size: 0.82rem;
+    }
+    span {
+      font-size: 0.72rem;
+    }
+  }
+  .goal__motivation-punch {
+    font-size: 0.9rem;
+  }
+  .goal__welcome-greeting {
+    font-size: 1.5rem;
+  }
+  .goal__welcome-hand {
+    font-size: 1.65rem;
+  }
+}
+@media (max-width: 480px) {
+  .goal__step-wrapper--welcome {
+    padding: var(--space-4) 0;
+  }
+  .goal__welcome--loading {
+    min-height: 260px;
+  }
+  .goal__greeting-row {
+    gap: 8px;
+  }
   .goal__welcome-greeting {
     font-size: 1.4rem;
   }
-}
-
-@media (max-width: 360px) {
-  .goal__title {
-    font-size: 1.8rem;
+  .goal__welcome-hand {
+    font-size: 1.55rem;
   }
-
-  .goal__actions {
+  .goal__profile-item {
+    min-height: 52px;
+  }
+  .goal__motivation {
+    padding: 1.2rem 0;
+  }
+  .goal__motivation-title {
+    font-size: 1.24rem;
+  }
+  .goal__motivation-text {
+    font-size: 0.85rem;
+    line-height: 1.75;
+  }
+  .goal__motivation-feature {
     gap: var(--space-2);
   }
-
-  .goal__next {
-    flex: 1;
+  .goal__motivation-feature-icon {
+    width: 28px;
+    height: 28px;
+    svg {
+      width: 13px;
+      height: 13px;
+    }
   }
-
+  .goal__motivation-punch {
+    font-size: 0.88rem;
+  }
+  .goal__motivation-footer {
+    font-size: 0.79rem;
+  }
+  .goal__actions {
+    margin-top: var(--space-5);
+  }
+  .goal__next {
+    min-width: 220px;
+    min-height: 56px;
+    padding: 0 var(--space-6);
+    font-size: 0.9rem;
+  }
+  .goal__orb--1 {
+    width: 300px;
+    height: 300px;
+  }
+  .goal__orb--2 {
+    width: 240px;
+    height: 240px;
+  }
+  .goal__orb--3 {
+    width: 220px;
+    height: 220px;
+  }
+}
+@media (max-width: 360px) {
   .goal__welcome-greeting {
     font-size: 1.25rem;
   }
+  .goal__welcome-hand {
+    font-size: 1.45rem;
+  }
+  .goal__profile-item {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .goal__profile-value {
+    text-align: left;
+  }
+  .goal__motivation {
+    padding: 1rem 0;
+  }
+  .goal__motivation-title {
+    font-size: 1.15rem;
+  }
+  .goal__motivation-text {
+    font-size: 0.82rem;
+  }
+  .goal__next {
+    width: 100%;
+    min-width: 0;
+  }
 }
-
 @media (prefers-reduced-motion: reduce) {
   .goal__step-wrapper,
+  .goal__bg,
+  .goal__orb,
   .goal__welcome-icon,
+  .goal__greeting-row,
+  .goal__welcome-hand,
+  .goal__loading,
+  .goal__loading-text,
+  .goal__loading-dots span,
+  .goal__loader,
+  .goal__welcome--profile,
+  .goal__hero,
+  .goal__eyebrow-dot,
+  .goal__title span,
+  .goal__profile-card,
+  .goal__profile-shine,
+  .goal__profile-item,
+  .goal__profile-divider,
+  .goal__motivation,
+  .goal__motivation-glow,
+  .goal__motivation-shine,
+  .goal__motivation-eyebrow,
+  .goal__motivation-dot,
+  .goal__motivation-title,
+  .goal__motivation-title span,
+  .goal__motivation-feature,
+  .goal__motivation-punch,
+  .goal__motivation-footer,
+  .goal__footer,
   .goal__actions {
-    animation: none;
+    animation: none !important;
     opacity: 1;
     transform: none;
   }
-
-  .goal__next {
+  .goal__next,
+  .goal__next-arrow,
+  .goal__next-glow,
+  .goal__profile-icon,
+  .goal__motivation-feature,
+  .goal__motivation-feature-icon {
     transition: none;
   }
 }
-
 @keyframes goal-step-in {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-
+@keyframes goal-bg-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes goal-orb-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -20px) scale(1.06);
+  }
+  66% {
+    transform: translate(-20px, 25px) scale(0.96);
+  }
+}
+@keyframes goal-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-primary) 0%, transparent);
+  }
+}
+@keyframes goal-gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+@keyframes goal-hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes goal-shine-sweep {
+  0% {
+    transform: translateX(-160%);
+  }
+  100% {
+    transform: translateX(260%);
+  }
+}
+@keyframes goal-motivation-glow-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(1.08);
+  }
+}
+@keyframes goal-motivation-shine {
+  0% {
+    transform: translateX(-180%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+@keyframes goal-welcome-icon-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes goal-loader {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes goal-greeting-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes goal-hand-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.7) rotate(-12deg);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.08) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0);
+  }
+}
+@keyframes goal-hand-wave {
+  0%,
+  58%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  63% {
+    transform: translateY(-1px) rotate(10deg);
+  }
+  68% {
+    transform: translateY(0) rotate(-8deg);
+  }
+  73% {
+    transform: translateY(-1px) rotate(7deg);
+  }
+  78% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  83% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+@keyframes goal-loading-in {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes goal-loading-text {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes goal-loading-dot {
+  0%,
+  20% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  60%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes goal-profile-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes goal-profile-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes goal-profile-row-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes goal-divider-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes goal-motivation-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes goal-motivation-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes goal-motivation-title-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes goal-motivation-highlight-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 @keyframes goal-actions-in {
   from {
     opacity: 0;
     transform: translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes goal-welcome-icon {
-  0% {
-    opacity: 0;
-    transform: scale(0.7);
-  }
-
-  60% {
-    opacity: 1;
-    transform: scale(1.08);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
   }
 }

@@ -1,232 +1,706 @@
-<div class="goal__step-wrapper">
-  @if (currentStep === 1) {
-    <header class="goal__header">
-      <p class="goal__step">ՔԱՅԼ 1</p>
-      <h1 class="goal__title">Ի՞նչ նպատակով ես ուզում սովորել անգլերեն։</h1>
-      <p class="goal__subtitle">Ընտրիր քո հիմնական նպատակը։</p>
-    </header>
+<!-- ======================================================
+     STEP 1 / 4 — GOAL
+     ====================================================== -->
 
-    <div class="goal__options">
-      <button
-        type="button"
-        class="goal__option"
-        [class.goal__option--selected]="selectedGoal === 'career'"
-        (click)="goalSelected.emit('career')"
-      >
-        <span class="goal__option-content">
-          <span class="goal__option-title">Աշխատանքի և կարիերայի համար</span>
-          <span class="goal__option-description">
-            Կարիերայում ավելի վստահ օգտագործել անգլերենը
-          </span>
+@if (currentStep === 1) {
+  <header class="goal__header">
+    <div
+      class="goal__progress"
+      aria-label="Քայլ 1 4-ից"
+    >
+      <div class="goal__progress-meta">
+        <span class="goal__progress-label">
+          ՔԱՅԼ 1
         </span>
-        <span class="goal__option-arrow" aria-hidden="true">→</span>
-      </button>
 
-      <button
-        type="button"
-        class="goal__option"
-        [class.goal__option--selected]="selectedGoal === 'travel'"
-        (click)="goalSelected.emit('travel')"
-      >
-        <span class="goal__option-content">
-          <span class="goal__option-title">Ճամփորդությունների համար</span>
-          <span class="goal__option-description">
-            Ավելի ազատ շփվել և հեշտ կողմնորոշվել ճանապարհորդելիս
-          </span>
+        <span class="goal__progress-count">
+          1 / 4
         </span>
-        <span class="goal__option-arrow" aria-hidden="true">→</span>
-      </button>
+      </div>
 
-      <button
-        type="button"
-        class="goal__option"
-        [class.goal__option--selected]="selectedGoal === 'communication'"
-        (click)="goalSelected.emit('communication')"
+      <div
+        class="goal__progress-track"
+        aria-hidden="true"
       >
-        <span class="goal__option-content">
-          <span class="goal__option-title">Ազատ խոսելու և շփվելու համար</span>
-          <span class="goal__option-description">
-            Խոսել ավելի վստահ և հեշտ հասկանալ անգլերենը
-          </span>
-        </span>
-        <span class="goal__option-arrow" aria-hidden="true">→</span>
-      </button>
-
-      <button
-        type="button"
-        class="goal__option"
-        [class.goal__option--selected]="selectedGoal === 'self-development'"
-        (click)="goalSelected.emit('self-development')"
-      >
-        <span class="goal__option-content">
-          <span class="goal__option-title">Ինքնազարգացման համար</span>
-          <span class="goal__option-description">
-            Բարելավել անգլերենս և զարգացնել գիտելիքներս
-          </span>
-        </span>
-        <span class="goal__option-arrow" aria-hidden="true">→</span>
-      </button>
+        <span class="goal__progress-fill"></span>
+      </div>
     </div>
 
-    <div class="goal__actions">
-      <button
-        type="button"
-        class="goal__next button"
-        [disabled]="!selectedGoal"
-        (click)="next.emit()"
-      >
-        <span>Առաջ</span>
-        <span aria-hidden="true">→</span>
-      </button>
+    <div class="goal__heading">
+      <span class="goal__eyebrow">
+        Սկսենք քեզնից
+      </span>
+
+      <h1 class="goal__title">
+        Ի՞նչ նպատակով ես ուզում
+        <span>սովորել անգլերեն։</span>
+      </h1>
+
+      <p class="goal__subtitle">
+        Ընտրիր քո հիմնական նպատակը, որպեսզի քեզ համար ստեղծենք
+        ավելի համապատասխան ուսուցման ճանապարհ։
+      </p>
     </div>
-  }
+  </header>
 
-  @if (currentStep === 2) {
-    <header class="goal__header">
-      <p class="goal__step">ՔԱՅԼ 2</p>
-      <h1 class="goal__title">Ի՞նչ մակարդակի է քո անգլերենը։</h1>
-      <p class="goal__subtitle">Ընտրիր այն մակարդակը, որն ամենից շատ համապատասխանում է քեզ։</p>
-    </header>
+  <div class="goal__options goal__options--goals">
 
-    <div class="goal__options goal__options--levels">
-      <button
-        type="button"
-        class="goal__option"
-        [class.goal__option--selected]="selectedLevel === 'a1'"
-        (click)="levelSelected.emit('a1')"
-      >
-        <span class="goal__option-content">
-          <span class="goal__option-title">Սկսնակ</span>
-          <span class="goal__option-description">
-            Գիտեմ մի քանի բառ և պարզ արտահայտություններ
-          </span>
+    <button
+      type="button"
+      class="goal__option"
+      [class.goal__option--selected]="selectedGoal === 'career'"
+      [attr.aria-pressed]="selectedGoal === 'career'"
+      (click)="goalSelected.emit('career')"
+    >
+      <span class="goal__option-top">
+        <span class="goal__option-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M8 7V5.75A1.75 1.75 0 0 1 9.75 4h4.5A1.75 1.75 0 0 1 16 5.75V7"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+            <rect
+              x="3.5"
+              y="7"
+              width="17"
+              height="12.5"
+              rx="3"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+            <path
+              d="M3.75 11.5h16.5M10 11.5v1.25a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V11.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
         </span>
-        <span class="goal__option-level">A1</span>
-      </button>
 
-      <button
-        type="button"
-        class="goal__option"
-        [class.goal__option--selected]="selectedLevel === 'a2'"
-        (click)="levelSelected.emit('a2')"
-      >
-        <span class="goal__option-content">
-          <span class="goal__option-title">Տարրական</span>
-          <span class="goal__option-description">
-            Հասկանում եմ պարզ խոսակցություններ և նախադասություններ
-          </span>
+        <span class="goal__option-check" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="m5 10.2 3.1 3.1L15 6.7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </span>
-        <span class="goal__option-level">A2</span>
-      </button>
+      </span>
 
-      <button
-        type="button"
-        class="goal__option"
-        [class.goal__option--selected]="selectedLevel === 'b1'"
-        (click)="levelSelected.emit('b1')"
-      >
-        <span class="goal__option-content">
-          <span class="goal__option-title">Միջին</span>
-          <span class="goal__option-description"> Կարողանում եմ շփվել առօրյա թեմաների շուրջ </span>
+      <span class="goal__option-content">
+        <span class="goal__option-title">
+          Աշխատանքի և կարիերայի համար
         </span>
-        <span class="goal__option-level">B1</span>
-      </button>
 
-      <button
-        type="button"
-        class="goal__option"
-        [class.goal__option--selected]="selectedLevel === 'b2'"
-        (click)="levelSelected.emit('b2')"
-      >
-        <span class="goal__option-content">
-          <span class="goal__option-title">Միջինից բարձր</span>
-          <span class="goal__option-description">
-            Կարողանում եմ բավականին ազատ խոսել և հասկանալ
-          </span>
+        <span class="goal__option-description">
+          Կարիերայում ավելի վստահ օգտագործել անգլերենը
         </span>
-        <span class="goal__option-level">B2</span>
-      </button>
+      </span>
+    </button>
 
-      <button
-        type="button"
-        class="goal__option"
-        [class.goal__option--selected]="selectedLevel === 'c1'"
-        (click)="levelSelected.emit('c1')"
-      >
-        <span class="goal__option-content">
-          <span class="goal__option-title">Բարձր</span>
-          <span class="goal__option-description">
-            Խոսում և հասկանում եմ անգլերենը վստահ և ազատ
-          </span>
-        </span>
-        <span class="goal__option-level">C1</span>
-      </button>
+    <button
+      type="button"
+      class="goal__option"
+      [class.goal__option--selected]="selectedGoal === 'travel'"
+      [attr.aria-pressed]="selectedGoal === 'travel'"
+      (click)="goalSelected.emit('travel')"
+    >
+      <span class="goal__option-top">
+        <span class="goal__option-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle
+              cx="12"
+              cy="12"
+              r="8.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
 
-      <button
-        type="button"
-        class="goal__option goal__option--unknown"
-        [class.goal__option--selected]="selectedLevel === 'unknown'"
-        (click)="unknownLevelSelected.emit()"
-      >
-        <span class="goal__option-content">
-          <span class="goal__option-title">Չգիտեմ իմ մակարդակը</span>
-          <span class="goal__option-description">
-            Վստահ չեմ, թե որ մակարդակն է համապատասխանում ինձ
-          </span>
+            <path
+              d="M3.8 12h16.4M12 3.5c2.2 2.35 3.3 5.18 3.3 8.5S14.2 18.15 12 20.5c-2.2-2.35-3.3-5.18-3.3-8.5S9.8 5.85 12 3.5Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
         </span>
-        <span class="goal__option-level goal__option-level--unknown">?</span>
-      </button>
+
+        <span class="goal__option-check" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="m5 10.2 3.1 3.1L15 6.7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </span>
+
+      <span class="goal__option-content">
+        <span class="goal__option-title">
+          Ճամփորդությունների համար
+        </span>
+
+        <span class="goal__option-description">
+          Ավելի ազատ շփվել և հեշտ կողմնորոշվել ճանապարհորդելիս
+        </span>
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="goal__option"
+      [class.goal__option--selected]="selectedGoal === 'communication'"
+      [attr.aria-pressed]="selectedGoal === 'communication'"
+      (click)="goalSelected.emit('communication')"
+    >
+      <span class="goal__option-top">
+        <span class="goal__option-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M5.5 5.25h13A2.25 2.25 0 0 1 20.75 7.5v7A2.25 2.25 0 0 1 18.5 16.75H12l-4.25 3v-3H5.5a2.25 2.25 0 0 1-2.25-2.25v-7A2.25 2.25 0 0 1 5.5 5.25Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M7.5 9.75h9M7.5 12.75h5.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <span class="goal__option-check" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="m5 10.2 3.1 3.1L15 6.7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </span>
+
+      <span class="goal__option-content">
+        <span class="goal__option-title">
+          Ազատ խոսելու և շփվելու համար
+        </span>
+
+        <span class="goal__option-description">
+          Խոսել ավելի վստահ և հեշտ հասկանալ անգլերենը
+        </span>
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="goal__option"
+      [class.goal__option--selected]="selectedGoal === 'self-development'"
+      [attr.aria-pressed]="selectedGoal === 'self-development'"
+      (click)="goalSelected.emit('self-development')"
+    >
+      <span class="goal__option-top">
+        <span class="goal__option-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M12 3.5v17M3.5 12h17"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M7.5 7.5 5.25 5.25M16.5 7.5l2.25-2.25M7.5 16.5l-2.25 2.25M16.5 16.5l2.25 2.25"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <span class="goal__option-check" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="m5 10.2 3.1 3.1L15 6.7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </span>
+
+      <span class="goal__option-content">
+        <span class="goal__option-title">
+          Ինքնազարգացման համար
+        </span>
+
+        <span class="goal__option-description">
+          Բարելավել անգլերենս և զարգացնել գիտելիքներս
+        </span>
+      </span>
+    </button>
+
+  </div>
+
+  <div class="goal__actions">
+    <div class="goal__actions-note">
+      <span class="goal__actions-dot"></span>
+      Ընտրությունը կարող ես փոխել ցանկացած պահի
     </div>
 
-    @if (selectedLevel === 'unknown') {
-      <div class="goal__placement">
-        <div class="goal__placement-content">
-          <span class="goal__placement-icon" aria-hidden="true">?</span>
-          <div class="goal__placement-text">
-            <h2 class="goal__placement-title">Ցանկանո՞ւմ ես անցնել կարճ թեստ։</h2>
-            <p class="goal__placement-description">
-              Թեստը կօգնի մոտավորապես որոշել քո անգլերենի մակարդակը։
-            </p>
-          </div>
+    <button
+      type="button"
+      class="goal__next button"
+      [disabled]="!selectedGoal"
+      (click)="next.emit()"
+    >
+      <span>Շարունակել</span>
+      <span
+        class="goal__next-icon"
+        aria-hidden="true"
+      >
+        →
+      </span>
+    </button>
+  </div>
+}
+
+<!-- ======================================================
+     STEP 2 / 4 — LEVEL
+     ====================================================== -->
+
+@if (currentStep === 2) {
+  <header class="goal__header">
+    <div
+      class="goal__progress"
+      aria-label="Քայլ 2 4-ից"
+    >
+      <div class="goal__progress-meta">
+        <span class="goal__progress-label">
+          ՔԱՅԼ 2
+        </span>
+
+        <span class="goal__progress-count">
+          2 / 4
+        </span>
+      </div>
+
+      <div
+        class="goal__progress-track"
+        aria-hidden="true"
+      >
+        <span
+          class="goal__progress-fill goal__progress-fill--half"
+        ></span>
+      </div>
+    </div>
+
+    <div class="goal__heading">
+      <span class="goal__eyebrow">
+        Մի փոքր էլ քեզ մասին
+      </span>
+
+      <h1 class="goal__title">
+        Ի՞նչ մակարդակի է քո
+        <span>անգլերենը։</span>
+      </h1>
+
+      <p class="goal__subtitle">
+        Ընտրիր այն մակարդակը, որն ամենից շատ համապատասխանում է քեզ։
+        Եթե վստահ չես՝ կարող ենք արագ ստուգել։
+      </p>
+    </div>
+  </header>
+
+  <div class="goal__options goal__options--levels">
+
+    <button
+      type="button"
+      class="goal__option goal__option--level"
+      [class.goal__option--selected]="selectedLevel === 'a1'"
+      [attr.aria-pressed]="selectedLevel === 'a1'"
+      (click)="levelSelected.emit('a1')"
+    >
+      <span class="goal__option-top">
+        <span class="goal__level-badge">A1</span>
+
+        <span class="goal__option-check" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="m5 10.2 3.1 3.1L15 6.7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </span>
+
+      <span class="goal__option-content">
+        <span class="goal__option-title">
+          Սկսնակ
+        </span>
+
+        <span class="goal__option-description">
+          Գիտեմ մի քանի բառ և պարզ արտահայտություններ
+        </span>
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="goal__option goal__option--level"
+      [class.goal__option--selected]="selectedLevel === 'a2'"
+      [attr.aria-pressed]="selectedLevel === 'a2'"
+      (click)="levelSelected.emit('a2')"
+    >
+      <span class="goal__option-top">
+        <span class="goal__level-badge">A2</span>
+
+        <span class="goal__option-check" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="m5 10.2 3.1 3.1L15 6.7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </span>
+
+      <span class="goal__option-content">
+        <span class="goal__option-title">
+          Տարրական
+        </span>
+
+        <span class="goal__option-description">
+          Հասկանում եմ պարզ խոսակցություններ և նախադասություններ
+        </span>
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="goal__option goal__option--level"
+      [class.goal__option--selected]="selectedLevel === 'b1'"
+      [attr.aria-pressed]="selectedLevel === 'b1'"
+      (click)="levelSelected.emit('b1')"
+    >
+      <span class="goal__option-top">
+        <span class="goal__level-badge">B1</span>
+
+        <span class="goal__option-check" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="m5 10.2 3.1 3.1L15 6.7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </span>
+
+      <span class="goal__option-content">
+        <span class="goal__option-title">
+          Միջին
+        </span>
+
+        <span class="goal__option-description">
+          Կարողանում եմ շփվել առօրյա թեմաների շուրջ
+        </span>
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="goal__option goal__option--level"
+      [class.goal__option--selected]="selectedLevel === 'b2'"
+      [attr.aria-pressed]="selectedLevel === 'b2'"
+      (click)="levelSelected.emit('b2')"
+    >
+      <span class="goal__option-top">
+        <span class="goal__level-badge">B2</span>
+
+        <span class="goal__option-check" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="m5 10.2 3.1 3.1L15 6.7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </span>
+
+      <span class="goal__option-content">
+        <span class="goal__option-title">
+          Միջինից բարձր
+        </span>
+
+        <span class="goal__option-description">
+          Կարողանում եմ բավականին ազատ խոսել և հասկանալ
+        </span>
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="goal__option goal__option--level"
+      [class.goal__option--selected]="selectedLevel === 'c1'"
+      [attr.aria-pressed]="selectedLevel === 'c1'"
+      (click)="levelSelected.emit('c1')"
+    >
+      <span class="goal__option-top">
+        <span class="goal__level-badge">C1</span>
+
+        <span class="goal__option-check" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="m5 10.2 3.1 3.1L15 6.7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </span>
+
+      <span class="goal__option-content">
+        <span class="goal__option-title">
+          Բարձր
+        </span>
+
+        <span class="goal__option-description">
+          Խոսում և հասկանում եմ անգլերենը վստահ և ազատ
+        </span>
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="goal__option goal__option--level goal__option--unknown"
+      [class.goal__option--selected]="levelSource === 'unknown'"
+      [attr.aria-pressed]="levelSource === 'unknown'"
+      (click)="unknownLevelSelected.emit()"
+    >
+      <span class="goal__option-top">
+        <span class="goal__level-badge goal__level-badge--unknown">
+          ?
+        </span>
+
+        <span class="goal__option-check" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="m5 10.2 3.1 3.1L15 6.7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </span>
+
+      <span class="goal__option-content">
+        <span class="goal__option-title">
+          Չգիտեմ իմ մակարդակը
+        </span>
+
+        <span class="goal__option-description">
+          Վստահ չեմ, թե որ մակարդակն է համապատասխանում ինձ
+        </span>
+      </span>
+    </button>
+
+  </div>
+
+  @if (levelSource === 'unknown') {
+    <div class="goal__placement">
+      <div class="goal__placement-accent"></div>
+
+      <div class="goal__placement-content">
+        <div
+          class="goal__placement-icon"
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M9.5 9a2.7 2.7 0 1 1 4.1 2.3c-.9.55-1.6 1.05-1.6 2.2"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <circle
+              cx="12"
+              cy="16.9"
+              r="1"
+              fill="currentColor"
+            />
+
+            <circle
+              cx="12"
+              cy="12"
+              r="8.75"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+          </svg>
         </div>
 
-        <div class="goal__placement-actions">
-          <button
-            type="button"
-            class="goal__placement-button goal__placement-button--primary"
-            (click)="placementStart.emit()"
-          >
-            Այո, սկսել թեստը
-          </button>
+        <div class="goal__placement-text">
+          <span class="goal__placement-eyebrow">
+            ԱՆՎՃԱՐ ՄԱԿԱՐԴԱԿԻ ԹԵՍՏ
+          </span>
 
-          <button type="button" class="goal__placement-button" (click)="placementSkip.emit()">
-            Ոչ, թողնել այսպես
-          </button>
+          <h2 class="goal__placement-title">
+            Ցանկանո՞ւմ ես անցնել կարճ թեստ։
+          </h2>
 
-          <button type="button" class="goal__placement-button" (click)="placementLater.emit()">
-            Ավելի ուշ
-          </button>
+          <p class="goal__placement-description">
+            Մի քանի րոպեում կստանաս մոտավոր գնահատական, որպեսզի
+            դասերը սկսես ճիշտ մակարդակից։
+          </p>
         </div>
       </div>
-    }
 
-    <div class="goal__actions">
-      <button type="button" class="goal__back" (click)="back.emit()">
-        <span aria-hidden="true">←</span>
-        <span>Հետ</span>
-      </button>
+      <div class="goal__placement-actions">
 
-      <button
-        type="button"
-        class="goal__next button"
-        [disabled]="
-          !selectedLevel || (selectedLevel === 'unknown' && placementTestStatus === 'not-started')
-        "
-        (click)="next.emit()"
-      >
-        <span>Շարունակել</span>
-        <span aria-hidden="true">→</span>
-      </button>
+        <button
+          type="button"
+          class="goal__placement-button goal__placement-button--primary"
+          (click)="placementStart.emit()"
+        >
+          <span>
+            Այո, սկսել թեստը
+          </span>
+
+          <span aria-hidden="true">
+            →
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="goal__placement-button"
+          (click)="placementSkip.emit()"
+        >
+          Ոչ, թողնել այսպես
+        </button>
+
+        <button
+          type="button"
+          class="goal__placement-button"
+          (click)="placementLater.emit()"
+        >
+          Ավելի ուշ
+        </button>
+
+      </div>
     </div>
   }
-</div>
+
+  <!-- Nach dem Test: Hinweis-Box mit dem Ergebnis -->
+  @if (levelSource === 'test' && selectedLevel) {
+    <div class="goal__placement">
+      <div class="goal__placement-accent"></div>
+
+      <div class="goal__placement-content">
+        <div
+          class="goal__placement-icon"
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+            <path
+              d="m8 12.5 2.8 2.8L16.5 9.5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+
+        <div class="goal__placement-text">
+          <span class="goal__placement-eyebrow">
+            ԹԵՍՏԸ ԱՎԱՐՏՎԱԾ Է
+          </span>
+
+          <h2 class="goal__placement-title">
+            Քո մակարդակը՝ {{ selectedLevel.toUpperCase() }}
+          </h2>
+
+          <p class="goal__placement-description">
+            Այս մակարդակը ընտրվել է թեստի արդյունքով։ Կարող ես փոխել
+            ձեռքով, եթե համաձայն չես։
+          </p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="goal__actions">
+
+    <button
+      type="button"
+      class="goal__back"
+      (click)="back.emit()"
+    >
+      <span aria-hidden="true">
+        ←
+      </span>
+
+      <span>
+        Հետ
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="goal__next button"
+      [disabled]="levelSource === null"
+      (click)="next.emit()"
+    >
+      <span>
+        Շարունակել
+      </span>
+
+      <span
+        class="goal__next-icon"
+        aria-hidden="true"
+      >
+        →
+      </span>
+    </button>
+
+  </div>
+}

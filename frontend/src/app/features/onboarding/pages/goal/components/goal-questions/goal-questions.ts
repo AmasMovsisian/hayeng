@@ -1,6 +1,15 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { EnglishLevel, GoalOption, PlacementTestStatus } from '../../models/goal.models';
-
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
+import {
+  EnglishLevel,
+  GoalOption,
+  LevelSource,
+} from '../../models/goal.models';
 @Component({
   selector: 'app-goal-questions',
   standalone: true,
@@ -12,10 +21,9 @@ export class GoalQuestions {
   @Input() currentStep = 1;
   @Input() selectedGoal: GoalOption | null = null;
   @Input() selectedLevel: EnglishLevel | null = null;
-  @Input() placementTestStatus: PlacementTestStatus = 'not-started';
-
+  @Input() levelSource: LevelSource | null = null;
   @Output() goalSelected = new EventEmitter<GoalOption>();
-  @Output() levelSelected = new EventEmitter<Exclude<EnglishLevel, 'unknown'>>();
+  @Output() levelSelected = new EventEmitter<EnglishLevel>();
   @Output() unknownLevelSelected = new EventEmitter<void>();
   @Output() placementStart = new EventEmitter<void>();
   @Output() placementSkip = new EventEmitter<void>();
