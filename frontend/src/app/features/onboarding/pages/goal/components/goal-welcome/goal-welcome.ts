@@ -2,13 +2,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Output,
+  inject,
 } from '@angular/core';
-import { EnglishLevel, Gender, GoalOption } from '../../models/goal.models';
+import { EnglishLevel, Gender, GoalOption, LevelSource } from '../../models/goal.models';
+
 @Component({
   selector: 'app-goal-welcome',
   standalone: true,
@@ -23,22 +26,37 @@ export class GoalWelcome implements OnInit, OnDestroy {
   @Input() selectedGoal: GoalOption | null = null;
   @Input() selectedLevel: EnglishLevel | null = null;
   @Input() age: number | null = null;
+  @Input() levelSource: LevelSource | null = null;
+
   @Output() next = new EventEmitter<void>();
+
   isLoading = true;
   isLoadingLeaving = false;
   profileEntering = false;
+
+  private readonly host = inject(ElementRef<HTMLElement>);
+
   private loadingTimer: ReturnType<typeof setTimeout> | null = null;
   private transitionTimer: ReturnType<typeof setTimeout> | null = null;
   private profileTimer: ReturnType<typeof setTimeout> | null = null;
+  private scrollTimers: Array<ReturnType<typeof setTimeout>> = [];
+
   constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+
   ngOnInit(): void {
+    this.scrollToTop();
+
     this.loadingTimer = setTimeout(() => {
       this.isLoadingLeaving = true;
       this.changeDetectorRef.markForCheck();
+
       this.transitionTimer = setTimeout(() => {
         this.isLoading = false;
         this.profileEntering = true;
         this.changeDetectorRef.markForCheck();
+
+        this.scrollToTop();
+
         this.profileTimer = setTimeout(() => {
           this.profileEntering = false;
           this.changeDetectorRef.markForCheck();
@@ -46,6 +64,7 @@ export class GoalWelcome implements OnInit, OnDestroy {
       }, 300);
     }, 3500);
   }
+
   ngOnDestroy(): void {
     if (this.loadingTimer !== null) {
       clearTimeout(this.loadingTimer);
@@ -59,16 +78,70 @@ export class GoalWelcome implements OnInit, OnDestroy {
       clearTimeout(this.profileTimer);
       this.profileTimer = null;
     }
+    for (const t of this.scrollTimers) clearTimeout(t);
+    this.scrollTimers = [];
   }
+
+  private scrollToTop(): void {
+    const fire = (): void => {
+      const el = this.host.nativeElement as HTMLElement | undefined;
+
+      if (el) {
+        let node: HTMLElement | null = el.parentElement;
+        while (node) {
+          const style = window.getComputedStyle(node);
+          const oy = style.overflowY;
+          const isScrollable =
+            oy === 'auto' || oy === 'scroll' || oy === 'overlay';
+          if (isScrollable) {
+            node.scrollTop = 0;
+            if (node.scrollLeft !== 0) node.scrollLeft = 0;
+          }
+          node = node.parentElement;
+        }
+      }
+
+      const scrollingEl =
+        (document.scrollingElement as HTMLElement | null) ??
+        document.documentElement;
+      if (scrollingEl) scrollingEl.scrollTop = 0;
+
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      window.scrollTo(0, 0);
+
+      if (el) {
+        try {
+          el.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'auto' });
+        } catch {
+        }
+      }
+    };
+
+    fire();
+    requestAnimationFrame(fire);
+    requestAnimationFrame(() => requestAnimationFrame(fire));
+
+    const delays = [
+      0, 30, 60, 100, 150, 220, 300, 400, 520, 660, 820,
+      1000, 1200, 1450, 1700, 2000, 2300, 2600,
+    ];
+    for (const d of delays) {
+      this.scrollTimers.push(setTimeout(fire, d));
+    }
+  }
+
   get displayName(): string {
     const value = this.username.trim();
     if (!value) return '—';
     return this.transliterateName(value);
   }
+
   get displayAge(): string {
     if (this.age === null || this.age === undefined) return '—';
     return `${this.age} տարեկան`;
   }
+
   get displayGender(): string {
     if (!this.gender) return '—';
     const value = String(this.gender).trim().toLowerCase();
@@ -82,10 +155,12 @@ export class GoalWelcome implements OnInit, OnDestroy {
     };
     return genders[value] ?? this.getObjectLabel(this.gender);
   }
+
   get displayGoal(): string {
     if (!this.selectedGoal) return '—';
     const rawValue = this.getObjectLabel(this.selectedGoal).trim();
     if (!rawValue) return '—';
+
     const normalizedValue = this.normalizeGoalValue(rawValue);
     const goals: Record<string, string> = {
       career: 'Կարիերա',
@@ -114,11 +189,25 @@ export class GoalWelcome implements OnInit, OnDestroy {
     };
     return goals[normalizedValue] ?? rawValue;
   }
+
   get displayLevel(): string {
-    if (!this.selectedLevel) return '—';
+    if (!this.selectedLevel) {
+      switch (this.levelSource) {
+        case 'later':
+          return 'Հետո կպարզենք';
+        case 'skip':
+        case 'unknown':
+          return 'Մակարդակը նշված չէ';
+        default:
+          return '—';
+      }
+    }
+
     const rawValue = this.getObjectLabel(this.selectedLevel).trim();
     if (!rawValue) return '—';
+
     const value = rawValue.toLowerCase().trim().replace(/\s+/g, '');
+
     const levels: Record<string, string> = {
       a1: 'Սկսնակ / A1',
       a2: 'Տարրական / A2',
@@ -131,10 +220,10 @@ export class GoalWelcome implements OnInit, OnDestroy {
       intermediate: 'Միջին / B1',
       upperintermediate: 'Միջինից բարձր / B2',
       advanced: 'Բարձր / C1',
-      unknown: 'Չգիտեմ իմ մակարդակը',
     };
     return levels[value] ?? rawValue;
   }
+
   private normalizeGoalValue(value: string): string {
     return value
       .trim()
@@ -143,6 +232,7 @@ export class GoalWelcome implements OnInit, OnDestroy {
       .replace(/[\s-]+/g, '_')
       .replace(/_+/g, '_');
   }
+
   private getObjectLabel(value: unknown): string {
     if (typeof value === 'string') return value;
     if (value && typeof value === 'object') {
@@ -159,12 +249,14 @@ export class GoalWelcome implements OnInit, OnDestroy {
     }
     return String(value);
   }
+
   private transliterateName(value: string): string {
     const normalized = value
       .trim()
       .toLowerCase()
       .replace(/[^a-zA-Z\s'-]/g, '');
     if (!normalized) return value;
+
     const words = normalized.split(/(\s+|-|')/);
     return words
       .map((word) => {
@@ -173,11 +265,14 @@ export class GoalWelcome implements OnInit, OnDestroy {
       })
       .join('');
   }
+
   private transliterateWord(word: string): string {
     let result = '';
     let index = 0;
+
     while (index < word.length) {
       const remaining = word.slice(index);
+
       const multi: Array<[string, string]> = [
         ['you', 'յու'],
         ['shch', 'շչ'],
@@ -199,6 +294,7 @@ export class GoalWelcome implements OnInit, OnDestroy {
         ['oo', 'ու'],
         ['ee', 'ի'],
       ];
+
       let matched = false;
       for (const [latin, armenian] of multi) {
         if (remaining.startsWith(latin)) {
@@ -209,40 +305,22 @@ export class GoalWelcome implements OnInit, OnDestroy {
         }
       }
       if (matched) continue;
+
       const mappings: Record<string, string> = {
-        a: 'ա',
-        b: 'բ',
-        c: 'կ',
-        d: 'դ',
-        e: 'ե',
-        f: 'ֆ',
-        g: 'գ',
-        h: 'հ',
-        i: 'ի',
-        j: 'ջ',
-        k: 'կ',
-        l: 'լ',
-        m: 'մ',
-        n: 'ն',
-        o: 'ո',
-        p: 'պ',
-        q: 'ք',
-        r: 'ր',
-        s: 'ս',
-        t: 'տ',
-        u: 'ու',
-        v: 'վ',
-        w: 'վ',
-        x: 'քս',
-        y: 'յ',
-        z: 'զ',
+        a: 'ա', b: 'բ', c: 'կ', d: 'դ', e: 'ե', f: 'ֆ', g: 'գ',
+        h: 'հ', i: 'ի', j: 'ջ', k: 'կ', l: 'լ', m: 'մ', n: 'ն',
+        o: 'ո', p: 'պ', q: 'ք', r: 'ր', s: 'ս', t: 'տ', u: 'ու',
+        v: 'վ', w: 'վ', x: 'քս', y: 'յ', z: 'զ',
       };
+
       const character = word[index];
       result += mappings[character] ?? character;
       index++;
     }
+
     return this.capitalizeArmenian(result);
   }
+
   private capitalizeArmenian(value: string): string {
     if (!value) return value;
     return value.charAt(0).toUpperCase() + value.slice(1);

@@ -1,8 +1,5 @@
-// ============================================================
-// LIGHT THEME
-// ============================================================
-
-:root {
+:root,
+[data-theme="light-blue"] {
   // Base
   --color-white: #ffffff;
   --color-black: #111111;
@@ -17,7 +14,7 @@
   --color-text-secondary: #2f3336;
   --color-text-muted: #929da2;
 
-  // Brand 
+  // Brand
   --color-primary: #3f9bc6;
   --color-primary-dark: #327fa5;
   --color-primary-light: #dff3fa;
@@ -34,11 +31,97 @@
 }
 
 
+
+// ------------------------------------------------------------
+// ORANGE LIGHT
+// Same light background
+// Orange brand
+// ------------------------------------------------------------
+
+[data-theme="light-orange"] {
+  // Base
+  --color-white: #ffffff;
+  --color-black: #111111;
+
+  // Background
+  --color-bg: #fffaf5;
+  --color-surface: #ffffff;
+  --color-surface-muted: #fdf4ec;
+
+  // Text
+  --color-text: #191614;
+  --color-text-secondary: #37312d;
+  --color-text-muted: #968d87;
+
+  // Brand
+  --color-primary: #d95e17;
+  --color-primary-dark: #b94d12;
+  --color-primary-light: #fbe5d7;
+
+  // Borders
+  --color-border: #eadfd7;
+  --color-border-strong: #d9c8bd;
+
+  // Status
+  --color-success: #3f8063;
+  --color-warning: #b9822e;
+  --color-error: #c94f4b;
+  --color-info: #527ca3;
+}
+
+
+
+// ------------------------------------------------------------
+// ARMENIAN LIGHT
+// Same light style
+// Armenian red brand
+// ------------------------------------------------------------
+
+[data-theme="light-red"] {
+  // Base
+  --color-white: #ffffff;
+  --color-black: #111111;
+
+  // Background
+  --color-bg: #fffafa;
+  --color-surface: #ffffff;
+  --color-surface-muted: #fcf2f3;
+
+  // Text
+  --color-text: #191516;
+  --color-text-secondary: #393032;
+  --color-text-muted: #968c8e;
+
+  // Brand
+  --color-primary: #b8323c;
+  --color-primary-dark: #972831;
+  --color-primary-light: #f8e1e3;
+
+  // Borders
+  --color-border: #ead9db;
+  --color-border-strong: #d8c3c6;
+
+  // Status
+  --color-success: #3f8063;
+  --color-warning: #b9822e;
+  --color-error: #c94f4b;
+  --color-info: #527ca3;
+}
+
+
+
 // ============================================================
-// DARK THEME
+// DARK THEMES
 // ============================================================
 
-[data-theme="dark"] {
+
+// ------------------------------------------------------------
+// STANDARD DARK
+// Default dark theme
+// Your existing Orange
+// ------------------------------------------------------------
+
+[data-theme="dark-orange"] {
   // Base
   --color-white: #ffffff;
   --color-black: #111111;
@@ -53,7 +136,7 @@
   --color-text-secondary: #aaa7a1;
   --color-text-muted: #777570;
 
-  // Brand 
+  // Brand
   --color-primary: #d95e17;
   --color-primary-dark: #b94d12;
   --color-primary-light: #3a2419;
@@ -67,4 +150,433 @@
   --color-warning: #d0a052;
   --color-error: #df716c;
   --color-info: #78a0c4;
+}
+
+
+
+// ------------------------------------------------------------
+// BLUE DARK
+// Same dark background
+// Blue brand
+// ------------------------------------------------------------
+
+[data-theme="dark-blue"] {
+  // Base
+  --color-white: #ffffff;
+  --color-black: #111111;
+
+  // Background
+  --color-bg: #151515;
+  --color-surface: #1d1d1c;
+  --color-surface-muted: #242423;
+
+  // Text
+  --color-text: #f2f0eb;
+  --color-text-secondary: #aaa7a1;
+  --color-text-muted: #777570;
+
+  // Brand
+  --color-primary: #3f9bc6;
+  --color-primary-dark: #327fa5;
+  --color-primary-light: #1d3440;
+
+  // Borders
+  --color-border: #30302e;
+  --color-border-strong: #41413e;
+
+  // Status
+  --color-success: #72a88b;
+  --color-warning: #d0a052;
+  --color-error: #df716c;
+  --color-info: #78a0c4;
+}
+
+
+
+// ------------------------------------------------------------
+// ARMENIAN DARK
+// Same dark background
+// Armenian red brand
+// ------------------------------------------------------------
+
+[data-theme="dark-red"] {
+  // Base
+  --color-white: #ffffff;
+  --color-black: #111111;
+
+  // Background
+  --color-bg: #151515;
+  --color-surface: #1d1d1c;
+  --color-surface-muted: #242423;
+
+  // Text
+  --color-text: #f2f0eb;
+  --color-text-secondary: #aaa7a1;
+  --color-text-muted: #777570;
+
+  // Brand
+  --color-primary: #d34a54;
+  --color-primary-dark: #b33b44;
+  --color-primary-light: #3b2023;
+
+  // Borders
+  --color-border: #30302e;
+  --color-border-strong: #41413e;
+
+  // Status
+  --color-success: #72a88b;
+  --color-warning: #d0a052;
+  --color-error: #df716c;
+  --color-info: #78a0c4;
+}
+
+
+
+
+
+
+
+
+
+
+// ============================================================
+// PREMIUM THEMES
+// ============================================================
+//
+// PREMIUM LIGHT
+// ├── Jade
+// ├── Plum
+// ├── Midnight Indigo
+// └── Imperial Gold  ★ VIP
+//
+// PREMIUM DARK
+// ├── Emerald
+// ├── Bordeaux
+// ├── Midnight Indigo
+// └── Imperial Gold  ★ VIP
+//
+// ============================================================
+
+
+
+// ============================================================
+// PREMIUM LIGHT THEMES
+// ============================================================
+
+
+// ------------------------------------------------------------
+// PREMIUM LIGHT — JADE
+// Fresh / elegant / sophisticated
+// ------------------------------------------------------------
+
+[data-theme="premium-light-jade"] {
+  // Base
+  --color-white: #ffffff;
+  --color-black: #111716;
+
+  // Background
+  --color-bg: #f5faf8;
+  --color-surface: #ffffff;
+  --color-surface-muted: #edf5f2;
+
+  // Text
+  --color-text: #17201d;
+  --color-text-secondary: #4d5b56;
+  --color-text-muted: #899690;
+
+  // Brand
+  --color-primary: #197c68;
+  --color-primary-dark: #126452;
+  --color-primary-light: #dcefe9;
+
+  // Borders
+  --color-border: #d8e8e2;
+  --color-border-strong: #c2d8d0;
+
+  // Status
+  --color-success: #328262;
+  --color-warning: #b9822e;
+  --color-error: #c94f4b;
+  --color-info: #397b73;
+}
+
+
+
+// ------------------------------------------------------------
+// PREMIUM LIGHT — PLUM
+// Creative / elegant / distinctive
+// ------------------------------------------------------------
+
+[data-theme="premium-light-plum"] {
+  // Base
+  --color-white: #ffffff;
+  --color-black: #171318;
+
+  // Background
+  --color-bg: #faf7fb;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f3edf4;
+
+  // Text
+  --color-text: #201920;
+  --color-text-secondary: #5d555f;
+  --color-text-muted: #958b97;
+
+  // Brand
+  --color-primary: #70466f;
+  --color-primary-dark: #593557;
+  --color-primary-light: #f0e5f0;
+
+  // Borders
+  --color-border: #e5dce6;
+  --color-border-strong: #d2c4d4;
+
+  // Status
+  --color-success: #4a8066;
+  --color-warning: #b9822e;
+  --color-error: #c94f5a;
+  --color-info: #765e82;
+}
+
+
+
+// ------------------------------------------------------------
+// PREMIUM LIGHT — MIDNIGHT INDIGO
+// Intelligent / deep / premium
+// ------------------------------------------------------------
+
+[data-theme="premium-light-indigo"] {
+  // Base
+  --color-white: #ffffff;
+  --color-black: #12131b;
+
+  // Background
+  --color-bg: #f7f8fc;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef0f7;
+
+  // Text
+  --color-text: #181a25;
+  --color-text-secondary: #515567;
+  --color-text-muted: #8c91a2;
+
+  // Brand
+  --color-primary: #4f55a8;
+  --color-primary-dark: #3e438c;
+  --color-primary-light: #e7e8f8;
+
+  // Borders
+  --color-border: #dfe1ed;
+  --color-border-strong: #c9ccdf;
+
+  // Status
+  --color-success: #3f8063;
+  --color-warning: #b9822e;
+  --color-error: #c94f4b;
+  --color-info: #5668a8;
+}
+
+
+
+// ------------------------------------------------------------
+// PREMIUM LIGHT — IMPERIAL GOLD ★ VIP
+// Luxury / exclusive / flagship
+// ------------------------------------------------------------
+
+[data-theme="premium-light-gold"] {
+  // Base
+  --color-white: #ffffff;
+  --color-black: #17140d;
+
+  // Background
+  --color-bg: #fbfaf5;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f5f0df;
+
+  // Text
+  --color-text: #1e1b14;
+  --color-text-secondary: #625b4d;
+  --color-text-muted: #958d7b;
+
+  // Brand
+  --color-primary: #a9822f;
+  --color-primary-dark: #846522;
+  --color-primary-light: #f5edcf;
+
+  // Gold accents
+  --color-gold: #c9a24a;
+  --color-gold-dark: #a9822f;
+  --color-gold-light: #fbf5df;
+
+  // Borders
+  --color-border: #e9e1ca;
+  --color-border-strong: #d8cca9;
+
+  // Status
+  --color-success: #4d8063;
+  --color-warning: #b9822e;
+  --color-error: #bd514b;
+  --color-info: #766c55;
+}
+
+
+
+// ============================================================
+// PREMIUM DARK THEMES
+// ============================================================
+
+
+// ------------------------------------------------------------
+// PREMIUM DARK — EMERALD
+// Deep / calm / luxurious
+// ------------------------------------------------------------
+
+[data-theme="premium-dark-emerald"] {
+  // Base
+  --color-white: #ffffff;
+  --color-black: #0b110f;
+
+  // Background
+  --color-bg: #0e1714;
+  --color-surface: #16211d;
+  --color-surface-muted: #1d2a25;
+
+  // Text
+  --color-text: #f1f6f3;
+  --color-text-secondary: #b5c4be;
+  --color-text-muted: #75847e;
+
+  // Brand
+  --color-primary: #42aa8c;
+  --color-primary-dark: #328a71;
+  --color-primary-light: #193b32;
+
+  // Borders
+  --color-border: #293a34;
+  --color-border-strong: #3a4d46;
+
+  // Status
+  --color-success: #5abb8f;
+  --color-warning: #d1a04f;
+  --color-error: #df716c;
+  --color-info: #65aaa0;
+}
+
+
+
+// ------------------------------------------------------------
+// PREMIUM DARK — BORDEAUX
+// Sophisticated / powerful / elegant
+// ------------------------------------------------------------
+
+[data-theme="premium-dark-bordeaux"] {
+  // Base
+  --color-white: #ffffff;
+  --color-black: #100c0d;
+
+  // Background
+  --color-bg: #181113;
+  --color-surface: #23181a;
+  --color-surface-muted: #2d2022;
+
+  // Text
+  --color-text: #f7f1f1;
+  --color-text-secondary: #c3b2b4;
+  --color-text-muted: #827376;
+
+  // Brand
+  --color-primary: #b84d5b;
+  --color-primary-dark: #953b48;
+  --color-primary-light: #402126;
+
+  // Borders
+  --color-border: #3b292c;
+  --color-border-strong: #51373b;
+
+  // Status
+  --color-success: #65a484;
+  --color-warning: #d0a052;
+  --color-error: #e16d72;
+  --color-info: #8e7078;
+}
+
+
+
+// ------------------------------------------------------------
+// PREMIUM DARK — MIDNIGHT INDIGO
+// Deep / futuristic / sophisticated
+// ------------------------------------------------------------
+
+[data-theme="premium-dark-indigo"] {
+  // Base
+  --color-white: #ffffff;
+  --color-black: #090a12;
+
+  // Background
+  --color-bg: #10121e;
+  --color-surface: #181b2b;
+  --color-surface-muted: #20243a;
+
+  // Text
+  --color-text: #f2f3fa;
+  --color-text-secondary: #b4b7ca;
+  --color-text-muted: #777c96;
+
+  // Brand
+  --color-primary: #7b82dc;
+  --color-primary-dark: #6269bd;
+  --color-primary-light: #292d54;
+
+  // Borders
+  --color-border: #2b2f47;
+  --color-border-strong: #3b405d;
+
+  // Status
+  --color-success: #62aa87;
+  --color-warning: #d0a052;
+  --color-error: #df716c;
+  --color-info: #8290dc;
+}
+
+
+
+// ------------------------------------------------------------
+// PREMIUM DARK — IMPERIAL GOLD ★ VIP
+// Flagship / ultra premium / exclusive
+// ------------------------------------------------------------
+
+[data-theme="premium-dark-gold"] {
+  // Base
+  --color-white: #ffffff;
+  --color-black: #0c0b08;
+
+  // Background
+  --color-bg: #12110d;
+  --color-surface: #1b1912;
+  --color-surface-muted: #252117;
+
+  // Text
+  --color-text: #f8f3e5;
+  --color-text-secondary: #c7bea7;
+  --color-text-muted: #827a67;
+
+  // Brand
+  --color-primary: #d2ad55;
+  --color-primary-dark: #ae8837;
+  --color-primary-light: #41361c;
+
+  // Gold
+  --color-gold: #e0bd62;
+  --color-gold-dark: #b8923d;
+  --color-gold-light: #4a3b1d;
+
+  // Borders
+  --color-border: #39321f;
+  --color-border-strong: #554929;
+
+  // Status
+  --color-success: #6aae87;
+  --color-warning: #d5aa50;
+  --color-error: #df716c;
+  --color-info: #a89972;
 }

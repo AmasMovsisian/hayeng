@@ -18,38 +18,6 @@
     pointer-events: none;
     overflow: hidden;
   }
-  &__orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.55;
-    will-change: transform;
-    &--1 {
-      width: 420px;
-      height: 420px;
-      top: -140px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: radial-gradient(circle, color-mix(in srgb, var(--color-primary) 55%, transparent), transparent 70%);
-      animation: w-orb-float 18s ease-in-out infinite;
-    }
-    &--2 {
-      width: 340px;
-      height: 340px;
-      bottom: -120px;
-      left: -80px;
-      background: radial-gradient(circle, color-mix(in srgb, var(--color-primary-light) 45%, transparent), transparent 70%);
-      animation: w-orb-float 22s ease-in-out infinite reverse;
-    }
-    &--3 {
-      width: 300px;
-      height: 300px;
-      bottom: -80px;
-      right: -80px;
-      background: radial-gradient(circle, color-mix(in srgb, var(--color-primary) 40%, transparent), transparent 70%);
-      animation: w-orb-float 26s ease-in-out infinite;
-    }
-  }
   &__content {
     position: relative;
     z-index: 1;
@@ -98,12 +66,18 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    &--dark { display: none; }
+    &--dark {
+      display: none;
+    }
   }
   :host-context([data-theme='dark']) &__logo-image--light,
-  [data-theme='dark'] &__logo-image--light { display: none; }
+  [data-theme='dark'] &__logo-image--light {
+    display: none;
+  }
   :host-context([data-theme='dark']) &__logo-image--dark,
-  [data-theme='dark'] &__logo-image--dark { display: block; }
+  [data-theme='dark'] &__logo-image--dark {
+    display: block;
+  }
   &__brand-name {
     font-family: var(--font-primary);
     font-size: 0.66rem;
@@ -226,9 +200,15 @@
     animation-duration: 6s;
     animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
     animation-iteration-count: infinite;
-    &--1 { animation-name: promise-word-1; }
-    &--2 { animation-name: promise-word-2; }
-    &--3 { animation-name: promise-word-3; }
+    &--1 {
+      animation-name: promise-word-1;
+    }
+    &--2 {
+      animation-name: promise-word-2;
+    }
+    &--3 {
+      animation-name: promise-word-3;
+    }
   }
   &__promise-sep {
     width: 3px;
@@ -395,8 +375,12 @@
       box-shadow:
         0 18px 40px color-mix(in srgb, var(--color-primary) 42%, transparent),
         0 2px 0 color-mix(in srgb, var(--color-white) 30%, transparent) inset;
-      .welcome__button-arrow { transform: translateX(5px); }
-      .welcome__button-glow  { transform: translateX(120%); }
+      .welcome__button-arrow {
+        transform: translateX(5px);
+      }
+      .welcome__button-glow {
+        transform: translateX(120%);
+      }
     }
     &:active {
       transform: translateY(-1px) scale(0.99);
@@ -492,61 +476,129 @@
     opacity: 0.8;
   }
 }
+
 @keyframes w-fade-in {
-  to { opacity: 1; }
+  to {
+    opacity: 1;
+  }
 }
+
 @keyframes w-content-in {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-@keyframes w-orb-float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%      { transform: translate(30px, -20px) scale(1.06); }
-  66%      { transform: translate(-20px, 25px) scale(0.96); }
-}
+
 @keyframes w-pulse {
-  0%, 100% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent); }
-  50%      { box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-primary) 0%, transparent); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-primary) 0%, transparent);
+  }
 }
+
 @keyframes w-gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
+
 @keyframes w-promise-sweep {
-  0%   { transform: translateX(-100%); opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { transform: translateX(100%); opacity: 0; }
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }
+
 @keyframes promise-word-1 {
-  0%, 27%  { color: var(--color-primary); opacity: 1; }
-  40%, 94% { color: var(--color-text-secondary); opacity: 0.55; }
-  100%     { color: var(--color-primary); opacity: 1; }
+  0%,
+  27% {
+    color: var(--color-primary);
+    opacity: 1;
+  }
+  40%,
+  94% {
+    color: var(--color-text-secondary);
+    opacity: 0.55;
+  }
+  100% {
+    color: var(--color-primary);
+    opacity: 1;
+  }
 }
+
 @keyframes promise-word-2 {
-  0%, 27%  { color: var(--color-text-secondary); opacity: 0.55; }
-  40%, 60% { color: var(--color-primary); opacity: 1; }
-  73%, 100%{ color: var(--color-text-secondary); opacity: 0.55; }
+  0%,
+  27% {
+    color: var(--color-text-secondary);
+    opacity: 0.55;
+  }
+  40%,
+  60% {
+    color: var(--color-primary);
+    opacity: 1;
+  }
+  73%,
+  100% {
+    color: var(--color-text-secondary);
+    opacity: 0.55;
+  }
 }
+
 @keyframes promise-word-3 {
-  0%, 60%  { color: var(--color-text-secondary); opacity: 0.55; }
-  73%, 94% { color: var(--color-primary); opacity: 1; }
-  100%     { color: var(--color-text-secondary); opacity: 0.55; }
+  0%,
+  60% {
+    color: var(--color-text-secondary);
+    opacity: 0.55;
+  }
+  73%,
+  94% {
+    color: var(--color-primary);
+    opacity: 1;
+  }
+  100% {
+    color: var(--color-text-secondary);
+    opacity: 0.55;
+  }
 }
+
 @media (max-width: 480px) {
   .welcome {
     padding: var(--space-8) var(--space-5);
-    &__brand { margin-bottom: var(--space-8); }
+    &__brand {
+      margin-bottom: var(--space-8);
+    }
     &__logo {
       width: 54px;
       height: 54px;
       padding: 6px;
       border-radius: var(--radius-md);
     }
-    &__title { font-size: clamp(2.4rem, 12vw, 3.1rem); }
-    &__subtitle { font-size: 0.88rem; }
+    &__title {
+      font-size: clamp(2.4rem, 12vw, 3.1rem);
+    }
+    &__subtitle {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
     &__lead {
       margin-top: var(--space-4);
       font-size: 0.9rem;
@@ -559,9 +611,15 @@
       font-size: 0.76rem;
       &-word {
         animation-name: none;
-        &--1 { animation: promise-word-1-mobile 6s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
-        &--2 { animation: promise-word-2-mobile 6s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
-        &--3 { animation: promise-word-3-mobile 6s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+        &--1 {
+          animation: promise-word-1-mobile 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+        &--2 {
+          animation: promise-word-2-mobile 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+        &--3 {
+          animation: promise-word-3-mobile 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
       }
     }
     &__benefits {
@@ -575,60 +633,131 @@
         width: 34px;
         height: 34px;
         border-radius: var(--radius-sm);
-        svg { width: 16px; height: 16px; }
+        svg {
+          width: 16px;
+          height: 16px;
+        }
       }
       &-content {
-        strong { font-size: 0.82rem; }
-        span   { font-size: 0.7rem; }
+        strong {
+          font-size: 0.82rem;
+        }
+        span {
+          font-size: 0.7rem;
+        }
       }
     }
-    &__coming-soon { font-size: 0.46rem; padding: 4px 8px; }
-    &__action { margin-top: var(--space-6); }
+    &__coming-soon {
+      font-size: 0.46rem;
+      padding: 4px 8px;
+    }
+    &__action {
+      margin-top: var(--space-6);
+    }
     &__button {
       width: 100%;
       max-width: 320px;
       min-height: 58px;
     }
-    &__note { font-size: 0.5rem; gap: var(--space-2); }
-    &__footer { margin-top: var(--space-7); font-size: 0.5rem; }
-    &__orb--1 { width: 320px; height: 320px; }
-    &__orb--2 { width: 260px; height: 260px; }
-    &__orb--3 { width: 220px; height: 220px; }
+    &__note {
+      font-size: 0.5rem;
+      gap: var(--space-2);
+    }
+    &__footer {
+      margin-top: var(--space-7);
+      font-size: 0.5rem;
+    }
   }
 }
+
 @keyframes promise-word-1-mobile {
-  0%, 27%  { color: var(--color-primary); opacity: 1; }
-  40%, 94% { color: var(--color-text-secondary); opacity: 0.55; }
-  100%     { color: var(--color-primary); opacity: 1; }
+  0%,
+  27% {
+    color: var(--color-primary);
+    opacity: 1;
+  }
+  40%,
+  94% {
+    color: var(--color-text-secondary);
+    opacity: 0.55;
+  }
+  100% {
+    color: var(--color-primary);
+    opacity: 1;
+  }
 }
+
 @keyframes promise-word-2-mobile {
-  0%, 27%  { color: var(--color-text-secondary); opacity: 0.55; }
-  40%, 60% { color: var(--color-primary); opacity: 1; }
-  73%, 100%{ color: var(--color-text-secondary); opacity: 0.55; }
+  0%,
+  27% {
+    color: var(--color-text-secondary);
+    opacity: 0.55;
+  }
+  40%,
+  60% {
+    color: var(--color-primary);
+    opacity: 1;
+  }
+  73%,
+  100% {
+    color: var(--color-text-secondary);
+    opacity: 0.55;
+  }
 }
+
 @keyframes promise-word-3-mobile {
-  0%, 60%  { color: var(--color-text-secondary); opacity: 0.55; }
-  73%, 94% { color: var(--color-primary); opacity: 1; }
-  100%     { color: var(--color-text-secondary); opacity: 0.55; }
+  0%,
+  60% {
+    color: var(--color-text-secondary);
+    opacity: 0.55;
+  }
+  73%,
+  94% {
+    color: var(--color-primary);
+    opacity: 1;
+  }
+  100% {
+    color: var(--color-text-secondary);
+    opacity: 0.55;
+  }
 }
+
 @media (max-height: 720px) and (min-width: 481px) {
   .welcome {
     padding-top: var(--space-8);
     padding-bottom: var(--space-8);
-    &__brand    { margin-bottom: var(--space-7); }
-    &__logo     { width: 50px; height: 50px; }
-    &__lead     { margin-top: var(--space-4); }
-    &__promise  { margin-top: var(--space-5); }
-    &__benefits { margin-top: var(--space-6); }
-    &__benefit  { padding: var(--space-3) var(--space-4); }
-    &__action   { margin-top: var(--space-6); }
-    &__footer   { margin-top: var(--space-6); padding-top: var(--space-4); }
+    &__brand {
+      margin-bottom: var(--space-7);
+    }
+    &__logo {
+      width: 50px;
+      height: 50px;
+    }
+    &__lead {
+      margin-top: var(--space-4);
+    }
+    &__promise {
+      margin-top: var(--space-5);
+    }
+    &__benefits {
+      margin-top: var(--space-6);
+    }
+    &__benefit {
+      padding: var(--space-3) var(--space-4);
+    }
+    &__action {
+      margin-top: var(--space-6);
+    }
+    &__footer {
+      margin-top: var(--space-6);
+      padding-top: var(--space-4);
+    }
   }
 }
+
 @media (prefers-reduced-motion: reduce) {
   .welcome,
   .welcome__content,
-  .welcome__orb,
   .welcome__eyebrow-dot,
   .welcome__title span,
   .welcome__promise-bar,

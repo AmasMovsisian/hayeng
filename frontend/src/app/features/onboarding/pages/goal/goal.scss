@@ -8,6 +8,22 @@
   color: var(--color-text);
   opacity: 0;
   animation: goal-fade-in 0.7s ease-out 0.05s forwards;
+  &:has(app-goal-questions) {
+    align-items: flex-start;
+  }
+  @media (min-width: 641px) {
+    &:has(app-goal-profile),
+    &:has(app-goal-register) {
+      align-items: flex-start;
+      .goal__step-wrapper {
+        padding-top: 0;
+        max-width: 100%;
+      }
+      .goal__progress {
+        margin-top: 0;
+      }
+    }
+  }
   &__content {
     width: min(100%, 540px);
     display: flex;
@@ -34,6 +50,7 @@
     opacity: 1;
   }
 }
+
 @keyframes goal-fade-in {
   from {
     opacity: 0;
