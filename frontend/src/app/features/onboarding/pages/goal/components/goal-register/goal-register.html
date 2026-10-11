@@ -1,3 +1,4 @@
+
 <div class="goal__step-wrapper">
   <header class="goal__header">
     <div
@@ -9,15 +10,16 @@
       aria-label="Քայլ 4 4-ից"
     >
       <div class="goal__progress-meta">
-        <span class="goal__progress-label"> ՔԱՅԼ 4 </span>
-        <span class="goal__progress-count"> 4 / 4 </span>
+        <span class="goal__progress-label">ՔԱՅԼ 4</span>
+        <span class="goal__progress-count">4 / 4</span>
       </div>
       <div class="goal__progress-track" aria-hidden="true">
         <span class="goal__progress-fill goal__progress-fill--complete"></span>
       </div>
     </div>
+
     <div class="goal__heading">
-      <span class="goal__eyebrow"> Վերջին քայլ </span>
+      <span class="goal__eyebrow">Վերջին քայլ</span>
       <h1 class="goal__title">
         Ստեղծիր քո
         <span>հաշիվը։</span>
@@ -27,11 +29,51 @@
       </p>
     </div>
   </header>
+
   <div class="goal__form">
     <label class="goal__field">
       <span class="goal__label-row">
-        <span class="goal__label"> Էլ․ փոստ </span>
-        <span class="goal__optional"> Անհրաժեշտ </span>
+        <span class="goal__label">Օգտանուն</span>
+        <span class="goal__optional">Անհրաժեշտ</span>
+      </span>
+      <span class="goal__input-shell">
+        <span class="goal__input-leading" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M5 20a7 7 0 0 1 14 0"></path>
+          </svg>
+        </span>
+        <input
+          type="text"
+          class="goal__input"
+          name="username"
+          autocomplete="username"
+          placeholder="Մուտքագրիր օգտանունդ"
+          [value]="username"
+          (input)="usernameChange.emit($any($event.target).value)"
+          [attr.aria-invalid]="username.length > 0 && !usernameValid"
+          required
+        />
+      </span>
+      <span
+        *ngIf="username.length > 0 && !usernameValid"
+        class="goal__username-error"
+        role="alert"
+      >
+        {{ usernameError }}
+      </span>
+      <span
+        *ngIf="username.length > 0 && usernameValid && usernameAvailable"
+        class="goal__username-success"
+      >
+        Username-ը հասանելի է։
+      </span>
+    </label>
+
+    <label class="goal__field">
+      <span class="goal__label-row">
+        <span class="goal__label">Էլ․ փոստ</span>
+        <span class="goal__optional">Անհրաժեշտ</span>
       </span>
       <span class="goal__input-shell">
         <span class="goal__input-leading" aria-hidden="true">
@@ -45,16 +87,18 @@
           class="goal__input"
           name="email"
           autocomplete="email"
-          placeholder="you@example.com"
+          placeholder="օրինակ@email.com"
           [value]="email"
           (input)="emailChange.emit($any($event.target).value)"
+          required
         />
       </span>
     </label>
+
     <label class="goal__field">
       <span class="goal__label-row">
-        <span class="goal__label"> Գաղտնաբառ </span>
-        <span class="goal__optional"> Անհրաժեշտ </span>
+        <span class="goal__label">Գաղտնաբառ</span>
+        <span class="goal__optional">Անհրաժեշտ</span>
       </span>
       <span class="goal__input-shell">
         <span class="goal__input-leading" aria-hidden="true">
@@ -71,13 +115,15 @@
           placeholder="••••••••"
           [value]="password"
           (input)="passwordChange.emit($any($event.target).value)"
+          required
         />
       </span>
     </label>
+
     <label class="goal__field">
       <span class="goal__label-row">
-        <span class="goal__label"> Կրկնել գաղտնաբառը </span>
-        <span class="goal__optional"> Անհրաժեշտ </span>
+        <span class="goal__label">Կրկնել գաղտնաբառը</span>
+        <span class="goal__optional">Անհրաժեշտ</span>
       </span>
       <span class="goal__input-shell">
         <span class="goal__input-leading" aria-hidden="true">
@@ -94,28 +140,37 @@
           placeholder="••••••••"
           [value]="passwordConfirm"
           (input)="passwordConfirmChange.emit($any($event.target).value)"
+          required
         />
       </span>
     </label>
   </div>
+
   <div class="goal__registration-divider">
     <span></span>
     <span>կամ</span>
     <span></span>
   </div>
-  <button type="button" class="goal__google-button" (click)="googleRegister.emit()">
+
+  <button
+    type="button"
+    class="goal__google-button"
+    (click)="googleRegister.emit()"
+  >
     <span class="goal__google-icon" aria-hidden="true">G</span>
     <span>Գրանցվել Google-ով</span>
   </button>
+
   <div class="goal__actions">
     <button type="button" class="goal__back" (click)="back.emit()">
       <span aria-hidden="true">←</span>
       <span>Հետ</span>
     </button>
+
     <button
       type="button"
       class="goal__next button"
-      [disabled]="!registrationValid"
+      [disabled]="!registrationValid || !usernameValid || !usernameAvailable"
       (click)="register.emit()"
     >
       <span>Ավարտել</span>
