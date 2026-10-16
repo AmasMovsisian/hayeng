@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { EnglishLevel, Gender, GoalOption, LevelSource } from '../../models/goal.models';
 import { AppFooter } from '../../../../../../shared/app-footer/app-footer';
+import { ARMENIAN_NAME_MAP } from '../../data/armenian-names';
 
 @Component({
   selector: 'app-goal-welcome',
@@ -253,13 +254,10 @@ export class GoalWelcome implements OnInit, OnDestroy {
   }
 
   private transliterateName(value: string): string {
-    const normalized = value
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-zA-Z\s'-]/g, '');
-    if (!normalized) return value;
+    const trimmed = value.trim();
+    if (!trimmed) return trimmed;
 
-    const words = normalized.split(/(\s+|-|')/);
+    const words = trimmed.split(/(\s+|-|')/);
     return words
       .map((word) => {
         if (/^\s+$/.test(word) || word === '-' || word === "'") return word;
@@ -269,11 +267,21 @@ export class GoalWelcome implements OnInit, OnDestroy {
   }
 
   private transliterateWord(word: string): string {
+    const lowerKey = word.toLowerCase().replace(/[^a-z]/g, '');
+    const mapped = ARMENIAN_NAME_MAP[lowerKey];
+    if (mapped) return mapped;
+
     let result = '';
     let index = 0;
 
     while (index < word.length) {
       const remaining = word.slice(index);
+
+      if ((remaining.startsWith('r') || remaining.startsWith('R')) && index === 0) {
+        result += 'Ռ';
+        index += 1;
+        continue;
+      }
 
       const multi: Array<[string, string]> = [
         ['you', 'յու'],
@@ -316,7 +324,8 @@ export class GoalWelcome implements OnInit, OnDestroy {
       };
 
       const character = word[index];
-      result += mappings[character] ?? character;
+      const lowerChar = character.toLowerCase();
+      result += mappings[lowerChar] ?? character;
       index++;
     }
 

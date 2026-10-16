@@ -197,6 +197,7 @@
     white-space: nowrap;
     color: var(--color-text-secondary);
     font-weight: 700;
+    animation-name: none;
     animation-duration: 6s;
     animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
     animation-iteration-count: infinite;
@@ -584,13 +585,22 @@
       &-word {
         animation-name: none;
         &--1 {
-          animation: promise-word-1-mobile 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+          animation-name: promise-word-1-mobile;
+          animation-duration: 6s;
+          animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+          animation-iteration-count: infinite;
         }
         &--2 {
-          animation: promise-word-2-mobile 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+          animation-name: promise-word-2-mobile;
+          animation-duration: 6s;
+          animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+          animation-iteration-count: infinite;
         }
         &--3 {
-          animation: promise-word-3-mobile 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+          animation-name: promise-word-3-mobile;
+          animation-duration: 6s;
+          animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+          animation-iteration-count: infinite;
         }
       }
     }

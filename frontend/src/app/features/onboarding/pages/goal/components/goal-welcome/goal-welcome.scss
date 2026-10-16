@@ -556,6 +556,13 @@
   animation: goal-actions-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.58s forwards;
 }
 
+.goal__footer-wrap {
+  display: block;
+  width: 100%;
+  opacity: 0;
+  animation: goal-footer-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.75s forwards;
+}
+
 .goal__next {
   position: relative;
   display: inline-flex;
@@ -584,7 +591,7 @@
   overflow: hidden;
   isolation: isolate;
   box-shadow:
-    0 2px 30px color-mix(in srgb, var(--color-primary) 32%, transparent),
+    0 10px 30px color-mix(in srgb, var(--color-primary) 32%, transparent),
     0 2px 0 color-mix(in srgb, var(--color-white) 20%, transparent) inset;
   transition:
     transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
@@ -713,7 +720,7 @@
 
 @media (max-width: 480px) {
   .goal__step-wrapper--welcome {
-    padding: var(--space-6) 0;
+    padding: var(--space-4) 0;
   }
   .goal__welcome--loading {
     min-height: 260px;
@@ -818,7 +825,8 @@
   .goal__motivation-lead,
   .goal__motivation-feature,
   .goal__motivation-punch,
-  .goal__actions {
+  .goal__actions,
+  .goal__footer-wrap {
     animation: none !important;
     opacity: 1;
     transform: none;
@@ -951,5 +959,10 @@
 
 @keyframes goal-actions-in {
   from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes goal-footer-in {
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }

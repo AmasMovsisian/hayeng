@@ -236,26 +236,26 @@
             </div>
           </div>
         </section>
-      </div>
-      <div class="goal__actions">
-        <button type="button" class="goal__next" (click)="next.emit()">
-          <span class="goal__next-glow" aria-hidden="true"></span>
-          <span class="goal__next-label" lang="hy">Սկսել սովորել</span>
-          <span class="goal__next-arrow" aria-hidden="true">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M5 12h14M13 5l7 7-7 7" />
-            </svg>
-          </span>
-        </button>
+        <div class="goal__actions">
+          <button type="button" class="goal__next" (click)="next.emit()">
+            <span class="goal__next-glow" aria-hidden="true"></span>
+            <span class="goal__next-label" lang="hy">Սկսել սովորել</span>
+            <span class="goal__next-arrow" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14M13 5l7 7-7 7" />
+              </svg>
+            </span>
+          </button>
+        </div>
+        <hy-app-footer class="goal__footer-wrap"></hy-app-footer>
       </div>
     }
   </div>
 </div>
-<hy-app-footer></hy-app-footer>
