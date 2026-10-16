@@ -18,12 +18,14 @@ import {
   GoalOption,
   LevelSource,
 } from '../../models/goal.models';
+import { AppFooter } from '../../../../../../shared/app-footer/app-footer';
 
 type PlacementChoice = 'skip' | 'later' | null;
 
 @Component({
   selector: 'app-goal-questions',
   standalone: true,
+  imports: [AppFooter],
   templateUrl: './goal-questions.html',
   styleUrl: './goal-questions.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,0 +1,58 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+
+  width: 100%;
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+
+  border-top: 1px solid color-mix(in srgb, var(--color-text) 6%, transparent);
+
+  color: var(--color-text-secondary);
+  font-family: var(--font-primary);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  opacity: 0.65;
+
+  &__brand {
+    color: var(--color-primary);
+    font-weight: 900;
+    letter-spacing: 0.18em;
+  }
+
+  &__dot {
+    flex: 0 0 auto;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    opacity: 0.8;
+  }
+
+  &__text {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-footer {
+    gap: var(--space-2);
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-height: 720px) and (min-width: 481px) {
+  .app-footer {
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+  }
+}

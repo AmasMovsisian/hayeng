@@ -13,13 +13,14 @@ import {
   TestUserAnswer,
 } from '../../models/placement-test.models';
 import { PLACEMENT_QUESTIONS } from '../../data/placement-questions';
+import { AppFooter } from '../../../../../../shared/app-footer/app-footer';
 
 type TestPhase = 'questions' | 'result' | 'review';
 
 @Component({
   selector: 'app-goal-test',
   standalone: true,
-  imports: [],
+  imports: [AppFooter],
   templateUrl: './goal-test.html',
   styleUrl: './goal-test.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

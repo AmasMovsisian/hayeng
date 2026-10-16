@@ -447,34 +447,6 @@
       opacity: 0.7;
     }
   }
-  &__footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-3);
-    margin-top: var(--space-8);
-    padding-top: var(--space-5);
-    width: 100%;
-    border-top: 1px solid color-mix(in srgb, var(--color-text) 6%, transparent);
-    color: var(--color-text-secondary);
-    font-family: var(--font-primary);
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    opacity: 0.65;
-  }
-  &__footer-brand {
-    color: var(--color-primary);
-    font-weight: 900;
-    letter-spacing: 0.18em;
-  }
-  &__footer-dot {
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: var(--color-primary);
-    opacity: 0.8;
-  }
 }
 
 @keyframes w-fade-in {
@@ -663,10 +635,6 @@
       font-size: 0.5rem;
       gap: var(--space-2);
     }
-    &__footer {
-      margin-top: var(--space-7);
-      font-size: 0.5rem;
-    }
   }
 }
 
@@ -747,10 +715,6 @@
     }
     &__action {
       margin-top: var(--space-6);
-    }
-    &__footer {
-      margin-top: var(--space-6);
-      padding-top: var(--space-4);
     }
   }
 }

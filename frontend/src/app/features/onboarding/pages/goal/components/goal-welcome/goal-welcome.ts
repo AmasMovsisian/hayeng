@@ -11,6 +11,7 @@ import {
   inject,
 } from '@angular/core';
 import { EnglishLevel, Gender, GoalOption, LevelSource } from '../../models/goal.models';
+import { AppFooter } from '../../../../../../shared/app-footer/app-footer';
 
 @Component({
   selector: 'app-goal-welcome',
@@ -18,6 +19,7 @@ import { EnglishLevel, Gender, GoalOption, LevelSource } from '../../models/goal
   templateUrl: './goal-welcome.html',
   styleUrl: './goal-welcome.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AppFooter],
 })
 export class GoalWelcome implements OnInit, OnDestroy {
   @Input() username = '';

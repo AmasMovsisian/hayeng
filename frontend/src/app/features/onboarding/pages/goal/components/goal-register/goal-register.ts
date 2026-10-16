@@ -6,11 +6,12 @@ import {
   Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AppFooter } from '../../../../../../shared/app-footer/app-footer';
 
 @Component({
   selector: 'app-goal-register',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AppFooter],
   templateUrl: './goal-register.html',
   styleUrl: './goal-register.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -10,12 +10,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Gender } from '../../models/goal.models';
+import { AppFooter } from '../../../../../../shared/app-footer/app-footer';
 @Component({
   selector: 'app-goal-profile',
   standalone: true,
   templateUrl: './goal-profile.html',
   styleUrl: './goal-profile.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AppFooter],
 })
 export class GoalProfile implements OnChanges {
   @ViewChild('nativeDateInput')
