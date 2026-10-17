@@ -15,6 +15,19 @@ import {
 } from './models/goal.models';
 import { PlacementTestResult } from './models/placement-test.models';
 
+const MAX_NAME_LENGTH = 32;
+
+const NAME_ERRORS: Readonly<Record<string, string>> = {
+  required: 'Գրիր քո անունը։',
+  tooLong: 'Անունը չպետք է գերազանցի 32 նիշը։',
+  leadingOrTrailingSpace: 'Անվան սկզբում կամ վերջում բացատներ չեն թույլատրվում։',
+  repeatedSpaces: 'Անվան մասերի միջև օգտագործիր միայն մեկ բացատ։',
+  invalidCharacters: 'Օգտագործիր միայն տառեր, բացատ, գծիկ կամ ընդգծման նշան։',
+  invalidSeparator: 'Գծիկը կամ ընդգծման նշանը պետք է լինի տառերի միջև։',
+  tooManyParts: 'Մուտքագրիր միայն անունդ կամ անունն ու ազգանունդ։',
+  invalidFormat: 'Ստուգիր անվան գրությունը և փորձիր կրկին։',
+};
+
 @Component({
   selector: 'app-goal',
   standalone: true,
@@ -31,6 +44,7 @@ export class Goal {
   protected get currentStep(): number {
     return this.currentStepValue;
   }
+
   protected set currentStep(value: number) {
     this.currentStepValue = value;
     this.scrollToTop();
@@ -39,6 +53,7 @@ export class Goal {
   protected get showWelcome(): boolean {
     return this.showWelcomeValue;
   }
+
   protected set showWelcome(value: boolean) {
     this.showWelcomeValue = value;
     this.scrollToTop();
@@ -47,6 +62,7 @@ export class Goal {
   protected get showPlacementTest(): boolean {
     return this.showPlacementTestValue;
   }
+
   protected set showPlacementTest(value: boolean) {
     this.showPlacementTestValue = value;
     this.scrollToTop();
@@ -69,6 +85,9 @@ export class Goal {
   protected dateOfBirthTouched = false;
   protected genderTouched = false;
 
+  private readonly namePattern =
+    /^[\p{L}\p{M}]+(?:[-_][\p{L}\p{M}]+)*(?: [\p{L}\p{M}]+(?:[-_][\p{L}\p{M}]+)*)?$/u;
+
   private scrollToTop(): void {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -85,10 +104,12 @@ export class Goal {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const target = document.querySelector('.goal__option--selected') as HTMLElement | null;
+
         if (!target) {
           this.scrollToTop();
           return;
         }
+
         target.scrollIntoView({
           behavior: 'smooth',
           block: 'center',
@@ -114,8 +135,8 @@ export class Goal {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const target = document.querySelector('.goal__placement') as HTMLElement | null;
-        if (!target) return;
-        target.scrollIntoView({
+
+        target?.scrollIntoView({
           behavior: 'smooth',
           block: 'center',
         });
@@ -151,9 +172,11 @@ export class Goal {
 
   protected onPlacementCancelled(): void {
     this.showPlacementTestValue = false;
+
     if (this.levelSource === 'test') {
       this.levelSource = 'unknown';
     }
+
     this.scrollToTop();
   }
 
@@ -168,6 +191,7 @@ export class Goal {
       if (!this.selectedGoal) {
         return;
       }
+
       this.currentStep = 2;
       return;
     }
@@ -182,11 +206,6 @@ export class Goal {
       this.dateOfBirthTouched = true;
       this.genderTouched = true;
       this.continueProfile();
-      return;
-    }
-
-    if (this.currentStep === 4) {
-      return;
     }
   }
 
@@ -209,49 +228,61 @@ export class Goal {
 
     if (this.currentStep === 2) {
       this.currentStep = 1;
-      return;
     }
   }
 
   protected onUsernameInput(value: string): void {
-    this.username = value;
+    this.username = value.slice(0, MAX_NAME_LENGTH);
   }
 
   protected onUsernameBlur(): void {
     this.usernameTouched = true;
+    this.normalizeUsername();
+  }
+
+  private normalizeUsername(): void {
+    this.username = this.username.trim().replace(/\s+/g, ' ');
   }
 
   protected isUsernameValid(): boolean {
-    const username = this.username.trim();
-    if (!username) return false;
-    if (username.length < 3) return false;
-    if (username.length > 60) return false;
-    if (!/^[\p{L}]+(?:[ '-][\p{L}]+)*$/u.test(username)) return false;
-    if (/\s{2,}/.test(username)) return false;
-    const words = username.split(/[ '-]/);
-    if (!words.every((word) => word.length >= 2)) return false;
-    if (words.length === 1 && words[0].length < 3) return false;
-    return true;
+    return this.getUsernameError() === null;
   }
 
   protected getUsernameError(): string | null {
-    const username = this.username.trim();
-    if (!username) return 'Գրիր քո անունը։';
-    if (username.length < 3) return 'Անունը պետք է պարունակի առնվազն 3 տառ։';
-    if (username.length > 60) return 'Անունը չափազանց երկար է։';
-    if (!/^[\p{L}]+(?:[ '-][\p{L}]+)*$/u.test(username)) {
-      return 'Օգտագործիր միայն տառեր։ Թույլատրվում են նաև բացատ, գծիկ և ապոստրոֆ։';
+    const name = this.username;
+
+    if (!name.trim()) {
+      return NAME_ERRORS['required'];
     }
-    if (/\s{2,}/.test(username)) {
-      return 'Անվան մեջ իրար հաջորդող բացատներ չեն թույլատրվում։';
+
+    if (name.length > MAX_NAME_LENGTH) {
+      return NAME_ERRORS['tooLong'];
     }
-    const words = username.split(/[ '-]/);
-    if (!words.every((word) => word.length >= 2)) {
-      return 'Անվան յուրաքանչյուր մասը պետք է պարունակի առնվազն 2 տառ։';
+
+    if (name.startsWith(' ') || name.endsWith(' ')) {
+      return NAME_ERRORS['leadingOrTrailingSpace'];
     }
-    if (words.length === 1 && words[0].length < 3) {
-      return 'Անունը չափազանց կարճ է։';
+
+    if (/ {2,}/.test(name)) {
+      return NAME_ERRORS['repeatedSpaces'];
     }
+
+    if (!/^[\p{L}\p{M} _-]+$/u.test(name)) {
+      return NAME_ERRORS['invalidCharacters'];
+    }
+
+    if (/^[-_]|[-_]$|[-_]{2,}|[-_] | [-_]/.test(name)) {
+      return NAME_ERRORS['invalidSeparator'];
+    }
+
+    if (name.split(' ').length > 2) {
+      return NAME_ERRORS['tooManyParts'];
+    }
+
+    if (!this.namePattern.test(name)) {
+      return NAME_ERRORS['invalidFormat'];
+    }
+
     return null;
   }
 
@@ -272,10 +303,16 @@ export class Goal {
   }
 
   protected getAge(): number | null {
-    if (!this.dateOfBirth) return null;
+    if (!this.dateOfBirth) {
+      return null;
+    }
+
     const birthDate = new Date(`${this.dateOfBirth}T00:00:00`);
     const today = new Date();
-    if (Number.isNaN(birthDate.getTime())) return null;
+
+    if (Number.isNaN(birthDate.getTime())) {
+      return null;
+    }
 
     const year = birthDate.getFullYear();
     const month = birthDate.getMonth();
@@ -293,6 +330,7 @@ export class Goal {
     }
 
     const normalizedDate = new Date(year, month, day);
+
     if (
       normalizedDate.getFullYear() !== year ||
       normalizedDate.getMonth() !== month ||
@@ -301,27 +339,33 @@ export class Goal {
       return null;
     }
 
-    if (birthDate > today) return null;
+    if (birthDate > today) {
+      return null;
+    }
 
     let age = today.getFullYear() - year;
     const monthDifference = today.getMonth() - month;
+
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < day)) {
       age--;
     }
+
     return age;
   }
 
   protected isAgeValid(): boolean {
     const age = this.getAge();
-    if (age === null) return false;
-    return age >= 7 && age <= 120;
+    return age !== null && age >= 7 && age <= 120;
   }
 
   protected getDateOfBirthError(): string | null {
-    if (!this.dateOfBirth) return 'Ընտրիր քո ծննդյան ամսաթիվը։';
+    if (!this.dateOfBirth) {
+      return 'Ընտրիր քո ծննդյան ամսաթիվը։';
+    }
 
     const birthDate = new Date(`${this.dateOfBirth}T00:00:00`);
     const today = new Date();
+
     if (Number.isNaN(birthDate.getTime())) {
       return 'Մուտքագրիր վավեր ծննդյան ամսաթիվ։';
     }
@@ -335,6 +379,7 @@ export class Goal {
     }
 
     const normalizedDate = new Date(year, month, day);
+
     if (
       normalizedDate.getFullYear() !== year ||
       normalizedDate.getMonth() !== month ||
@@ -344,9 +389,19 @@ export class Goal {
     }
 
     const age = this.getAge();
-    if (age === null) return 'Մուտքագրիր վավեր ծննդյան ամսաթիվ։';
-    if (age < 7) return 'Գրանցվելու համար պետք է լինես առնվազն 7 տարեկան։';
-    if (age > 120) return 'Խնդրում ենք մուտքագրել իրական և վավեր ծննդյան ամսաթիվ։';
+
+    if (age === null) {
+      return 'Մուտքագրիր վավեր ծննդյան ամսաթիվ։';
+    }
+
+    if (age < 7) {
+      return 'Գրանցվելու համար պետք է լինես առնվազն 7 տարեկան։';
+    }
+
+    if (age > 120) {
+      return 'Խնդրում ենք մուտքագրել իրական և վավեր ծննդյան ամսաթիվ։';
+    }
+
     return null;
   }
 
@@ -372,14 +427,16 @@ export class Goal {
 
   protected isValidEmail(): boolean {
     const email = this.email.trim();
-    if (!email || email.length > 254) return false;
+
+    if (!email || email.length > 254) {
+      return false;
+    }
+
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
   protected isPasswordValid(): boolean {
-    if (this.password.length < 8 || this.password.length > 128) return false;
-    if (/\s/.test(this.password)) return false;
-    return true;
+    return this.password.length >= 8 && this.password.length <= 128 && !/\s/.test(this.password);
   }
 
   protected isRegistrationValid(): boolean {
@@ -395,10 +452,7 @@ export class Goal {
   }
 
   protected finish(): void {
-    if (!this.selectedGoal) {
-      return;
-    }
-    if (this.levelSource === null) {
+    if (!this.selectedGoal || this.levelSource === null) {
       return;
     }
 
@@ -413,17 +467,20 @@ export class Goal {
   }
 
   protected continueProfile(): void {
+    this.normalizeUsername();
+
     if (!this.isUsernameValid() || !this.isAgeValid() || !this.isGenderValid()) {
       return;
     }
 
     const age = this.getAge();
+
     if (age === null || this.gender === null) {
       return;
     }
 
     const userProfile: UserProfile = {
-      username: this.username.trim(),
+      username: this.username,
       dateOfBirth: this.dateOfBirth,
       age,
       gender: this.gender,
@@ -438,6 +495,8 @@ export class Goal {
   }
 
   protected register(): void {
+    this.normalizeUsername();
+
     if (!this.isRegistrationValid()) {
       return;
     }
@@ -448,12 +507,13 @@ export class Goal {
     };
 
     const age = this.getAge();
+
     if (age === null || this.gender === null) {
       return;
     }
 
     const onboardingProfile = {
-      username: this.username.trim(),
+      username: this.username,
       dateOfBirth: this.dateOfBirth,
       age,
       gender: this.gender,

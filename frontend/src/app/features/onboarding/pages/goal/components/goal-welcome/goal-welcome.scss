@@ -96,11 +96,15 @@
 }
 
 .goal__greeting-row {
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 10px;
   min-height: 42px;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 var(--space-4);
   animation: goal-greeting-row-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
 }
 
@@ -112,6 +116,10 @@
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.01em;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  text-align: center;
 }
 
 .goal__welcome-hand {

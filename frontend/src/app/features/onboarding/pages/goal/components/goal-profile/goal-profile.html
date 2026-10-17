@@ -9,24 +9,16 @@
       aria-label="Քայլ 3 4-ից"
     >
       <div class="goal__progress-meta">
-        <span class="goal__progress-label">
-          ՔԱՅԼ 3
-        </span>
-        <span class="goal__progress-count">
-          3 / 4
-        </span>
+        <span class="goal__progress-label"> ՔԱՅԼ 3 </span>
+        <span class="goal__progress-count"> 3 / 4 </span>
       </div>
-      <div
-        class="goal__progress-track"
-        aria-hidden="true"
-      >
+      <div class="goal__progress-track" aria-hidden="true">
         <span class="goal__progress-fill goal__progress-fill--three-quarter"></span>
       </div>
     </div>
+
     <div class="goal__heading">
-      <span class="goal__eyebrow">
-        Մի փոքր էլ քեզ մասին
-      </span>
+      <span class="goal__eyebrow"> Մի փոքր էլ քեզ մասին </span>
       <h1 class="goal__title">
         Ինչպե՞ս կարող ենք քեզ
         <span>ավելի լավ ճանաչել։</span>
@@ -36,71 +28,65 @@
       </p>
     </div>
   </header>
+
   <div class="goal__form">
-    <label
-      class="goal__field"
-      [class.goal__field--error]="usernameTouched && !usernameValid"
-    >
+    <label class="goal__field" [class.goal__field--error]="usernameErrorVisible">
       <span class="goal__label-row">
-        <span class="goal__label">
-          Անուն
-        </span>
-        <span class="goal__optional">
-          Քո իրական անունը
-        </span>
+        <span class="goal__label"> Անուն </span>
+        <span class="goal__optional"> Քո իրական անունը </span>
       </span>
+
       <span class="goal__input-shell">
-        <span
-          class="goal__input-leading"
-          aria-hidden="true"
-        >
+        <span class="goal__input-leading" aria-hidden="true">
           <svg viewBox="0 0 24 24" focusable="false">
             <circle cx="12" cy="8" r="3.5"></circle>
             <path d="M5 20c.8-3.1 3.2-5 7-5s6.2 1.9 7 5"></path>
           </svg>
         </span>
+
         <input
           type="text"
           class="goal__input"
           name="name"
           autocomplete="name"
           placeholder="Քո անունը"
+          [attr.maxlength]="maxNameLength"
           [value]="username"
-          (input)="onUsernameInput($any($event.target).value)"
-          (blur)="usernameBlur.emit()"
+          (input)="onUsernameInput($any($event.target).value, $event)"
+          (blur)="onUsernameBlur()"
           aria-label="Քո անունը"
+          aria-required="true"
+          [attr.aria-invalid]="usernameErrorVisible"
+          aria-describedby="name-error"
         />
       </span>
+
       <p
+        id="name-error"
         class="goal__field-error"
-        [class.goal__field-error--visible]="usernameTouched && !usernameValid"
+        [class.goal__field-error--visible]="usernameErrorVisible"
         aria-live="polite"
       >
-        {{ usernameError || '&nbsp;' }}
+        {{ usernameDisplayError || '&nbsp;' }}
       </p>
     </label>
-    <label
-      class="goal__field"
-      [class.goal__field--error]="dateOfBirthTouched && !ageValid"
-    >
+
+    <label class="goal__field" [class.goal__field--error]="dateOfBirthTouched && !ageValid">
       <span class="goal__label-row">
-        <span class="goal__label">
-          Ծննդյան ամսաթիվ
-        </span>
-        <span class="goal__optional">
-         Քո իրական ծննդյան ամսաթիվը
-        </span>
+        <span class="goal__label"> Ծննդյան ամսաթիվ </span>
+        <span class="goal__optional"> Քո իրական ծննդյան ամսաթիվը </span>
       </span>
+
       <span class="goal__date-wrapper">
-        <span
-          class="goal__input-leading goal__date-leading"
-          aria-hidden="true"
-        >
+        <span class="goal__input-leading goal__date-leading" aria-hidden="true">
           <svg viewBox="0 0 24 24" focusable="false">
             <path d="M7 2v3M17 2v3M3.5 9.5h17"></path>
-            <path d="M5.5 4.5h13a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2v-12a2 2 0 0 1 2-2Z"></path>
+            <path
+              d="M5.5 4.5h13a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2v-12a2 2 0 0 1 2-2Z"
+            ></path>
           </svg>
         </span>
+
         <input
           type="text"
           class="goal__input goal__date-input"
@@ -115,12 +101,16 @@
           aria-label="Ծննդյան ամսաթիվ"
           aria-describedby="date-of-birth-error"
         />
+
         <span class="goal__calendar-button" aria-hidden="true">
           <svg viewBox="0 0 24 24" focusable="false">
             <path d="M7 2v3M17 2v3M3.5 9.5h17"></path>
-            <path d="M5.5 4.5h13a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2v-12a2 2 0 0 1 2-2Z"></path>
+            <path
+              d="M5.5 4.5h13a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2v-12a2 2 0 0 1 2-2Z"
+            ></path>
           </svg>
         </span>
+
         <input
           #nativeDateInput
           type="date"
@@ -131,6 +121,7 @@
           (change)="onNativeDateChange($any($event.target).value)"
         />
       </span>
+
       <p
         id="date-of-birth-error"
         class="goal__field-error"
@@ -140,23 +131,17 @@
         {{ dateOfBirthError || '&nbsp;' }}
       </p>
     </label>
+
     <div
       class="goal__field goal__gender-field"
       [class.goal__field--error]="genderTouched && !genderValid"
     >
       <div class="goal__label-row">
-        <span class="goal__label">
-          Սեռ
-        </span>
-        <span class="goal__optional">
-          Ընտրիր մեկը
-        </span>
+        <span class="goal__label"> Սեռ </span>
+        <span class="goal__optional"> Ընտրիր մեկը </span>
       </div>
-      <div
-        class="goal__gender-options"
-        role="radiogroup"
-        aria-label="Ընտրիր քո սեռը"
-      >
+
+      <div class="goal__gender-options" role="radiogroup" aria-label="Ընտրիր քո սեռը">
         <button
           type="button"
           class="goal__gender-option"
@@ -166,17 +151,13 @@
           (click)="onGenderChange('male')"
           (blur)="genderBlur.emit()"
         >
-          <span class="goal__gender-icon" aria-hidden="true">
-            ♂
-          </span>
+          <span class="goal__gender-icon" aria-hidden="true"> ♂ </span>
+
           <span class="goal__gender-content">
-            <span class="goal__gender-title">
-              Արական
-            </span>
-            <span class="goal__gender-description">
-              Տղամարդ
-            </span>
+            <span class="goal__gender-title"> Արական </span>
+            <span class="goal__gender-description"> Տղամարդ </span>
           </span>
+
           <span
             class="goal__gender-check"
             [class.goal__gender-check--visible]="gender === 'male'"
@@ -187,6 +168,7 @@
             </svg>
           </span>
         </button>
+
         <button
           type="button"
           class="goal__gender-option"
@@ -196,17 +178,13 @@
           (click)="onGenderChange('female')"
           (blur)="genderBlur.emit()"
         >
-          <span class="goal__gender-icon" aria-hidden="true">
-            ♀
-          </span>
+          <span class="goal__gender-icon" aria-hidden="true"> ♀ </span>
+
           <span class="goal__gender-content">
-            <span class="goal__gender-title">
-              Իգական
-            </span>
-            <span class="goal__gender-description">
-              Կին
-            </span>
+            <span class="goal__gender-title"> Իգական </span>
+            <span class="goal__gender-description"> Կին </span>
           </span>
+
           <span
             class="goal__gender-check"
             [class.goal__gender-check--visible]="gender === 'female'"
@@ -218,6 +196,7 @@
           </span>
         </button>
       </div>
+
       <p
         class="goal__field-error"
         [class.goal__field-error--visible]="genderTouched && !genderValid"
@@ -226,6 +205,7 @@
         {{ genderValid ? '&nbsp;' : 'Ընտրիր քո սեռը։' }}
       </p>
     </div>
+
     <div class="goal__privacy-note">
       <span class="goal__privacy-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" focusable="false">
@@ -233,30 +213,22 @@
           <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
         </svg>
       </span>
-      <p>
-        Քո տվյալները մեզ օգնում են ստեղծել քեզ համար ավելի համապատասխան
-        ուսուցման փորձ։
-      </p>
+
+      <p>Քո տվյալները մեզ օգնում են ստեղծել քեզ համար ավելի համապատասխան ուսուցման փորձ։</p>
     </div>
   </div>
+
   <div class="goal__actions">
-    <button
-      type="button"
-      class="goal__back"
-      (click)="back.emit()"
-    >
+    <button type="button" class="goal__back" (click)="back.emit()">
       <span aria-hidden="true">←</span>
       <span>Հետ</span>
     </button>
-    <button
-      type="button"
-      class="goal__next button"
-      [disabled]="!canContinue"
-      (click)="onNext()"
-    >
+
+    <button type="button" class="goal__next button" [disabled]="!canContinue" (click)="onNext()">
       <span>Շարունակել</span>
       <span aria-hidden="true">→</span>
     </button>
   </div>
 </div>
+
 <hy-app-footer></hy-app-footer>
