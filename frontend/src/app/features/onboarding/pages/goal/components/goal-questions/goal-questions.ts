@@ -13,14 +13,8 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import {
-  EnglishLevel,
-  GoalOption,
-  LevelSource,
-} from '../../models/goal.models';
+import { EnglishLevel, GoalOption, LevelSource } from '../../models/goal.models';
 import { AppFooter } from '../../../../../../shared/app-footer/app-footer';
-
-type PlacementChoice = 'skip' | 'later' | null;
 
 @Component({
   selector: 'app-goal-questions',
@@ -47,7 +41,7 @@ export class GoalQuestions implements AfterViewInit, OnChanges {
   @Output() next = new EventEmitter<void>();
   @Output() back = new EventEmitter<void>();
 
-  protected placementChoice: PlacementChoice = null;
+  protected placementPanelVisible = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -58,56 +52,42 @@ export class GoalQuestions implements AfterViewInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['currentStep']) {
       this.scrollToTop(true);
-      this.placementChoice = null;
+      this.placementPanelVisible = false;
     }
 
-    if (changes['currentStep'] || changes['levelSource']) {
-      this.syncPlacementChoiceFromSource();
-    }
-  }
-
-  private syncPlacementChoiceFromSource(): void {
-    const s = this.levelSource;
-
-    if (s === 'skip' || s === 'later') {
-      this.placementChoice = s;
-    } else if (s === 'self' || s === 'test' || s === null) {
-      this.placementChoice = null;
+    if (changes['levelSource']) {
+      this.placementPanelVisible = this.levelSource === 'unknown';
     }
   }
 
   protected isPlacementPanelVisible(): boolean {
-    return (
-      this.levelSource === 'unknown' ||
-      this.levelSource === 'skip' ||
-      this.levelSource === 'later'
-    );
+    return this.levelSource === 'unknown' || this.placementPanelVisible;
   }
 
   protected isUnknownSelected(): boolean {
-    return this.isPlacementPanelVisible();
+    return this.levelSource === 'unknown';
   }
 
   protected isSkipSelected(): boolean {
-    return this.placementChoice === 'skip';
+    return false;
   }
 
   protected isLaterSelected(): boolean {
-    return this.placementChoice === 'later';
+    return false;
   }
 
   protected onPlacementStart(): void {
-    this.placementChoice = null;
+    this.placementPanelVisible = true;
     this.placementStart.emit();
   }
 
   protected onPlacementSkip(): void {
-    this.placementChoice = 'skip';
+    this.placementPanelVisible = false;
     this.placementSkip.emit();
   }
 
   protected onPlacementLater(): void {
-    this.placementChoice = 'later';
+    this.placementPanelVisible = false;
     this.placementLater.emit();
   }
 

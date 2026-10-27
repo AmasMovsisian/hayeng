@@ -1,4 +1,3 @@
-
 <div class="goal__step-wrapper">
   <header class="goal__header">
     <div
@@ -37,37 +36,36 @@
         <span class="goal__optional">Անհրաժեշտ</span>
       </span>
       <span class="goal__input-shell">
-        <span class="goal__input-leading" aria-hidden="true">
-          <svg viewBox="0 0 24 24" focusable="false">
-            <circle cx="12" cy="8" r="4"></circle>
-            <path d="M5 20a7 7 0 0 1 14 0"></path>
-          </svg>
-        </span>
+        <span class="goal__input-leading" aria-hidden="true">@</span>
         <input
           type="text"
           class="goal__input"
           name="username"
           autocomplete="username"
-          placeholder="Մուտքագրիր օգտանունդ"
+          placeholder="your_username"
           [value]="username"
-          (input)="usernameChange.emit($any($event.target).value)"
-          [attr.aria-invalid]="username.length > 0 && !usernameValid"
+          (input)="onUsernameInput($any($event.target).value, $event)"
+          [attr.aria-invalid]="usernameTouched && !usernameValid"
+          aria-describedby="username-error"
           required
         />
       </span>
-      <span
-        *ngIf="username.length > 0 && !usernameValid"
-        class="goal__username-error"
-        role="alert"
-      >
-        {{ usernameError }}
-      </span>
-      <span
-        *ngIf="username.length > 0 && usernameValid && usernameAvailable"
-        class="goal__username-success"
-      >
-        Username-ը հասանելի է։
-      </span>
+      @if (usernameTouched && !usernameValid) {
+        <span id="username-error" class="goal__username-error" role="alert">
+          {{ usernameError }}
+        </span>
+      }
+      @if (usernameValid && usernameChecking) {
+        <span class="goal__username-checking">Ստուգվում է հասանելիությունը…</span>
+      }
+      @if (usernameValid && !usernameChecking && usernameAvailable) {
+        <span class="goal__username-success">Օգտանունը հասանելի է։</span>
+      }
+      @if (usernameValid && !usernameChecking && !usernameAvailable && username.length > 0) {
+        <span class="goal__username-error" role="alert">
+          Այս օգտանունը զբաղված է։ Փորձիր մեկ այլ։
+        </span>
+      }
     </label>
 
     <label class="goal__field">
@@ -170,7 +168,7 @@
     <button
       type="button"
       class="goal__next button"
-      [disabled]="!registrationValid || !usernameValid || !usernameAvailable"
+      [disabled]="!registrationValid"
       (click)="register.emit()"
     >
       <span>Ավարտել</span>

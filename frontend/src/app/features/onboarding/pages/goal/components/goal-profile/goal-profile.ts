@@ -38,23 +38,22 @@ export class GoalProfile implements OnChanges {
   @ViewChild('nativeDateInput')
   nativeDateInput?: ElementRef<HTMLInputElement>;
 
-  @Input() username = '';
+  @Input() displayName = '';
   @Input() dateOfBirth = '';
   @Input() gender: Gender | null = null;
 
-  @Input() usernameTouched = false;
+  @Input() displayNameTouched = false;
   @Input() dateOfBirthTouched = false;
   @Input() genderTouched = false;
 
-  @Input() usernameValid = false;
-  @Input() ageValid = false;
+  @Input() displayNameValid = false;
   @Input() genderValid = false;
 
-  @Input() usernameError: string | null = null;
+  @Input() displayNameError: string | null = null;
   @Input() dateOfBirthError: string | null = null;
 
-  @Output() usernameInput = new EventEmitter<string>();
-  @Output() usernameBlur = new EventEmitter<void>();
+  @Output() displayNameInput = new EventEmitter<string>();
+  @Output() displayNameBlur = new EventEmitter<void>();
   @Output() dateOfBirthChange = new EventEmitter<string>();
   @Output() dateOfBirthBlur = new EventEmitter<void>();
   @Output() genderChange = new EventEmitter<Gender>();
@@ -75,30 +74,35 @@ export class GoalProfile implements OnChanges {
 
   constructor(private readonly cdr: ChangeDetectorRef) {}
 
-  get normalizedUsername(): string {
-    return this.normalizeName(this.username);
+  get normalizedDisplayName(): string {
+    return this.normalizeName(this.displayName);
   }
 
-  get usernameErrorVisible(): boolean {
+  get displayNameErrorVisible(): boolean {
     return (
-      this.nameFormatInvalid || (this.usernameTouched && this.getNameError(this.username) !== null)
+      this.nameFormatInvalid ||
+      (this.displayNameTouched && this.getNameError(this.displayName) !== null)
     );
   }
 
-  get usernameDisplayError(): string | null {
+  get displayNameDisplayError(): string | null {
     if (this.nameFormatInvalid) {
       return this.nameErrorMessage;
     }
 
-    if (this.usernameTouched) {
-      return this.getNameError(this.username);
+    if (this.displayNameTouched) {
+      return this.getNameError(this.displayName);
     }
 
     return null;
   }
 
+  get ageValid(): boolean {
+    return this.dateOfBirthError === null;
+  }
+
   get canContinue(): boolean {
-    return this.getNameError(this.username) === null && this.ageValid && this.genderValid;
+    return this.getNameError(this.displayName) === null && this.ageValid && this.genderValid;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -106,14 +110,14 @@ export class GoalProfile implements OnChanges {
       this.syncDateInputValue();
     }
 
-    if (changes['username'] && !this.nameFormatInvalid) {
-      this.nameErrorMessage = this.getNameError(this.username) ?? NAME_ERRORS.required;
+    if (changes['displayName'] && !this.nameFormatInvalid) {
+      this.nameErrorMessage = this.getNameError(this.displayName) ?? NAME_ERRORS.required;
     }
 
     this.cdr.markForCheck();
   }
 
-  onUsernameInput(value: string, event?: Event): void {
+  onDisplayNameInput(value: string, event?: Event): void {
     const input = event?.target as HTMLInputElement | undefined;
     const candidate = value.slice(0, MAX_NAME_LENGTH);
 
@@ -121,25 +125,25 @@ export class GoalProfile implements OnChanges {
       input.value = candidate;
     }
 
-    this.usernameTouched = true;
+    this.displayNameTouched = true;
     this.nameFormatInvalid = false;
     this.nameErrorMessage = this.getNameError(candidate) ?? NAME_ERRORS.required;
 
-    this.usernameInput.emit(candidate);
+    this.displayNameInput.emit(candidate);
     this.cdr.markForCheck();
   }
 
-  onUsernameBlur(): void {
-    const normalized = this.normalizeName(this.username);
-    const changed = normalized !== this.username;
+  onDisplayNameBlur(): void {
+    const normalized = this.normalizeName(this.displayName);
+    const changed = normalized !== this.displayName;
 
-    this.usernameTouched = true;
+    this.displayNameTouched = true;
 
     if (changed) {
-      this.usernameInput.emit(normalized);
+      this.displayNameInput.emit(normalized);
     }
 
-    this.usernameBlur.emit();
+    this.displayNameBlur.emit();
 
     const error = this.getNameError(normalized);
 
@@ -236,12 +240,12 @@ export class GoalProfile implements OnChanges {
   }
 
   onNext(): void {
-    this.usernameTouched = true;
+    this.displayNameTouched = true;
 
-    const normalized = this.normalizeName(this.username);
+    const normalized = this.normalizeName(this.displayName);
 
-    if (normalized !== this.username) {
-      this.usernameInput.emit(normalized);
+    if (normalized !== this.displayName) {
+      this.displayNameInput.emit(normalized);
     }
 
     const nameError = this.getNameError(normalized);

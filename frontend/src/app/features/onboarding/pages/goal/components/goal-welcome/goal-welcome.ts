@@ -28,7 +28,6 @@ export class GoalWelcome implements OnInit, OnDestroy {
   @Input() gender: Gender | null = null;
   @Input() selectedGoal: GoalOption | null = null;
   @Input() selectedLevel: EnglishLevel | null = null;
-  @Input() age: number | null = null;
   @Input() levelSource: LevelSource | null = null;
 
   @Output() next = new EventEmitter<void>();
@@ -58,6 +57,7 @@ export class GoalWelcome implements OnInit, OnDestroy {
         this.profileEntering = true;
         this.changeDetectorRef.markForCheck();
 
+        this.clearScrollTimers();
         this.scrollToTop();
 
         this.profileTimer = setTimeout(() => {
@@ -81,11 +81,17 @@ export class GoalWelcome implements OnInit, OnDestroy {
       clearTimeout(this.profileTimer);
       this.profileTimer = null;
     }
+    this.clearScrollTimers();
+  }
+
+  private clearScrollTimers(): void {
     for (const t of this.scrollTimers) clearTimeout(t);
     this.scrollTimers = [];
   }
 
   private scrollToTop(): void {
+    this.clearScrollTimers();
+
     const fire = (): void => {
       const el = this.host.nativeElement as HTMLElement | undefined;
 
@@ -125,10 +131,7 @@ export class GoalWelcome implements OnInit, OnDestroy {
     requestAnimationFrame(fire);
     requestAnimationFrame(() => requestAnimationFrame(fire));
 
-    const delays = [
-      0, 30, 60, 100, 150, 220, 300, 400, 520, 660, 820,
-      1000, 1200, 1450, 1700, 2000, 2300, 2600,
-    ];
+    const delays = [0, 30, 60, 100, 150, 220, 300, 400];
     for (const d of delays) {
       this.scrollTimers.push(setTimeout(fire, d));
     }
@@ -140,9 +143,41 @@ export class GoalWelcome implements OnInit, OnDestroy {
     return this.transliterateName(value);
   }
 
+  private get age(): number | null {
+    if (!this.dateOfBirth) return null;
+
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(this.dateOfBirth);
+    if (!match) return null;
+
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+    const today = new Date();
+    const birthDate = new Date(year, month - 1, day);
+
+    if (
+      birthDate.getFullYear() !== year ||
+      birthDate.getMonth() !== month - 1 ||
+      birthDate.getDate() !== day
+    ) {
+      return null;
+    }
+
+    let calculated = today.getFullYear() - year;
+    if (
+      today.getMonth() < month - 1 ||
+      (today.getMonth() === month - 1 && today.getDate() < day)
+    ) {
+      calculated--;
+    }
+
+    return calculated >= 0 ? calculated : null;
+  }
+
   get displayAge(): string {
-    if (this.age === null || this.age === undefined) return '—';
-    return `${this.age} տարեկան`;
+    const age = this.age;
+    if (age === null) return '—';
+    return `${age} տարեկան`;
   }
 
   get displayGender(): string {
@@ -195,15 +230,11 @@ export class GoalWelcome implements OnInit, OnDestroy {
 
   get displayLevel(): string {
     if (!this.selectedLevel) {
-      switch (this.levelSource) {
-        case 'later':
-          return 'Հետո կպարզենք';
-        case 'skip':
-        case 'unknown':
-          return 'Մակարդակը նշված չէ';
-        default:
-          return '—';
+      if (this.levelSource === 'unknown') {
+        return 'Մակարդակը նշված չէ';
       }
+
+      return '—';
     }
 
     const rawValue = this.getObjectLabel(this.selectedLevel).trim();
@@ -224,6 +255,7 @@ export class GoalWelcome implements OnInit, OnDestroy {
       upperintermediate: 'Միջինից բարձր / B2',
       advanced: 'Բարձր / C1',
     };
+
     return levels[value] ?? rawValue;
   }
 

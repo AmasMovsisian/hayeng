@@ -1,8 +1,17 @@
-export type GoalOption = 'career' | 'travel' | 'communication' | 'self-development';
 
-export type EnglishLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1';
+export const ENGLISH_LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1'] as const;
 
-export type LevelSource = 'self' | 'test' | 'unknown' | 'skip' | 'later';
+export type EnglishLevel = (typeof ENGLISH_LEVELS)[number];
+
+export type PlacementLevel = EnglishLevel;
+
+export type GoalOption =
+  | 'career'
+  | 'travel'
+  | 'communication'
+  | 'self-development';
+
+export type LevelSource = 'self' | 'test' | 'unknown';
 
 export type Gender = 'male' | 'female';
 
@@ -14,14 +23,12 @@ export interface LearningProfile {
 
 export interface UserProfile {
   username: string;
+  displayName: string;
   dateOfBirth: string;
-  age: number;
-  gender: Gender;
+  gender: Gender | null;
 }
 
 export interface RegistrationProfile {
   email: string;
   password: string;
 }
-
-export type PlacementLevel = EnglishLevel;

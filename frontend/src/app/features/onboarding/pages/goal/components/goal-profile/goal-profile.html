@@ -30,7 +30,7 @@
   </header>
 
   <div class="goal__form">
-    <label class="goal__field" [class.goal__field--error]="usernameErrorVisible">
+    <label class="goal__field" [class.goal__field--error]="displayNameErrorVisible">
       <span class="goal__label-row">
         <span class="goal__label"> Անուն </span>
         <span class="goal__optional"> Քո իրական անունը </span>
@@ -51,12 +51,12 @@
           autocomplete="name"
           placeholder="Քո անունը"
           [attr.maxlength]="maxNameLength"
-          [value]="username"
-          (input)="onUsernameInput($any($event.target).value, $event)"
-          (blur)="onUsernameBlur()"
+          [value]="displayName"
+          (input)="onDisplayNameInput($any($event.target).value, $event)"
+          (blur)="onDisplayNameBlur()"
           aria-label="Քո անունը"
           aria-required="true"
-          [attr.aria-invalid]="usernameErrorVisible"
+          [attr.aria-invalid]="displayNameErrorVisible"
           aria-describedby="name-error"
         />
       </span>
@@ -64,10 +64,10 @@
       <p
         id="name-error"
         class="goal__field-error"
-        [class.goal__field-error--visible]="usernameErrorVisible"
+        [class.goal__field-error--visible]="displayNameErrorVisible"
         aria-live="polite"
       >
-        {{ usernameDisplayError || '&nbsp;' }}
+        {{ displayNameDisplayError || '&nbsp;' }}
       </p>
     </label>
 

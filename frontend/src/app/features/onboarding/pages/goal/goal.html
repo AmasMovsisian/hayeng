@@ -24,19 +24,18 @@
     }
     @if (!showWelcome && !showPlacementTest && currentStep === 3) {
       <app-goal-profile
-        [username]="username"
+        [displayName]="displayName"
         [dateOfBirth]="dateOfBirth"
         [gender]="gender"
-        [usernameTouched]="usernameTouched"
+        [displayNameTouched]="displayNameTouched"
         [dateOfBirthTouched]="dateOfBirthTouched"
         [genderTouched]="genderTouched"
-        [usernameValid]="isUsernameValid()"
-        [ageValid]="isAgeValid()"
+        [displayNameValid]="isDisplayNameValid()"
         [genderValid]="isGenderValid()"
-        [usernameError]="getUsernameError()"
+        [displayNameError]="getDisplayNameError()"
         [dateOfBirthError]="getDateOfBirthError()"
-        (usernameInput)="onUsernameInput($event)"
-        (usernameBlur)="onUsernameBlur()"
+        (displayNameInput)="onDisplayNameInput($event)"
+        (displayNameBlur)="onDisplayNameBlur()"
         (dateOfBirthChange)="onDateOfBirthChange($event)"
         (dateOfBirthBlur)="onDateOfBirthBlur()"
         (genderChange)="onGenderChange($event)"
@@ -47,22 +46,26 @@
     }
     @if (showWelcome && !showPlacementTest) {
       <app-goal-welcome
-        [username]="username"
+        [username]="displayName"
         [dateOfBirth]="dateOfBirth"
         [gender]="gender"
         [selectedGoal]="selectedGoal"
         [selectedLevel]="selectedLevel"
         [levelSource]="levelSource"
-        [age]="getAge()"
         (next)="nextStep()"
       />
     }
     @if (!showWelcome && !showPlacementTest && currentStep === 4) {
       <app-goal-register
+        [username]="username"
+        [usernameAvailable]="usernameAvailable"
+        [usernameChecking]="usernameChecking"
+        [usernameTouched]="usernameTouched"
         [email]="email"
         [password]="password"
         [passwordConfirm]="passwordConfirm"
         [registrationValid]="isRegistrationValid()"
+        (usernameChange)="onUsernameChange($event)"
         (emailChange)="email = $event"
         (passwordChange)="password = $event"
         (passwordConfirmChange)="passwordConfirm = $event"

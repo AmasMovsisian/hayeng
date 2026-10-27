@@ -16,6 +16,7 @@ import {
 import { PlacementTestResult } from './models/placement-test.models';
 
 const MAX_NAME_LENGTH = 32;
+const USERNAME_CHECK_DEBOUNCE_MS = 400;
 
 const NAME_ERRORS: Readonly<Record<string, string>> = {
   required: 'Գրիր քո անունը։',
@@ -27,6 +28,26 @@ const NAME_ERRORS: Readonly<Record<string, string>> = {
   tooManyParts: 'Մուտքագրիր միայն անունդ կամ անունն ու ազգանունդ։',
   invalidFormat: 'Ստուգիր անվան գրությունը և փորձիր կրկին։',
 };
+
+const MOCK_TAKEN_USERNAMES: ReadonlySet<string> = new Set([
+  'admin',
+  'hayeng',
+  'hayk',
+  'support',
+  'test',
+  'user',
+  'hello',
+]);
+
+function mockCheckUsernameAvailability(username: string): Promise<boolean> {
+  const normalized = username.trim().toLowerCase();
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(!MOCK_TAKEN_USERNAMES.has(normalized));
+    }, 350);
+  });
+}
 
 @Component({
   selector: 'app-goal',
@@ -74,6 +95,7 @@ export class Goal {
   protected placementTestResult: PlacementTestResult | null = null;
 
   protected username = '';
+  protected displayName = '';
   protected dateOfBirth = '';
   protected gender: Gender | null = null;
 
@@ -81,9 +103,15 @@ export class Goal {
   protected password = '';
   protected passwordConfirm = '';
 
+  protected usernameChecking = false;
+  protected usernameAvailable = false;
   protected usernameTouched = false;
+  protected displayNameTouched = false;
   protected dateOfBirthTouched = false;
   protected genderTouched = false;
+
+  private usernameCheckToken = 0;
+  private usernameCheckTimer: ReturnType<typeof setTimeout> | null = null;
 
   private readonly namePattern =
     /^[\p{L}\p{M}]+(?:[-_][\p{L}\p{M}]+)*(?: [\p{L}\p{M}]+(?:[-_][\p{L}\p{M}]+)*)?$/u;
@@ -91,11 +119,7 @@ export class Goal {
   private scrollToTop(): void {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        window.scrollTo({
-          top: 0,
-          left: 0,
-          behavior: 'smooth',
-        });
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
       });
     });
   }
@@ -110,10 +134,7 @@ export class Goal {
           return;
         }
 
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
     });
   }
@@ -131,15 +152,12 @@ export class Goal {
   protected selectUnknownLevel(): void {
     this.selectedLevel = null;
     this.levelSource = 'unknown';
+    this.placementTestResult = null;
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const target = document.querySelector('.goal__placement') as HTMLElement | null;
-
-        target?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
+        target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
     });
   }
@@ -149,11 +167,11 @@ export class Goal {
   }
 
   protected skipPlacementTest(): void {
-    this.levelSource = 'skip';
+    this.levelSource = 'unknown';
   }
 
   protected laterPlacementTest(): void {
-    this.levelSource = 'later';
+    this.levelSource = 'unknown';
   }
 
   protected onPlacementCompleted(result: PlacementTestResult): void {
@@ -162,19 +180,15 @@ export class Goal {
     this.levelSource = 'test';
     this.showPlacementTestValue = false;
     this.scrollToSelectedLevel();
-
-    console.log(
-      'Estimated level:',
-      result.level,
-      `(${result.correctAnswers}/${result.totalQuestions}, ${result.score}%)`,
-    );
   }
 
   protected onPlacementCancelled(): void {
     this.showPlacementTestValue = false;
 
     if (this.levelSource === 'test') {
+      this.selectedLevel = null;
       this.levelSource = 'unknown';
+      this.placementTestResult = null;
     }
 
     this.scrollToTop();
@@ -191,7 +205,6 @@ export class Goal {
       if (!this.selectedGoal) {
         return;
       }
-
       this.currentStep = 2;
       return;
     }
@@ -202,7 +215,7 @@ export class Goal {
     }
 
     if (this.currentStep === 3) {
-      this.usernameTouched = true;
+      this.displayNameTouched = true;
       this.dateOfBirthTouched = true;
       this.genderTouched = true;
       this.continueProfile();
@@ -231,25 +244,21 @@ export class Goal {
     }
   }
 
-  protected onUsernameInput(value: string): void {
-    this.username = value.slice(0, MAX_NAME_LENGTH);
+  protected onDisplayNameInput(value: string): void {
+    this.displayName = value.slice(0, MAX_NAME_LENGTH);
   }
 
-  protected onUsernameBlur(): void {
-    this.usernameTouched = true;
-    this.normalizeUsername();
+  protected onDisplayNameBlur(): void {
+    this.displayNameTouched = true;
+    this.displayName = this.displayName.trim().replace(/\s+/g, ' ');
   }
 
-  private normalizeUsername(): void {
-    this.username = this.username.trim().replace(/\s+/g, ' ');
+  protected isDisplayNameValid(): boolean {
+    return this.getDisplayNameError() === null;
   }
 
-  protected isUsernameValid(): boolean {
-    return this.getUsernameError() === null;
-  }
-
-  protected getUsernameError(): string | null {
-    const name = this.username;
+  protected getDisplayNameError(): string | null {
+    const name = this.displayName;
 
     if (!name.trim()) {
       return NAME_ERRORS['required'];
@@ -286,14 +295,6 @@ export class Goal {
     return null;
   }
 
-  protected touchUsername(): void {
-    this.usernameTouched = true;
-  }
-
-  protected shouldShowUsernameError(): boolean {
-    return this.usernameTouched && !this.isUsernameValid();
-  }
-
   protected onDateOfBirthChange(value: string): void {
     this.dateOfBirth = value;
   }
@@ -302,60 +303,8 @@ export class Goal {
     this.dateOfBirthTouched = true;
   }
 
-  protected getAge(): number | null {
-    if (!this.dateOfBirth) {
-      return null;
-    }
-
-    const birthDate = new Date(`${this.dateOfBirth}T00:00:00`);
-    const today = new Date();
-
-    if (Number.isNaN(birthDate.getTime())) {
-      return null;
-    }
-
-    const year = birthDate.getFullYear();
-    const month = birthDate.getMonth();
-    const day = birthDate.getDate();
-
-    if (
-      year < 1900 ||
-      year > today.getFullYear() ||
-      month < 0 ||
-      month > 11 ||
-      day < 1 ||
-      day > 31
-    ) {
-      return null;
-    }
-
-    const normalizedDate = new Date(year, month, day);
-
-    if (
-      normalizedDate.getFullYear() !== year ||
-      normalizedDate.getMonth() !== month ||
-      normalizedDate.getDate() !== day
-    ) {
-      return null;
-    }
-
-    if (birthDate > today) {
-      return null;
-    }
-
-    let age = today.getFullYear() - year;
-    const monthDifference = today.getMonth() - month;
-
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < day)) {
-      age--;
-    }
-
-    return age;
-  }
-
   protected isAgeValid(): boolean {
-    const age = this.getAge();
-    return age !== null && age >= 7 && age <= 120;
+    return this.getDateOfBirthError() === null;
   }
 
   protected getDateOfBirthError(): string | null {
@@ -363,35 +312,36 @@ export class Goal {
       return 'Ընտրիր քո ծննդյան ամսաթիվը։';
     }
 
-    const birthDate = new Date(`${this.dateOfBirth}T00:00:00`);
-    const today = new Date();
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(this.dateOfBirth);
 
-    if (Number.isNaN(birthDate.getTime())) {
+    if (!match) {
       return 'Մուտքագրիր վավեր ծննդյան ամսաթիվ։';
     }
 
-    const year = birthDate.getFullYear();
-    const month = birthDate.getMonth();
-    const day = birthDate.getDate();
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+    const today = new Date();
+    const birthDate = new Date(year, month - 1, day);
+
+    if (
+      year < 1900 ||
+      year > today.getFullYear() ||
+      birthDate.getFullYear() !== year ||
+      birthDate.getMonth() !== month - 1 ||
+      birthDate.getDate() !== day
+    ) {
+      return 'Ընտրիր գոյություն ունեցող և ճիշտ ամսաթիվ։';
+    }
 
     if (birthDate > today) {
       return 'Ծննդյան ամսաթիվը չի կարող լինել ապագայում։';
     }
 
-    const normalizedDate = new Date(year, month, day);
+    let age = today.getFullYear() - year;
 
-    if (
-      normalizedDate.getFullYear() !== year ||
-      normalizedDate.getMonth() !== month ||
-      normalizedDate.getDate() !== day
-    ) {
-      return 'Ընտրիր գոյություն ունեցող և ճիշտ ամսաթիվ։';
-    }
-
-    const age = this.getAge();
-
-    if (age === null) {
-      return 'Մուտքագրիր վավեր ծննդյան ամսաթիվ։';
+    if (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day)) {
+      age--;
     }
 
     if (age < 7) {
@@ -403,14 +353,6 @@ export class Goal {
     }
 
     return null;
-  }
-
-  protected touchDateOfBirth(): void {
-    this.dateOfBirthTouched = true;
-  }
-
-  protected shouldShowDateOfBirthError(): boolean {
-    return this.dateOfBirthTouched && !this.isAgeValid();
   }
 
   protected onGenderChange(value: Gender): void {
@@ -439,16 +381,73 @@ export class Goal {
     return this.password.length >= 8 && this.password.length <= 128 && !/\s/.test(this.password);
   }
 
+  protected isUsernameFormatValid(): boolean {
+    const value = this.username;
+
+    if (value.length < 3 || value.length > 30) {
+      return false;
+    }
+
+    if (!/^[A-Za-z][A-Za-z0-9_]*$/.test(value)) {
+      return false;
+    }
+
+    if (/__/.test(value)) {
+      return false;
+    }
+
+    if (/_$/.test(value)) {
+      return false;
+    }
+
+    return true;
+  }
+
   protected isRegistrationValid(): boolean {
     return (
-      this.isUsernameValid() &&
+      this.isDisplayNameValid() &&
       this.isAgeValid() &&
       this.isGenderValid() &&
+      this.isUsernameFormatValid() &&
+      this.usernameAvailable &&
+      !this.usernameChecking &&
       this.isValidEmail() &&
       this.isPasswordValid() &&
       this.passwordConfirm.length >= 8 &&
       this.password === this.passwordConfirm
     );
+  }
+
+  protected onUsernameChange(value: string): void {
+    this.username = value;
+    this.usernameTouched = true;
+    this.usernameAvailable = false;
+    this.usernameChecking = false;
+
+    if (this.usernameCheckTimer !== null) {
+      clearTimeout(this.usernameCheckTimer);
+      this.usernameCheckTimer = null;
+    }
+
+    if (!this.isUsernameFormatValid()) {
+      this.usernameCheckToken++;
+      return;
+    }
+
+    this.usernameChecking = true;
+    const token = ++this.usernameCheckToken;
+
+    this.usernameCheckTimer = setTimeout(() => {
+      this.usernameCheckTimer = null;
+
+      mockCheckUsernameAvailability(value).then((available) => {
+        if (token !== this.usernameCheckToken) {
+          return;
+        }
+        this.usernameAvailable = available;
+        this.usernameChecking = false;
+      });
+    }, USERNAME_CHECK_DEBOUNCE_MS);
   }
 
   protected finish(): void {
@@ -467,22 +466,18 @@ export class Goal {
   }
 
   protected continueProfile(): void {
-    this.normalizeUsername();
-
-    if (!this.isUsernameValid() || !this.isAgeValid() || !this.isGenderValid()) {
+    if (!this.isDisplayNameValid() || !this.isAgeValid() || !this.isGenderValid()) {
       return;
     }
 
-    const age = this.getAge();
-
-    if (age === null || this.gender === null) {
+    if (this.gender === null) {
       return;
     }
 
     const userProfile: UserProfile = {
-      username: this.username,
+      username: '',
+      displayName: this.displayName,
       dateOfBirth: this.dateOfBirth,
-      age,
       gender: this.gender,
     };
 
@@ -495,9 +490,7 @@ export class Goal {
   }
 
   protected register(): void {
-    this.normalizeUsername();
-
-    if (!this.isRegistrationValid()) {
+    if (!this.isRegistrationValid() || this.gender === null) {
       return;
     }
 
@@ -506,16 +499,10 @@ export class Goal {
       password: this.password,
     };
 
-    const age = this.getAge();
-
-    if (age === null || this.gender === null) {
-      return;
-    }
-
     const onboardingProfile = {
       username: this.username,
+      displayName: this.displayName,
       dateOfBirth: this.dateOfBirth,
-      age,
       gender: this.gender,
       learning: {
         goal: this.selectedGoal,
