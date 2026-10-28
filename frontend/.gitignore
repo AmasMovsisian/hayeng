@@ -1,17 +1,21 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
-# Compiled output
 /dist
 /tmp
 /out-tsc
 /bazel-out
 
-# Node
 /node_modules
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# IDEs and editors
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+
 .idea/
 .project
 .classpath
@@ -20,7 +24,6 @@ yarn-error.log
 .settings/
 *.sublime-workspace
 
-# Visual Studio Code
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -28,9 +31,9 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
-# Miscellaneous
 /.angular/cache
-.sass-cache/
+/.angular/
+/.sass-cache/
 /connect.lock
 /coverage
 /libpeerconnection.log
@@ -38,6 +41,45 @@ testem.log
 /typings
 __screenshots__/
 
-# System files
+.cache/
+.parcel-cache/
+.turbo/
+.next/
+.nuxt/
+.output/
+.vercel/
+.netlify/
+
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+
+playwright-report/
+test-results/
+cypress/videos/
+cypress/screenshots/
+
 .DS_Store
 Thumbs.db
+Desktop.ini
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+id_rsa
+id_ed25519
