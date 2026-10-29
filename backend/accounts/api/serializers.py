@@ -12,7 +12,9 @@ User = get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, validators=[validate_password])
+    """Serializer for user registration with validation."""
+
+    password = serializers.CharField(write_only=True)
     password_confirm = serializers.CharField(write_only=True)
     date_of_birth = serializers.DateField(required=True)
     gender = serializers.ChoiceField(choices=['male', 'female'], required=True)
@@ -28,12 +30,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
 
     def validate_email(self, value):
+        """Validate and normalize the email address."""
         normalized = value.lower().strip()
         if User.objects.filter(email__iexact=normalized).exists():
             raise serializers.ValidationError('This email is already registered.')
         return normalized
 
     def validate_username(self, value):
+        """Validate username format, length and uniqueness."""
         if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', value):
             raise serializers.ValidationError(
                 'Username must start with a letter and contain only letters, numbers, and underscores.'
@@ -45,6 +49,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return value.lower()
 
     def validate_date_of_birth(self, value):
+        """Validate date of birth and age constraints."""
         if value is None:
             raise serializers.ValidationError('Date of birth is required.')
         today = date.today()
@@ -58,6 +63,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return value
 
     def validate_display_name(self, value):
+        """Validate display name format, length and allowed characters."""
         if not value or not value.strip():
             raise serializers.ValidationError('Display name is required.')
 
@@ -70,8 +76,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         if '  ' in value:
             raise serializers.ValidationError('Display name cannot contain consecutive spaces.')
 
-        if not re.fullmatch(r'[\w \-]+', value):
-            raise serializers.ValidationError('Display name contains invalid characters.')
+        if not re.fullmatch(r"[^\W\d_]+(?:[ \-_][^\W\d_]+)*", value):
+            raise serializers.ValidationError(
+                'Display name may contain only letters, spaces, hyphens, and underscores.'
+            )
 
         if re.search(r'^[-_]|[-_]$|[-_]{2,}|[-_] | [-_]', value):
             raise serializers.ValidationError('Separators cannot be at the edges or repeated.')
@@ -79,79 +87,38 @@ class RegisterSerializer(serializers.ModelSerializer):
         if len(value.split(' ')) > 2:
             raise serializers.ValidationError('Display name can have at most two parts.')
 
+        if re.search(r'\d', value):
+            raise serializers.ValidationError('Display name cannot contain digits.')
+
         return value
 
     def validate(self, data):
-        if data['password'] != data['password_confirm']:
-            raise serializers.ValidationError({'password_confirm': 'Passwords do not match.'})
+        """Cross-field validation for password rules and confirmation."""
+        errors = {}
+
+        user = User(
+            email=data.get('email', ''),
+            username=data.get('username', ''),
+            display_name=data.get('display_name', ''),
+        )
+        try:
+            validate_password(data.get('password', ''), user=user)
+        except serializers.ValidationError as exc:
+            errors['password'] = list(exc.detail)
+
+        if data.get('password') != data.get('password_confirm'):
+            errors['password_confirm'] = 'Passwords do not match.'
+
+        if errors:
+            raise serializers.ValidationError(errors)
+
         return data
 
     def create(self, validated_data):
+        """Create a new user with a hashed password."""
         validated_data.pop('password_confirm')
         password = validated_data.pop('password')
         user = User(**validated_data)
         user.set_password(password)
         user.save()
         return user
-
-
-class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
-
-    def validate(self, data):
-        email = data['email'].lower().strip()
-        password = data['password']
-        user = authenticate(
-            request=self.context.get('request'),
-            username=email,
-            password=password,
-        )
-        if user is None:
-            raise serializers.ValidationError({'detail': 'Invalid email or password.'})
-        if not user.is_active:
-            raise serializers.ValidationError({'detail': 'Account is inactive.'})
-        data['user'] = user
-        return data
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            'id', 'email', 'username', 'display_name',
-            'date_of_birth', 'gender', 'email_verified',
-        ]
-        read_only_fields = fields
-
-
-class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token['username'] = user.username
-        token['display_name'] = user.display_name
-        token['email'] = user.email
-        return token
-
-
-class VerifyEmailSerializer(serializers.Serializer):
-    uid = serializers.CharField()
-    token = serializers.CharField()
-
-    def validate(self, data):
-        try:
-            uid = force_str(urlsafe_base64_decode(data['uid']))
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            raise serializers.ValidationError({'detail': 'Invalid verification link.'})
-
-        if not default_token_generator.check_token(user, data['token']):
-            raise serializers.ValidationError({'detail': 'Invalid or expired verification link.'})
-
-        data['user'] = user
-        return data
-
-
-class ResendVerificationSerializer(serializers.Serializer):
-    email = serializers.EmailField()

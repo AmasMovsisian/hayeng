@@ -5,6 +5,8 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
+    """Admin configuration for the custom User model."""
+
     list_display = ('email', 'username', 'display_name', 'email_verified', 'is_staff', 'is_active')
     list_filter = ('email_verified', 'is_staff', 'is_active', 'gender')
     search_fields = ('email', 'username', 'display_name')

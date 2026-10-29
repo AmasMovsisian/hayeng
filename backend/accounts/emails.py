@@ -7,6 +7,7 @@ from django.contrib.auth.tokens import default_token_generator
 
 
 def send_verification_email(user):
+    """Send an email verification link to the given user."""
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
     verify_path = reverse('verify-email-page')

@@ -5,6 +5,8 @@ from django.db.models.functions import Lower
 
 
 class User(AbstractUser):
+    """Custom user model using email as the login identifier."""
+
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=30)
     display_name = models.CharField(max_length=32)
@@ -25,6 +27,7 @@ class User(AbstractUser):
         ]
 
     def save(self, *args, **kwargs):
+        """Normalize username and email to lowercase before saving."""
         if self.username:
             self.username = self.username.lower()
         if self.email:
