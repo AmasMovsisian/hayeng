@@ -13,7 +13,7 @@ from rest_framework_simplejwt.views import (
     TokenBlacklistView,
 )
 
-from ..emails import send_verification_email
+from ..emails import send_verification_email, send_password_reset_email
 from .serializers import (
     RegisterSerializer,
     LoginSerializer,
@@ -21,6 +21,8 @@ from .serializers import (
     EmailTokenObtainPairSerializer,
     VerifyEmailSerializer,
     ResendVerificationSerializer,
+    PasswordResetRequestSerializer,
+    PasswordResetConfirmSerializer,
 )
 
 User = get_user_model()
@@ -217,5 +219,75 @@ class ResendVerificationView(APIView):
             send_verification_email(user)
         return Response(
             {'detail': 'If the email is registered and unverified, a new link has been sent.'},
+            status=status.HTTP_200_OK,
+        )
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class PasswordResetRequestView(APIView):
+    """API view that sends a password reset email."""
+
+    permission_classes = [permissions.AllowAny]
+    throttle_scope = 'password-reset'
+
+    @extend_schema(
+        request=PasswordResetRequestSerializer,
+        responses={
+            200: inline_serializer(
+                name='PasswordResetRequestResponse',
+                fields={'detail': serializers.CharField()},
+            )
+        },
+        tags=['auth'],
+        description=(
+            'Sends a password reset email if the address belongs to an active account. '
+            'Always returns 200 to prevent email enumeration.'
+        ),
+    )
+    def post(self, request):
+        """Send a reset link without leaking whether the email exists."""
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email'].lower().strip()
+        user = User.objects.filter(email__iexact=email, is_active=True).first()
+        if user is not None:
+            send_password_reset_email(user)
+        return Response(
+            {'detail': 'If the email is registered, a password reset link has been sent.'},
+            status=status.HTTP_200_OK,
+        )
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class PasswordResetConfirmView(APIView):
+    """API view that completes a password reset using uid + token."""
+
+    permission_classes = [permissions.AllowAny]
+    throttle_scope = 'password-reset'
+
+    @extend_schema(
+        request=PasswordResetConfirmSerializer,
+        responses={
+            200: inline_serializer(
+                name='PasswordResetConfirmResponse',
+                fields={'detail': serializers.CharField()},
+            )
+        },
+        tags=['auth'],
+        description=(
+            'Sets a new password using the uid + token from the reset email. '
+            'The token is invalidated automatically after a successful reset.'
+        ),
+    )
+    def post(self, request):
+        """Validate the token and set the new password."""
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        new_password = serializer.validated_data['new_password']
+        user.set_password(new_password)
+        user.save(update_fields=['password'])
+        return Response(
+            {'detail': 'Password has been reset successfully.'},
             status=status.HTTP_200_OK,
         )

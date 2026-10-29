@@ -122,3 +122,136 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+
+class LoginSerializer(serializers.Serializer):
+    """Serializer for session-based login."""
+
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        """Authenticate the user and return a generic error on failure."""
+        email = data.get('email', '').lower().strip()
+        password = data.get('password', '')
+        user = authenticate(
+            request=self.context.get('request'),
+            username=email,
+            password=password,
+        )
+        if user is None:
+            raise serializers.ValidationError('Invalid email or password.')
+        if not user.is_active:
+            raise serializers.ValidationError('Invalid email or password.')
+        data['user'] = user
+        return data
+
+
+class UserSerializer(serializers.ModelSerializer):
+    """Read-only serializer for the authenticated user."""
+
+    class Meta:
+        model = User
+        fields = [
+            'id', 'email', 'username', 'display_name',
+            'date_of_birth', 'gender', 'email_verified',
+        ]
+        read_only_fields = fields
+
+
+class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """JWT serializer that authenticates via email instead of username."""
+
+    default_error_messages = {
+        'no_active_account': 'Invalid email or password.',
+    }
+
+    @classmethod
+    def get_token(cls, user):
+        """Add custom claims to the JWT payload."""
+        token = super().get_token(user)
+        token['username'] = user.username
+        token['display_name'] = user.display_name
+        token['email'] = user.email
+        return token
+
+
+class VerifyEmailSerializer(serializers.Serializer):
+    """Serializer that validates a uid + token pair for email verification."""
+
+    uid = serializers.CharField()
+    token = serializers.CharField()
+
+    def validate(self, data):
+        """Resolve the user and validate the token."""
+        user = self._get_user(data.get('uid'))
+        token = data.get('token')
+
+        if user is None or not default_token_generator.check_token(user, token):
+            raise serializers.ValidationError('Invalid or expired verification link.')
+
+        data['user'] = user
+        return data
+
+    @staticmethod
+    def _get_user(uidb64):
+        """Decode the uid and return the user or None."""
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            return User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return None
+
+
+class ResendVerificationSerializer(serializers.Serializer):
+    """Serializer for resending the email verification link."""
+
+    email = serializers.EmailField()
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    """Serializer for requesting a password reset email."""
+
+    email = serializers.EmailField()
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    """Serializer that validates a uid + token pair and sets a new password."""
+
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(write_only=True)
+    new_password_confirm = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        """Validate the token, password strength and confirmation."""
+        errors = {}
+
+        user = self._get_user(data.get('uid'))
+        token = data.get('token')
+
+        if user is None or not default_token_generator.check_token(user, token):
+            raise serializers.ValidationError('Invalid or expired password reset link.')
+
+        try:
+            validate_password(data.get('new_password', ''), user=user)
+        except serializers.ValidationError as exc:
+            errors['new_password'] = list(exc.detail)
+
+        if data.get('new_password') != data.get('new_password_confirm'):
+            errors['new_password_confirm'] = 'Passwords do not match.'
+
+        if errors:
+            raise serializers.ValidationError(errors)
+
+        data['user'] = user
+        return data
+
+    @staticmethod
+    def _get_user(uidb64):
+        """Decode the uid and return the user or None."""
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            return User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return None

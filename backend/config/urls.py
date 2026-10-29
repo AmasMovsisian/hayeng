@@ -25,4 +25,5 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('verify-email', RedirectView.as_view(url='http://localhost:4200/verify-email', permanent=False), name='verify-email-page'),
+    path('password-reset',RedirectView.as_view(url='http://localhost:4200/password-reset', permanent=False),name='password-reset-page',),
 ]

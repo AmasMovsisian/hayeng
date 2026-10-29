@@ -104,11 +104,12 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.ScopedRateThrottle',
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'login': '10/min',
-        'register': '5/hour',
-        'resend-verification': '3/hour',
-        'verify-email': '20/hour',
-    },
+            'login': '10/min',
+            'register': '5/hour',
+            'resend-verification': '3/hour',
+            'verify-email': '20/hour',
+            'password-reset': '3/hour',
+        },
 }
 
 SPECTACULAR_SETTINGS = {
