@@ -15,7 +15,6 @@ from .views import (
     PasswordResetConfirmView,
 )
 
-# Authentication and account-related URL routes.
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('csrf/', CsrfTokenView.as_view(), name='csrf'),

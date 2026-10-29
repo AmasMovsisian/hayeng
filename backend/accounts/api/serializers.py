@@ -6,7 +6,11 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.serializers import (
+    TokenObtainPairSerializer,
+    TokenRefreshSerializer,
+)
+from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
 
@@ -174,6 +178,35 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['display_name'] = user.display_name
         token['email'] = user.email
         return token
+
+
+class SafeTokenRefreshSerializer(TokenRefreshSerializer):
+    """Refresh serializer that relies on SimpleJWT's blacklist for revocation.
+
+    The password-hash claim is intentionally not checked here because
+    SimpleJWT does not populate it reliably on all token issuance paths
+    (see SimpleJWT issue #927). Instead, password resets blacklist every
+    outstanding token for the user, which this serializer's parent class
+    already validates automatically.
+    """
+
+    def validate(self, attrs):
+        """Validate the refresh token, including blacklist status."""
+        refresh = RefreshToken(attrs['refresh'])
+        user_id = refresh.payload.get('user_id')
+
+        if user_id:
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                from rest_framework_simplejwt.exceptions import InvalidToken
+                raise InvalidToken('Token is invalid or expired.')
+
+            if not user.is_active:
+                from rest_framework_simplejwt.exceptions import InvalidToken
+                raise InvalidToken('Token is invalid or expired.')
+
+        return super().validate(attrs)
 
 
 class VerifyEmailSerializer(serializers.Serializer):

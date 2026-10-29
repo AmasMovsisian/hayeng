@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from accounts.models import User
 
@@ -149,6 +150,17 @@ class PasswordResetConfirmTests(TestCase):
             new_password_confirm='DifferentPass!890',
         ))
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_refresh_token_revoked_after_reset(self):
+        """A refresh token issued before the reset can no longer be used."""
+        refresh = RefreshToken.for_user(self.user)
+        old_refresh = str(refresh)
+
+        self.client.post(self.url, self._payload())
+
+        refresh_url = reverse('token_refresh')
+        response = self.client.post(refresh_url, {'refresh': old_refresh})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 class PasswordResetCsrfTests(TestCase):

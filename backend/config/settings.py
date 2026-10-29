@@ -104,12 +104,12 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.ScopedRateThrottle',
     ),
     'DEFAULT_THROTTLE_RATES': {
-            'login': '10/min',
-            'register': '5/hour',
-            'resend-verification': '3/hour',
-            'verify-email': '20/hour',
-            'password-reset': '3/hour',
-        },
+        'login': '10/min',
+        'register': '5/hour',
+        'resend-verification': '3/hour',
+        'verify-email': '20/hour',
+        'password-reset': '3/hour',
+    },
 }
 
 SPECTACULAR_SETTINGS = {
@@ -132,6 +132,8 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
+    'CHECK_REVOKE_TOKEN': True,
+    'REVOKE_TOKEN_CLAIM': 'password_hash',
 }
 
 CSRF_COOKIE_SECURE = not DEBUG
@@ -151,7 +153,7 @@ SECURE_HSTS_SECONDS = 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
 SECURE_CONTENT_TYPE_NOSNIFF = True
-SECURE_REFERRER_POLICY = 'same-origin'
+SECURE_REFERRER_POLICY = 'no-referrer'
 
 CORS_ALLOWED_ORIGINS = ['http://localhost:4200']
 CORS_ALLOW_CREDENTIALS = True

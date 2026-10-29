@@ -12,6 +12,10 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenBlacklistView,
 )
+from rest_framework_simplejwt.token_blacklist.models import (
+    OutstandingToken,
+    BlacklistedToken,
+)
 
 from ..emails import send_verification_email, send_password_reset_email
 from .serializers import (
@@ -19,6 +23,7 @@ from .serializers import (
     LoginSerializer,
     UserSerializer,
     EmailTokenObtainPairSerializer,
+    SafeTokenRefreshSerializer,
     VerifyEmailSerializer,
     ResendVerificationSerializer,
     PasswordResetRequestSerializer,
@@ -26,6 +31,13 @@ from .serializers import (
 )
 
 User = get_user_model()
+
+
+def _blacklist_all_refresh_tokens(user):
+    """Blacklist every outstanding refresh token for the given user."""
+    tokens = OutstandingToken.objects.filter(user=user)
+    for token in tokens:
+        BlacklistedToken.objects.get_or_create(token=token)
 
 
 @method_decorator(csrf_protect, name='dispatch')
@@ -145,8 +157,9 @@ class EmailTokenObtainPairView(TokenObtainPairView):
 
 
 class RefreshTokenView(TokenRefreshView):
-    """JWT token refresh view."""
+    """JWT token refresh view with password-hash validation."""
 
+    serializer_class = SafeTokenRefreshSerializer
     permission_classes = [permissions.AllowAny]
 
 
@@ -280,13 +293,26 @@ class PasswordResetConfirmView(APIView):
         ),
     )
     def post(self, request):
-        """Validate the token and set the new password."""
+        """Validate the token, lock the user row, set the password and revoke refresh tokens."""
         serializer = PasswordResetConfirmSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        new_password = serializer.validated_data['new_password']
-        user.set_password(new_password)
-        user.save(update_fields=['password'])
+
+        with transaction.atomic():
+            user = User.objects.select_for_update().get(
+                pk=serializer.validated_data['user'].pk
+            )
+            token = request.data.get('token')
+            from django.contrib.auth.tokens import default_token_generator
+            if not default_token_generator.check_token(user, token):
+                raise serializers.ValidationError(
+                    'Invalid or expired password reset link.'
+                )
+
+            user.set_password(serializer.validated_data['new_password'])
+            user.save(update_fields=['password'])
+
+            _blacklist_all_refresh_tokens(user)
+
         return Response(
             {'detail': 'Password has been reset successfully.'},
             status=status.HTTP_200_OK,
