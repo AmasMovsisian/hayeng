@@ -43,8 +43,10 @@ an intentional decision:
 The protection against a compromised inbox is therefore not "block the
 reset endpoint" but rather:
 1. Short-lived access tokens (JWT: 15 min).
-2. Password change invalidates **all** existing sessions (Django
-   `set_password()` rotates the session auth hash).
+2. Password change invalidates **all** existing sessions and access tokens
+   (Django `set_password()` rotates the session auth hash; SimpleJWT's
+   `CHECK_REVOKE_TOKEN` rejects tokens whose `password_hash` claim no
+   longer matches).
 3. Optional email notification on successful reset (planned for a later
    phase, not part of this ADR).
 
@@ -81,15 +83,30 @@ safe regardless of which client calls it.
 
 ### Session and token invalidation
 `user.set_password()` changes the password hash, which invalidates every
-existing Django session for that user. JWT access tokens remain valid until
-they expire (15 minutes) — this is accepted because access tokens are
-short-lived and refresh tokens can be blacklisted server-side via the
-`token/blacklist/` endpoint.
+existing Django session for that user. Because `CHECK_REVOKE_TOKEN` is
+enabled, SimpleJWT also rejects **access tokens** immediately after a
+password change — the `password_hash` claim no longer matches the stored
+hash. Previously issued refresh tokens are additionally blacklisted by
+`_blacklist_all_refresh_tokens()`, so they cannot be exchanged for new
+access tokens either.
+
+This is stricter than the earlier assumption that access tokens would
+remain valid until expiry: with `CHECK_REVOKE_TOKEN=True`, a stolen access
+token becomes useless the moment the password is reset. The trade-off is a
+small amount of extra work on every authenticated request (one hash
+comparison), which is negligible.
 
 After a successful reset, the reset token itself becomes invalid
 automatically (it is bound to the old password hash), so the same link
 cannot be replayed. This is verified by
-`test_token_invalid_after_password_change`.
+`test_token_invalid_after_password_change` and by
+`test_reused_token_is_rejected_after_successful_reset`.
+
+Parallel confirmation requests with the same token are serialised through
+`SELECT ... FOR UPDATE` on the user row inside a transaction, with the
+token re-validated **inside** the lock. This prevents two concurrent
+requests from both succeeding and is verified by
+`test_only_one_concurrent_reset_succeeds`.
 
 ### Rate limiting
 Both endpoints share the `password-reset` throttle scope (`3/hour`). The
@@ -122,8 +139,9 @@ wrong" and "token is expired".
 ## Consequences
 - The flow works uniformly for web and mobile clients.
 - No new database tables are required.
-- Password resets invalidate all active web sessions and all outstanding
-  reset tokens for the account.
+- Password resets invalidate all active web sessions, all outstanding
+  access tokens (via `CHECK_REVOKE_TOKEN`) and all outstanding reset tokens
+  for the account.
 - The design relies on the email inbox as the security boundary. This is
   explicit and intentional; any future change that weakens this assumption
   (e.g. allowing SMS resets) must be evaluated separately.
