@@ -3,10 +3,11 @@ from datetime import date
 from django.contrib.auth.tokens import default_token_generator
 from django.core import mail
 from django.core.cache import cache
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from freezegun import freeze_time
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -161,6 +162,24 @@ class PasswordResetConfirmTests(TestCase):
         refresh_url = reverse('token_refresh')
         response = self.client.post(refresh_url, {'refresh': old_refresh})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    @override_settings(PASSWORD_RESET_TIMEOUT=1)
+    def test_expired_token_returns_400(self):
+        """A reset token past PASSWORD_RESET_TIMEOUT is rejected."""
+        with freeze_time('2026-01-01 12:00:00'):
+            fresh_token = default_token_generator.make_token(self.user)
+
+        with freeze_time('2026-01-01 12:00:05'):
+            response = self.client.post(self.url, {
+                'uid': self.uidb64,
+                'token': fresh_token,
+                'new_password': 'NewStrongPass!567',
+                'new_password_confirm': 'NewStrongPass!567',
+            })
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('OldStrongPass!234'))
 
 
 class PasswordResetCsrfTests(TestCase):

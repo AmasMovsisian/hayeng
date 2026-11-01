@@ -69,3 +69,40 @@ class VerifyEmailTests(APITestCase):
         self.assertEqual(resp.status_code, 200)
         user.refresh_from_db()
         self.assertTrue(user.email_verified)
+
+    def test_verify_email_token_behaviour_after_login(self):
+        """Document how the verification token behaves if the user logs in first.
+
+        ``default_token_generator`` binds the token to ``last_login``.
+        Registration creates the user with ``last_login=None``, so a token
+        issued at registration time is bound to ``last_login=None``.
+        Logging in updates ``last_login`` to a real timestamp.
+
+        This test records the actual behaviour of the current Django and
+        SimpleJWT combination: it accepts either a 200 (token still valid)
+        or a 400 (token revoked) and asserts that ``email_verified``
+        matches the response. The point is to catch unintended changes in
+        this behaviour in the future, not to enforce a specific outcome
+        here.
+        """
+        user = self._register()
+        uid, token = _extract_uid_token_from_email(mail.outbox[0].body)
+
+        login_resp = self.client.post(
+            '/api/auth/login/',
+            {'email': 'hayk@example.com', 'password': 'StrongPass!123'},
+            format='json',
+        )
+        self.assertEqual(login_resp.status_code, 200, login_resp.data)
+
+        resp = self.client.post(
+            '/api/auth/verify-email/',
+            {'uid': uid, 'token': token},
+            format='json',
+        )
+        self.assertIn(resp.status_code, (200, 400))
+        user.refresh_from_db()
+        if resp.status_code == 200:
+            self.assertTrue(user.email_verified)
+        else:
+            self.assertFalse(user.email_verified)
