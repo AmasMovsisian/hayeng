@@ -288,3 +288,25 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
             return User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             return None
+
+
+class UsernameAvailabilitySerializer(serializers.Serializer):
+    """Serializer that validates a username and reports its availability."""
+
+    username = serializers.CharField()
+
+    def validate_username(self, value):
+        """Validate username format and length (same rules as registration)."""
+        if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', value):
+            raise serializers.ValidationError(
+                'Username must start with a letter and contain only letters, numbers, and underscores.'
+            )
+        if len(value) < 3 or len(value) > 30:
+            raise serializers.ValidationError('Username must be 3-30 characters.')
+        return value.lower()
+
+    def validate(self, data):
+        """Check whether the normalized username is already taken."""
+        username = data.get('username', '')
+        data['available'] = not User.objects.filter(username__iexact=username).exists()
+        return data

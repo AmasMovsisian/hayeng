@@ -28,6 +28,7 @@ from .serializers import (
     ResendVerificationSerializer,
     PasswordResetRequestSerializer,
     PasswordResetConfirmSerializer,
+    UsernameAvailabilitySerializer,
 )
 
 User = get_user_model()
@@ -91,6 +92,42 @@ class CsrfTokenView(APIView):
         """Set the CSRF cookie and return 204."""
         get_token(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class UsernameAvailableView(APIView):
+    """API view that reports whether a username is still available."""
+
+    permission_classes = [permissions.AllowAny]
+    throttle_scope = 'username-available'
+
+    @extend_schema(
+        request=None,
+        responses={
+            200: inline_serializer(
+                name='UsernameAvailableResponse',
+                fields={
+                    'available': serializers.BooleanField(),
+                    'username': serializers.CharField(),
+                },
+            )
+        },
+        tags=['auth'],
+        description=(
+            'Checks whether a username is available. Enforces the same format rules '
+            'as registration. Read-only; no CSRF required.'
+        ),
+    )
+    def get(self, request):
+        """Validate the username and report availability."""
+        serializer = UsernameAvailabilitySerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        return Response(
+            {
+                'available': serializer.validated_data['available'],
+                'username': serializer.validated_data['username'],
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 @method_decorator(csrf_protect, name='dispatch')

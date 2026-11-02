@@ -109,6 +109,7 @@ REST_FRAMEWORK = {
         'resend-verification': '3/hour',
         'verify-email': '20/hour',
         'password-reset': '3/hour',
+        'username-available': '60/min',
     },
 }
 
