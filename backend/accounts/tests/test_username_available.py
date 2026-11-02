@@ -1,10 +1,8 @@
 from datetime import date
-
 from django.core.cache import cache
 from django.test import TestCase, Client
 from django.urls import reverse
 from rest_framework import status
-
 from accounts.models import User
 
 

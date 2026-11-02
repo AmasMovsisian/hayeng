@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { GoalQuestions } from './components/goal-questions/goal-questions';
 import { GoalProfile } from './components/goal-profile/goal-profile';
 import { GoalWelcome } from './components/goal-welcome/goal-welcome';
@@ -14,6 +15,7 @@ import {
   UserProfile,
 } from './models/goal.models';
 import { PlacementTestResult } from './models/placement-test.models';
+import { AuthService } from '../../../../core/services/auth.service';
 
 const MAX_NAME_LENGTH = 32;
 const USERNAME_CHECK_DEBOUNCE_MS = 400;
@@ -29,26 +31,6 @@ const NAME_ERRORS: Readonly<Record<string, string>> = {
   invalidFormat: 'Ստուգիր անվան գրությունը և փորձիր կրկին։',
 };
 
-const MOCK_TAKEN_USERNAMES: ReadonlySet<string> = new Set([
-  'admin',
-  'hayeng',
-  'hayk',
-  'support',
-  'test',
-  'user',
-  'hello',
-]);
-
-function mockCheckUsernameAvailability(username: string): Promise<boolean> {
-  const normalized = username.trim().toLowerCase();
-
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(!MOCK_TAKEN_USERNAMES.has(normalized));
-    }, 350);
-  });
-}
-
 @Component({
   selector: 'app-goal',
   standalone: true,
@@ -58,6 +40,10 @@ function mockCheckUsernameAvailability(username: string): Promise<boolean> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Goal {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   private currentStepValue = 1;
   private showWelcomeValue = false;
   private showPlacementTestValue = false;
@@ -109,6 +95,10 @@ export class Goal {
   protected displayNameTouched = false;
   protected dateOfBirthTouched = false;
   protected genderTouched = false;
+
+  protected registrationSubmitting = false;
+  protected registrationError: string | null = null;
+  protected registrationFieldErrors: Record<string, string[]> = {};
 
   private usernameCheckToken = 0;
   private usernameCheckTimer: ReturnType<typeof setTimeout> | null = null;
@@ -167,10 +157,6 @@ export class Goal {
   }
 
   protected skipPlacementTest(): void {
-    this.levelSource = 'unknown';
-  }
-
-  protected laterPlacementTest(): void {
     this.levelSource = 'unknown';
   }
 
@@ -440,12 +426,23 @@ export class Goal {
     this.usernameCheckTimer = setTimeout(() => {
       this.usernameCheckTimer = null;
 
-      mockCheckUsernameAvailability(value).then((available) => {
-        if (token !== this.usernameCheckToken) {
-          return;
-        }
-        this.usernameAvailable = available;
-        this.usernameChecking = false;
+      this.authService.isUsernameAvailable(value).subscribe({
+        next: (result) => {
+          if (token !== this.usernameCheckToken) {
+            return;
+          }
+          this.usernameAvailable = result.available;
+          this.usernameChecking = false;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          if (token !== this.usernameCheckToken) {
+            return;
+          }
+          this.usernameAvailable = false;
+          this.usernameChecking = false;
+          this.cdr.markForCheck();
+        },
       });
     }, USERNAME_CHECK_DEBOUNCE_MS);
   }
@@ -494,28 +491,67 @@ export class Goal {
       return;
     }
 
-    const registrationProfile: RegistrationProfile = {
+    this.registrationSubmitting = true;
+    this.registrationError = null;
+    this.registrationFieldErrors = {};
+    this.cdr.markForCheck();
+
+    const payload = {
       email: this.email.trim(),
-      password: this.password,
-    };
-
-    const onboardingProfile = {
-      username: this.username,
-      displayName: this.displayName,
-      dateOfBirth: this.dateOfBirth,
+      username: this.username.trim().toLowerCase(),
+      display_name: this.displayName.trim(),
+      date_of_birth: this.dateOfBirth,
       gender: this.gender,
-      learning: {
-        goal: this.selectedGoal,
-        level: this.selectedLevel,
-        levelSource: this.levelSource,
-        placementScore: this.placementTestResult?.score ?? null,
-      },
-      registration: {
-        email: registrationProfile.email,
-      },
+      password: this.password,
+      password_confirm: this.passwordConfirm,
     };
 
-    console.log('Registration profile:', registrationProfile);
-    console.log('Complete onboarding profile:', onboardingProfile);
+    this.authService.register(payload).subscribe({
+      next: () => {
+        this.registrationSubmitting = false;
+        this.cdr.markForCheck();
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        this.registrationSubmitting = false;
+        this.registrationError = this.extractErrorMessage(error);
+        this.registrationFieldErrors = this.extractFieldErrors(error);
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  private extractErrorMessage(error: unknown): string {
+    if (error && typeof error === 'object' && 'error' in error) {
+      const body = (error as { error: unknown }).error;
+      if (body && typeof body === 'object') {
+        if ('detail' in body && typeof (body as { detail: unknown }).detail === 'string') {
+          return (body as { detail: string }).detail;
+        }
+      }
+    }
+    return 'Չհաջողվեց գրանցվել։ Խնդրում ենք փորձել կրկին։';
+  }
+
+  private extractFieldErrors(error: unknown): Record<string, string[]> {
+    if (!error || typeof error !== 'object' || !('error' in error)) {
+      return {};
+    }
+    const body = (error as { error: unknown }).error;
+    if (!body || typeof body !== 'object') {
+      return {};
+    }
+    const result: Record<string, string[]> = {};
+    for (const [key, value] of Object.entries(body as Record<string, unknown>)) {
+      if (key === 'detail') {
+        continue;
+      }
+      if (Array.isArray(value)) {
+        result[key] = value.map((v) => String(v));
+      } else if (typeof value === 'string') {
+        result[key] = [value];
+      }
+    }
+    return result;
   }
 }

@@ -37,7 +37,6 @@ export class GoalQuestions implements AfterViewInit, OnChanges {
   @Output() unknownLevelSelected = new EventEmitter<void>();
   @Output() placementStart = new EventEmitter<void>();
   @Output() placementSkip = new EventEmitter<void>();
-  @Output() placementLater = new EventEmitter<void>();
   @Output() next = new EventEmitter<void>();
   @Output() back = new EventEmitter<void>();
 
@@ -72,10 +71,6 @@ export class GoalQuestions implements AfterViewInit, OnChanges {
     return false;
   }
 
-  protected isLaterSelected(): boolean {
-    return false;
-  }
-
   protected onPlacementStart(): void {
     this.placementPanelVisible = true;
     this.placementStart.emit();
@@ -84,11 +79,6 @@ export class GoalQuestions implements AfterViewInit, OnChanges {
   protected onPlacementSkip(): void {
     this.placementPanelVisible = false;
     this.placementSkip.emit();
-  }
-
-  protected onPlacementLater(): void {
-    this.placementPanelVisible = false;
-    this.placementLater.emit();
   }
 
   private scrollToTop(smooth: boolean): void {
