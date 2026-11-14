@@ -1,77 +1,37 @@
 <main class="goal">
   <section class="goal__content">
     @if (showPlacementTest) {
-      <app-goal-test
-        (completed)="onPlacementCompleted($event)"
-        (cancelled)="onPlacementCancelled()"
-      />
+      <app-goal-test (completed)="onPlacementCompleted($event)" (cancelled)="onPlacementCancelled()" />
     }
     @if (!showWelcome && !showPlacementTest && (currentStep === 1 || currentStep === 2)) {
-      <app-goal-questions
-        [currentStep]="currentStep"
-        [selectedGoal]="selectedGoal"
-        [selectedLevel]="selectedLevel"
-        [levelSource]="levelSource"
-        (goalSelected)="selectGoal($event)"
-        (levelSelected)="selectLevel($event)"
-        (unknownLevelSelected)="selectUnknownLevel()"
-        (placementStart)="startPlacementTest()"
-        (placementSkip)="skipPlacementTest()"
-        (next)="nextStep()"
-        (back)="previousStep()"
-      />
+      <app-goal-questions [currentStep]="currentStep" [selectedGoal]="selectedGoal" [selectedLevel]="selectedLevel" [levelSource]="levelSource"
+        (goalSelected)="selectGoal($event)" (levelSelected)="selectLevel($event)" (unknownLevelSelected)="selectUnknownLevel()"
+        (placementStart)="startPlacementTest()" (placementSkip)="skipPlacementTest()" (next)="nextStep()" (back)="previousStep()" />
     }
     @if (!showWelcome && !showPlacementTest && currentStep === 3) {
-      <app-goal-profile
-        [displayName]="displayName"
-        [dateOfBirth]="dateOfBirth"
-        [gender]="gender"
-        [displayNameTouched]="displayNameTouched"
-        [dateOfBirthTouched]="dateOfBirthTouched"
-        [genderTouched]="genderTouched"
-        [displayNameValid]="isDisplayNameValid()"
-        [genderValid]="isGenderValid()"
-        [displayNameError]="getDisplayNameError()"
-        [dateOfBirthError]="getDateOfBirthError()"
-        (displayNameInput)="onDisplayNameInput($event)"
-        (displayNameBlur)="onDisplayNameBlur()"
-        (dateOfBirthChange)="onDateOfBirthChange($event)"
-        (dateOfBirthBlur)="onDateOfBirthBlur()"
-        (genderChange)="onGenderChange($event)"
-        (genderBlur)="onGenderBlur()"
-        (next)="nextStep()"
-        (back)="previousStep()"
-      />
+      <app-goal-profile [displayName]="displayName" [dateOfBirth]="dateOfBirth" [gender]="gender"
+        [displayNameTouched]="displayNameTouched" [dateOfBirthTouched]="dateOfBirthTouched" [genderTouched]="genderTouched"
+        [displayNameValid]="isDisplayNameValid()" [genderValid]="isGenderValid()" [displayNameError]="getDisplayNameError()" [dateOfBirthError]="getDateOfBirthError()"
+        (displayNameInput)="onDisplayNameInput($event)" (displayNameBlur)="onDisplayNameBlur()" (dateOfBirthChange)="onDateOfBirthChange($event)"
+        (dateOfBirthBlur)="onDateOfBirthBlur()" (genderChange)="onGenderChange($event)" (genderBlur)="onGenderBlur()" (next)="nextStep()" (back)="previousStep()" />
     }
     @if (showWelcome && !showPlacementTest) {
-      <app-goal-welcome
-        [username]="displayName"
-        [dateOfBirth]="dateOfBirth"
-        [gender]="gender"
-        [selectedGoal]="selectedGoal"
-        [selectedLevel]="selectedLevel"
-        [levelSource]="levelSource"
-        (next)="nextStep()"
-      />
+      <app-goal-welcome [username]="displayName" [dateOfBirth]="dateOfBirth" [gender]="gender" [selectedGoal]="selectedGoal"
+        [selectedLevel]="selectedLevel" [levelSource]="levelSource" (next)="nextStep()" />
     }
     @if (!showWelcome && !showPlacementTest && currentStep === 4) {
       <app-goal-register
-        [username]="username"
-        [usernameAvailable]="usernameAvailable"
-        [usernameChecking]="usernameChecking"
-        [usernameTouched]="usernameTouched"
-        [email]="email"
-        [password]="password"
-        [passwordConfirm]="passwordConfirm"
-        [registrationValid]="isRegistrationValid()"
+        [username]="username" [usernameAvailable]="usernameAvailable" [usernameChecking]="usernameChecking" [usernameTouched]="usernameTouched"
+        [email]="email" [password]="password" [passwordConfirm]="passwordConfirm"
+        [registrationValid]="isRegistrationValid()" 
+        [emailTouched]="emailTouched" [passwordTouched]="passwordTouched" [passwordConfirmTouched]="passwordConfirmTouched"
+        [emailError]="getEmailError()" [passwordError]="getPasswordError()" [passwordConfirmError]="getPasswordConfirmError()" [usernameError]="getUsernameServerError()"
+        [registrationSubmitting]="registrationSubmitting" [registrationError]="registrationError" [registrationFieldErrors]="registrationFieldErrors"
         (usernameChange)="onUsernameChange($event)"
-        (emailChange)="email = $event"
-        (passwordChange)="password = $event"
-        (passwordConfirmChange)="passwordConfirm = $event"
-        (googleRegister)="registerWithGoogle()"
-        (register)="register()"
-        (back)="previousStep()"
-      />
+        (emailChange)="onEmailChange($event)"
+        (passwordChange)="onPasswordChange($event)"
+        (passwordConfirmChange)="onPasswordConfirmChange($event)"
+        (googleRegister)="registerWithGoogle()" (register)="register()" (back)="previousStep()" />
     }
   </section>
 </main>

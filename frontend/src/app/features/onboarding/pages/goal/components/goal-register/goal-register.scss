@@ -12,9 +12,7 @@
   animation: goal-step-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.goal__header {
-  width: 100%;
-}
+.goal__header { width: 100%; }
 
 .goal__progress {
   width: 100%;
@@ -69,22 +67,11 @@
   background: var(--color-primary);
   transition: width 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
+.goal__progress-fill--half { width: 50%; }
+.goal__progress-fill--three-quarter { width: 75%; }
+.goal__progress-fill--complete { width: 100%; }
 
-.goal__progress-fill--half {
-  width: 50%;
-}
-
-.goal__progress-fill--three-quarter {
-  width: 75%;
-}
-
-.goal__progress-fill--complete {
-  width: 100%;
-}
-
-.goal__heading {
-  text-align: left;
-}
+.goal__heading { text-align: left; }
 
 .goal__eyebrow {
   display: inline-flex;
@@ -110,9 +97,7 @@
   font-weight: 800;
   line-height: 1.13;
   letter-spacing: -0.035em;
-  span {
-    color: var(--color-primary);
-  }
+  span { color: var(--color-primary); }
 }
 
 .goal__subtitle {
@@ -141,18 +126,93 @@
   flex-direction: column;
   gap: var(--space-2);
   &--error {
-    .goal__label {
-      color: var(--color-error);
-    }
+    .goal__label { color: var(--color-error); }
     .goal__input-shell {
       border-color: var(--color-error);
       background: color-mix(in srgb, var(--color-error) 4%, var(--color-surface));
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 9%, transparent);
     }
-    .goal__input-leading {
-      color: var(--color-error);
-    }
+    .goal__input-leading { color: var(--color-error); }
   }
+}
+
+/* --- STYLES FÜR DIE ZUSTÄNDE (ERROR / SUCCESS) --- */
+.goal__input-shell--error {
+  border-color: var(--color-error) !important;
+  background: color-mix(in srgb, var(--color-error) 4%, var(--color-surface)) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 9%, transparent) !important;
+
+  .goal__input-leading {
+    color: var(--color-error) !important;
+    background: transparent !important;
+  }
+}
+
+.goal__input-shell--success {
+  border-color: var(--color-success) !important;
+  background: color-mix(in srgb, var(--color-success) 4%, var(--color-surface)) !important;
+  box-shadow: none !important;
+
+  .goal__input-leading {
+    color: var(--color-success) !important;
+    background: transparent !important;
+  }
+}
+
+.goal__input-shell--error.goal__input-shell--success {
+  border-color: var(--color-error) !important;
+  background: color-mix(in srgb, var(--color-error) 4%, var(--color-surface)) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 9%, transparent) !important;
+
+  .goal__input-leading {
+    color: var(--color-error) !important;
+    background: transparent !important;
+  }
+}
+
+.goal__username-error {
+  display: block;
+  margin-top: 4px;
+  color: var(--color-error);
+  font-family: var(--font-armenian);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.goal__error-box {
+  width: 100%;
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-error) 8%, transparent);
+  color: var(--color-error);
+  font-family: var(--font-armenian);
+  font-size: 0.9rem;
+  text-align: left;
+  animation: goal-form-in 0.3s ease-out forwards;
+}
+
+.goal__username-success {
+  display: block;
+  margin-top: 4px;
+  color: var(--color-success);
+  font-family: var(--font-armenian);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+.goal__username-checking {
+  display: block;
+  margin-top: 4px;
+  color: var(--color-text-muted);
+  font-family: var(--font-armenian);
+  font-size: 0.8rem;
+  font-style: italic;
+  text-align: left;
 }
 
 .goal__label-row {
@@ -190,22 +250,27 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
-  transition:
-    border-color 180ms ease,
-    background-color 180ms ease,
-    box-shadow 180ms ease,
-    transform 180ms ease;
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
-
-.goal__input-shell:hover {
-  border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
-}
-
+.goal__input-shell:hover { border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border)); }
 .goal__input-shell:focus-within {
   border-color: var(--color-primary);
-  box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent),
-    0 8px 22px color-mix(in srgb, var(--color-primary) 5%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent), 0 8px 22px color-mix(in srgb, var(--color-primary) 5%, transparent);
+}
+
+.goal__input-shell--error:hover,
+.goal__input-shell--success:hover {
+  border-color: inherit;
+}
+
+.goal__input-shell--error:focus-within {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 12%, transparent);
+}
+
+.goal__input-shell--success:focus-within {
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-success) 12%, transparent);
 }
 
 .goal__input-leading {
@@ -218,11 +283,8 @@
   margin-left: 6px;
   border-radius: var(--radius-md);
   color: var(--color-text-muted);
-  transition:
-    color 180ms ease,
-    background-color 180ms ease;
+  transition: color 180ms ease, background-color 180ms ease;
 }
-
 .goal__input-leading svg {
   width: 20px;
   height: 20px;
@@ -232,11 +294,7 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-
-.goal__input-shell:focus-within .goal__input-leading {
-  color: var(--color-primary);
-  background: var(--color-primary-light);
-}
+.goal__input-shell:focus-within .goal__input-leading { color: var(--color-primary); background: var(--color-primary-light); }
 
 .goal__input {
   width: 100%;
@@ -252,19 +310,66 @@
   font-weight: 500;
   line-height: 1;
   touch-action: manipulation;
-  &::placeholder {
-    color: var(--color-text-muted);
-    opacity: 0.85;
+  &::placeholder { color: var(--color-text-muted); opacity: 0.85; }
+  &:disabled { color: var(--color-text-secondary); cursor: not-allowed; opacity: 0.65; }
+  &:-webkit-autofill { -webkit-text-fill-color: var(--color-text); box-shadow: 0 0 0 1000px var(--color-surface) inset; }
+}
+
+.goal__input--with-toggle {
+  padding-right: 52px;
+}
+
+.goal__password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+  touch-action: manipulation;
+  transition: color 150ms ease, background-color 150ms ease;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
-  &:disabled {
-    color: var(--color-text-secondary);
-    cursor: not-allowed;
-    opacity: 0.65;
+
+  &:hover {
+    color: var(--color-text);
+    background: var(--color-surface-muted);
   }
-  &:-webkit-autofill {
-    -webkit-text-fill-color: var(--color-text);
-    box-shadow: 0 0 0 1000px var(--color-surface) inset;
+
+  &:active {
+    background: var(--color-border);
   }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 2px;
+  }
+}
+
+.goal__input-shell--error .goal__password-toggle {
+  color: var(--color-error);
+}
+
+.goal__input-shell--success .goal__password-toggle {
+  color: var(--color-success);
 }
 
 .goal__registration-divider {
@@ -276,15 +381,8 @@
   color: var(--color-text-secondary);
   font-family: var(--font-armenian);
   font-size: 0.82rem;
-  span:first-child,
-  span:last-child {
-    flex: 1;
-    height: 1px;
-    background: var(--color-border);
-  }
-  span:nth-child(2) {
-    user-select: none;
-  }
+  span:first-child, span:last-child { flex: 1; height: 1px; background: var(--color-border); }
+  span:nth-child(2) { user-select: none; }
 }
 
 .goal__google-button {
@@ -305,31 +403,11 @@
   font-weight: 700;
   cursor: pointer;
   touch-action: manipulation;
-  transition:
-    border-color 150ms ease,
-    background-color 150ms ease,
-    color 150ms ease,
-    transform 150ms ease,
-    box-shadow 150ms ease;
-  &:hover {
-    border-color: var(--color-primary);
-    background: var(--color-surface-muted);
-    box-shadow: 0 8px 24px color-mix(in srgb, var(--color-primary) 10%, transparent);
-    transform: translateY(-1px);
-  }
-  &:active {
-    transform: translateY(0);
-  }
-  &:focus-visible {
-    outline: 3px solid var(--color-primary-light);
-    outline-offset: 3px;
-  }
-  &:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  &:hover { border-color: var(--color-primary); background: var(--color-surface-muted); box-shadow: 0 8px 24px color-mix(in srgb, var(--color-primary) 10%, transparent); transform: translateY(-1px); }
+  &:active { transform: translateY(0); }
+  &:focus-visible { outline: 3px solid var(--color-primary-light); outline-offset: 3px; }
+  &:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
 }
 
 .goal__google-icon {
@@ -370,20 +448,8 @@
   font-family: var(--font-armenian);
   touch-action: manipulation;
   box-shadow: 0 6px 18px color-mix(in srgb, var(--color-primary) 13%, transparent);
-  &:not(:disabled):hover {
-    box-shadow: 0 10px 28px color-mix(in srgb, var(--color-primary) 20%, transparent);
-    transform: translateY(-1px);
-  }
-  &:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-    &:hover {
-      background: var(--color-primary);
-      transform: none;
-    }
-  }
+  &:not(:disabled):hover { box-shadow: 0 10px 28px color-mix(in srgb, var(--color-primary) 20%, transparent); transform: translateY(-1px); }
+  &:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; &:hover { background: var(--color-primary); transform: none; } }
 }
 
 .goal__back {
@@ -402,203 +468,66 @@
   font-weight: 700;
   cursor: pointer;
   touch-action: manipulation;
-  transition:
-    border-color 150ms ease,
-    background-color 150ms ease,
-    color 150ms ease,
-    transform 150ms ease,
-    box-shadow 150ms ease;
-  &:hover {
-    border-color: var(--color-primary);
-    background: var(--color-surface-muted);
-    color: var(--color-primary);
-    box-shadow: 0 5px 16px color-mix(in srgb, var(--color-primary) 8%, transparent);
-  }
-  &:active {
-    transform: translateY(1px);
-  }
-  &:focus-visible {
-    outline: 3px solid var(--color-primary-light);
-    outline-offset: 3px;
-  }
-  &:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  &:hover { border-color: var(--color-primary); background: var(--color-surface-muted); color: var(--color-primary); box-shadow: 0 5px 16px color-mix(in srgb, var(--color-primary) 8%, transparent); }
+  &:active { transform: translateY(1px); }
+  &:focus-visible { outline: 3px solid var(--color-primary-light); outline-offset: 3px; }
+  &:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
 }
 
 @media (max-width: 720px) {
-  .goal__step-wrapper {
-    width: 100%;
-    max-width: 100%;
-  }
-  .goal__progress {
-    max-width: 100%;
-  }
-  .goal__input,
-  .goal__input-shell input,
-  input.goal__input,
-  textarea.goal__input,
-  select.goal__input {
-    font-size: 16px !important;
-  }
+  .goal__step-wrapper { width: 100%; max-width: 100%; }
+  .goal__progress { max-width: 100%; }
+  .goal__input, .goal__input-shell input, input.goal__input, textarea.goal__input, select.goal__input { font-size: 16px !important; }
 }
 
 @media (max-width: 640px) {
-  .goal__step-wrapper {
-    padding-top: var(--space-6);
-  }
-  .goal__progress {
-    margin-bottom: var(--space-5);
-  }
-  .goal__title {
-    font-size: clamp(1.9rem, 8vw, 2.5rem);
-  }
-  .goal__subtitle {
-    font-size: 0.9rem;
-  }
+  .goal__step-wrapper { padding-top: var(--space-6); }
+  .goal__progress { margin-bottom: var(--space-5); }
+  .goal__title { font-size: clamp(1.9rem, 8vw, 2.5rem); }
+  .goal__subtitle { font-size: 0.9rem; }
 }
 
 @media (max-width: 560px) {
-  .goal__title {
-    font-size: clamp(1.9rem, 9vw, 2.6rem);
-    line-height: 1.16;
-  }
-  .goal__subtitle {
-    margin-top: var(--space-3);
-    font-size: 0.88rem;
-    line-height: 1.65;
-  }
-  .goal__form {
-    gap: var(--space-4);
-    margin-top: var(--space-7);
-  }
-  .goal__actions {
-    align-items: stretch;
-    flex-direction: column-reverse;
-    gap: var(--space-3);
-    margin-top: var(--space-6);
-  }
-  .goal__next {
-    width: 100%;
-  }
-  .goal__back {
-    width: 100%;
-  }
+  .goal__title { font-size: clamp(1.9rem, 9vw, 2.6rem); line-height: 1.16; }
+  .goal__subtitle { margin-top: var(--space-3); font-size: 0.88rem; line-height: 1.65; }
+  .goal__form { gap: var(--space-4); margin-top: var(--space-7); }
+  .goal__actions { align-items: stretch; flex-direction: column-reverse; gap: var(--space-3); margin-top: var(--space-6); }
+  .goal__next { width: 100%; }
+  .goal__back { width: 100%; }
 }
 
 @media (max-width: 480px) {
-  .goal__step-wrapper {
-    padding-top: var(--space-5);
-  }
-  .goal__progress {
-    margin-bottom: var(--space-4);
-  }
-  .goal__progress-meta {
-    margin-bottom: 8px;
-  }
-  .goal__progress-label {
-    font-size: 0.62rem;
-  }
-  .goal__progress-count {
-    font-size: 0.66rem;
-  }
-  .goal__progress-track {
-    height: 4px;
-  }
-  .goal__form {
-    gap: var(--space-4);
-    margin-top: var(--space-6);
-  }
-  .goal__input-shell {
-    min-height: 54px;
-  }
-  .goal__input {
-    min-height: 52px;
-    font-size: 16px !important;
-  }
-  .goal__input-leading {
-    width: 40px;
-    height: 40px;
-    flex-basis: 40px;
-  }
-  .goal__optional {
-    display: none;
-  }
-  .goal__actions {
-    margin-top: var(--space-5);
-  }
-  .goal__next {
-    min-width: 128px;
-  }
-  .goal__back {
-    padding: 0 var(--space-4);
-  }
+  .goal__step-wrapper { padding-top: var(--space-5); }
+  .goal__progress { margin-bottom: var(--space-4); }
+  .goal__progress-meta { margin-bottom: 8px; }
+  .goal__progress-label { font-size: 0.62rem; }
+  .goal__progress-count { font-size: 0.66rem; }
+  .goal__progress-track { height: 4px; }
+  .goal__form { gap: var(--space-4); margin-top: var(--space-6); }
+  .goal__input-shell { min-height: 54px; }
+  .goal__input { min-height: 52px; font-size: 16px !important; }
+  .goal__input-leading { width: 40px; height: 40px; flex-basis: 40px; }
+  .goal__optional { display: none; }
+  .goal__actions { margin-top: var(--space-5); }
+  .goal__next { min-width: 128px; }
+  .goal__back { padding: 0 var(--space-4); }
+  .goal__input--with-toggle { padding-right: 48px; }
+  .goal__password-toggle { width: 36px; height: 36px; right: 4px; }
 }
 
 @media (max-width: 380px) {
-  .goal__eyebrow {
-    font-size: 0.66rem;
-  }
-  .goal__title {
-    font-size: 1.8rem;
-  }
-  .goal__actions {
-    gap: var(--space-2);
-  }
-  .goal__back,
-  .goal__next {
-    flex: 1;
-  }
+  .goal__eyebrow { font-size: 0.66rem; }
+  .goal__title { font-size: 1.8rem; }
+  .goal__actions { gap: var(--space-2); }
+  .goal__back, .goal__next { flex: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .goal__step-wrapper,
-  .goal__form,
-  .goal__actions,
-  .goal__progress-fill {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-  .goal__input-shell,
-  .goal__input,
-  .goal__google-button,
-  .goal__back {
-    transition: none;
-  }
+  .goal__step-wrapper, .goal__form, .goal__actions, .goal__progress-fill { animation: none; opacity: 1; transform: none; }
+  .goal__input-shell, .goal__input, .goal__google-button, .goal__back, .goal__password-toggle { transition: none; }
 }
 
-@keyframes goal-step-in {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes goal-form-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes goal-actions-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+@keyframes goal-step-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes goal-form-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes goal-actions-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

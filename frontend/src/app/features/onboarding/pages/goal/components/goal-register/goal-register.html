@@ -1,13 +1,6 @@
 <div class="goal__step-wrapper">
   <header class="goal__header">
-    <div
-      class="goal__progress"
-      role="progressbar"
-      aria-valuemin="1"
-      aria-valuemax="4"
-      aria-valuenow="4"
-      aria-label="Քայլ 4 4-ից"
-    >
+    <div class="goal__progress" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="4" aria-label="Քայլ 4 4-ից">
       <div class="goal__progress-meta">
         <span class="goal__progress-label">ՔԱՅԼ 4</span>
         <span class="goal__progress-count">4 / 4</span>
@@ -16,18 +9,18 @@
         <span class="goal__progress-fill goal__progress-fill--complete"></span>
       </div>
     </div>
-
     <div class="goal__heading">
       <span class="goal__eyebrow">Վերջին քայլ</span>
-      <h1 class="goal__title">
-        Ստեղծիր քո
-        <span>հաշիվը։</span>
-      </h1>
-      <p class="goal__subtitle">
-        Պահպանիր քո պրոֆիլը և շարունակիր սովորել այնտեղ, որտեղ կանգ առար։
-      </p>
+      <h1 class="goal__title">Ստեղծիր քո <span>հաշիվը։</span></h1>
+      <p class="goal__subtitle">Պահպանիր քո պրոֆիլը և շարունակիր սովորել այնտեղ, որտեղ կանգ առար։</p>
     </div>
   </header>
+
+  @if (registrationError) {
+    <div class="goal__error-box" role="alert">
+      <p>{{ registrationError }}</p>
+    </div>
+  }
 
   <div class="goal__form">
     <label class="goal__field">
@@ -35,36 +28,28 @@
         <span class="goal__label">Օգտանուն</span>
         <span class="goal__optional">Անհրաժեշտ</span>
       </span>
-      <span class="goal__input-shell">
+      <span class="goal__input-shell"
+        [class.goal__input-shell--error]="!!usernameError || !!registrationFieldErrors['username']?.length"
+        [class.goal__input-shell--success]="!usernameError && !registrationFieldErrors['username']?.length && usernameTouched && isUsernameFormatValid && usernameAvailable && !usernameChecking">
         <span class="goal__input-leading" aria-hidden="true">@</span>
-        <input
-          type="text"
-          class="goal__input"
-          name="username"
-          autocomplete="username"
-          placeholder="your_username"
-          [value]="username"
-          (input)="onUsernameInput($any($event.target).value, $event)"
-          [attr.aria-invalid]="usernameTouched && !usernameValid"
-          aria-describedby="username-error"
-          required
-        />
+        <input type="text" class="goal__input" name="username" autocomplete="username" placeholder="your_username"
+          [value]="username" (input)="onUsernameInput($any($event.target).value, $event)" required />
       </span>
-      @if (usernameTouched && !usernameValid) {
-        <span id="username-error" class="goal__username-error" role="alert">
-          {{ usernameError }}
-        </span>
+
+      @if (usernameTouched && !isUsernameFormatValid && usernameFormatError) {
+        <span class="goal__username-error" role="alert">{{ usernameFormatError }}</span>
       }
-      @if (usernameValid && usernameChecking) {
+      @if (registrationFieldErrors['username']?.length) {
+        <span class="goal__username-error" role="alert">{{ registrationFieldErrors['username'][0] }}</span>
+      } @else if (usernameError) {
+        <span class="goal__username-error" role="alert">{{ usernameError }}</span>
+      }
+
+      @if (usernameTouched && isUsernameFormatValid && usernameChecking) {
         <span class="goal__username-checking">Ստուգվում է հասանելիությունը…</span>
       }
-      @if (usernameValid && !usernameChecking && usernameAvailable) {
+      @if (usernameTouched && isUsernameFormatValid && !usernameChecking && usernameAvailable && !registrationFieldErrors['username']?.length) {
         <span class="goal__username-success">Օգտանունը հասանելի է։</span>
-      }
-      @if (usernameValid && !usernameChecking && !usernameAvailable && username.length > 0) {
-        <span class="goal__username-error" role="alert">
-          Այս օգտանունը զբաղված է։ Փորձիր մեկ այլ։
-        </span>
       }
     </label>
 
@@ -73,24 +58,20 @@
         <span class="goal__label">Էլ․ փոստ</span>
         <span class="goal__optional">Անհրաժեշտ</span>
       </span>
-      <span class="goal__input-shell">
+      <span class="goal__input-shell"
+        [class.goal__input-shell--error]="!!emailError || !!registrationFieldErrors['email']?.length">
         <span class="goal__input-leading" aria-hidden="true">
-          <svg viewBox="0 0 24 24" focusable="false">
-            <rect x="3.5" y="5.5" width="17" height="13" rx="2.5"></rect>
-            <path d="m4.5 7 7.5 5.5L19.5 7"></path>
-          </svg>
+          <svg viewBox="0 0 24 24" focusable="false"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"></rect><path d="m4.5 7 7.5 5.5L19.5 7"></path></svg>
         </span>
-        <input
-          type="email"
-          class="goal__input"
-          name="email"
-          autocomplete="email"
-          placeholder="օրինակ@email.com"
-          [value]="email"
-          (input)="emailChange.emit($any($event.target).value)"
-          required
-        />
+        <input type="email" class="goal__input" name="email" autocomplete="email" placeholder="օրինակ@email.com"
+          [value]="email" (input)="emailChange.emit($any($event.target).value)" required />
       </span>
+      @if (emailError) {
+        <span class="goal__username-error" role="alert">{{ emailError }}</span>
+      }
+      @if (registrationFieldErrors['email']?.length) {
+        <span class="goal__username-error" role="alert">{{ registrationFieldErrors['email'][0] }}</span>
+      }
     </label>
 
     <label class="goal__field">
@@ -98,24 +79,37 @@
         <span class="goal__label">Գաղտնաբառ</span>
         <span class="goal__optional">Անհրաժեշտ</span>
       </span>
-      <span class="goal__input-shell">
+      <span class="goal__input-shell"
+        [class.goal__input-shell--error]="!!passwordError || !!registrationFieldErrors['password']?.length">
         <span class="goal__input-leading" aria-hidden="true">
-          <svg viewBox="0 0 24 24" focusable="false">
-            <rect x="5" y="10" width="14" height="10" rx="2"></rect>
-            <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
-          </svg>
+          <svg viewBox="0 0 24 24" focusable="false"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
         </span>
-        <input
-          type="password"
-          class="goal__input"
-          name="password"
-          autocomplete="new-password"
-          placeholder="••••••••"
-          [value]="password"
-          (input)="passwordChange.emit($any($event.target).value)"
-          required
-        />
+        <input class="goal__input goal__input--with-toggle" [type]="showPassword ? 'text' : 'password'" name="password" autocomplete="new-password" placeholder="••••••••"
+          [value]="password" (input)="passwordChange.emit($any($event.target).value)" required />
+        <button type="button" class="goal__password-toggle" (click)="togglePasswordVisibility()"
+          [attr.aria-label]="showPassword ? 'Թաքցնել գաղտնաբառը' : 'Ցույց տալ գաղտնաբառը'"
+          [attr.aria-pressed]="showPassword" tabindex="0">
+          @if (showPassword) {
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <path d="M3 3l18 18"></path>
+              <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
+              <path d="M9.4 5.1A10.9 10.9 0 0 1 12 5c5 0 9 4.5 9 7 0 .9-.4 2-1.2 3.1"></path>
+              <path d="M6.3 6.3C4 8 2.6 10.3 3 12c.8 2.6 4.6 7 9 7 1.4 0 2.8-.4 4-1"></path>
+            </svg>
+          } @else {
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7S2.5 12 2.5 12z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          }
+        </button>
       </span>
+      @if (passwordError) {
+        <span class="goal__username-error" role="alert">{{ passwordError }}</span>
+      }
+      @if (registrationFieldErrors['password']?.length) {
+        <span class="goal__username-error" role="alert">{{ registrationFieldErrors['password'][0] }}</span>
+      }
     </label>
 
     <label class="goal__field">
@@ -123,56 +117,54 @@
         <span class="goal__label">Կրկնել գաղտնաբառը</span>
         <span class="goal__optional">Անհրաժեշտ</span>
       </span>
-      <span class="goal__input-shell">
+      <span class="goal__input-shell"
+        [class.goal__input-shell--error]="!!passwordConfirmError || !!registrationFieldErrors['password_confirm']?.length">
         <span class="goal__input-leading" aria-hidden="true">
-          <svg viewBox="0 0 24 24" focusable="false">
-            <rect x="5" y="10" width="14" height="10" rx="2"></rect>
-            <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
-          </svg>
+          <svg viewBox="0 0 24 24" focusable="false"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
         </span>
-        <input
-          type="password"
-          class="goal__input"
-          name="passwordConfirm"
-          autocomplete="new-password"
-          placeholder="••••••••"
-          [value]="passwordConfirm"
-          (input)="passwordConfirmChange.emit($any($event.target).value)"
-          required
-        />
+        <input class="goal__input goal__input--with-toggle" [type]="showPasswordConfirm ? 'text' : 'password'" name="passwordConfirm" autocomplete="new-password" placeholder="••••••••"
+          [value]="passwordConfirm" (input)="passwordConfirmChange.emit($any($event.target).value)" required />
+        <button type="button" class="goal__password-toggle" (click)="togglePasswordConfirmVisibility()"
+          [attr.aria-label]="showPasswordConfirm ? 'Թաքցնել գաղտնաբառը' : 'Ցույց տալ գաղտնաբառը'"
+          [attr.aria-pressed]="showPasswordConfirm" tabindex="0">
+          @if (showPasswordConfirm) {
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <path d="M3 3l18 18"></path>
+              <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
+              <path d="M9.4 5.1A10.9 10.9 0 0 1 12 5c5 0 9 4.5 9 7 0 .9-.4 2-1.2 3.1"></path>
+              <path d="M6.3 6.3C4 8 2.6 10.3 3 12c.8 2.6 4.6 7 9 7 1.4 0 2.8-.4 4-1"></path>
+            </svg>
+          } @else {
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7S2.5 12 2.5 12z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          }
+        </button>
       </span>
+      @if (passwordConfirmError) {
+        <span class="goal__username-error" role="alert">{{ passwordConfirmError }}</span>
+      }
+      @if (registrationFieldErrors['password_confirm']?.length) {
+        <span class="goal__username-error" role="alert">{{ registrationFieldErrors['password_confirm'][0] }}</span>
+      }
     </label>
   </div>
 
-  <div class="goal__registration-divider">
-    <span></span>
-    <span>կամ</span>
-    <span></span>
-  </div>
+  <div class="goal__registration-divider"><span></span><span>կամ</span><span></span></div>
 
-  <button
-    type="button"
-    class="goal__google-button"
-    (click)="googleRegister.emit()"
-  >
+  <button type="button" class="goal__google-button" (click)="googleRegister.emit()" [disabled]="registrationSubmitting">
     <span class="goal__google-icon" aria-hidden="true">G</span>
     <span>Գրանցվել Google-ով</span>
   </button>
 
   <div class="goal__actions">
-    <button type="button" class="goal__back" (click)="back.emit()">
-      <span aria-hidden="true">←</span>
-      <span>Հետ</span>
+    <button type="button" class="goal__back" (click)="back.emit()" [disabled]="registrationSubmitting">
+      <span aria-hidden="true">←</span><span>Հետ</span>
     </button>
 
-    <button
-      type="button"
-      class="goal__next button"
-      [disabled]="!registrationValid"
-      (click)="register.emit()"
-    >
-      <span>Ավարտել</span>
-      <span aria-hidden="true">✓</span>
+    <button type="button" class="goal__next button" [disabled]="!registrationValid || registrationSubmitting" (click)="register.emit()">
+      @if (registrationSubmitting) { <span>Ստեղծվում է…</span> } @else { <span>Ավարտել</span><span aria-hidden="true">✓</span> }
     </button>
   </div>
 </div>
